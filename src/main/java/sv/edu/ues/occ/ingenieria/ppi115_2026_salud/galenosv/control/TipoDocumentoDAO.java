@@ -4,6 +4,8 @@
  */
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control;
 
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoDocumento;
@@ -12,13 +14,16 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoDocumento
  *
  * @author kardia
  */
+
+@Stateless
+@LocalBean
 public class TipoDocumentoDAO extends DefaultDAO<TipoDocumento> {
     
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public TipoDocumentoDAO(Class<TipoDocumento> entity) {
-        super(entity);
+    public TipoDocumentoDAO() {
+        super(TipoDocumento.class);
     }
 
     @Override

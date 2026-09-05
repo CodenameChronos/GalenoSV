@@ -4,6 +4,8 @@
  */
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control;
 
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Rol;
@@ -12,13 +14,16 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Rol;
  *
  * @author kardia
  */
+
+@Stateless
+@LocalBean
 public class RolDAO extends DefaultDAO<Rol> {
     
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public RolDAO(Class<Rol> entity) {
-        super(entity);
+    public RolDAO() {
+        super(Rol.class);
     }
 
     @Override

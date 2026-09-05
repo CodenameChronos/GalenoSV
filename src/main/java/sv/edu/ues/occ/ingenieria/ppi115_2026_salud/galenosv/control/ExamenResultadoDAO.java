@@ -4,6 +4,8 @@
  */
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control;
 
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ExamenResultado;
@@ -12,13 +14,16 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ExamenResulta
  *
  * @author kardia
  */
+
+@Stateless
+@LocalBean
 public class ExamenResultadoDAO extends DefaultDAO<ExamenResultado> {
     
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public ExamenResultadoDAO(Class<ExamenResultado> entity) {
-        super(entity);
+    public ExamenResultadoDAO() {
+        super(ExamenResultado.class);
     }
 
     @Override

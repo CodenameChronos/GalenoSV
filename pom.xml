@@ -14,6 +14,7 @@
     
     <dependencyManagement>
         <dependencies>
+            
             <!-- Source: https://mvnrepository.com/artifact/org.junit/junit-bom -->
             <dependency>
                 <groupId>org.junit</groupId>
@@ -22,6 +23,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            
             <!-- Source: https://mvnrepository.com/artifact/org.mockito/mockito-bom -->
             <dependency>
                 <groupId>org.mockito</groupId>
@@ -30,47 +32,65 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            
         </dependencies>
     </dependencyManagement>
     
     <dependencies>
+        
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
             <version>${jakartaee}</version>
             <scope>provided</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
             <scope>test</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
         </dependency>
+        
         <!-- Source: https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
+        
         <!-- Source: https://mvnrepository.com/artifact/org.mockito/mockito-core -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <!-- Source: https://mvnrepository.com/artifact/org.primefaces/primefaces -->
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>15.0.17</version>
+            <classifier>jakarta</classifier>
+            <scope>compile</scope>
+        </dependency>
+        
     </dependencies>
     
     <build>
         <plugins>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -80,11 +100,13 @@
                     <target>21</target>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
             </plugin>
+            
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
@@ -94,6 +116,7 @@
                     <installDirectory>/home/kardia/Documentos/Setups/Openliberty/wlp</installDirectory>
                 </configuration>
             </plugin>
+            
             <!-- Source: https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -125,6 +148,7 @@
                         </execution>
                     </executions>
             </plugin>
+            
         </plugins>
     </build>
 </project>

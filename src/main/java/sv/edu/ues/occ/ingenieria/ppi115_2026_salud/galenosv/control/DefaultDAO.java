@@ -6,7 +6,6 @@ package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control;
 
 import jakarta.persistence.EntityManager;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,7 +15,7 @@ import java.util.logging.Logger;
  */
 public abstract class DefaultDAO<T> implements DAOInterface<T> {
 
-    public final Class<T> entity;
+    public final Class entity;
 
     public abstract EntityManager getEntityManager();
 
@@ -25,7 +24,7 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
     }
 
     @Override
-    public void crear(T registro) throws IllegalArgumentException, IllegalStateException {
+    public void crear(Object registro) throws IllegalArgumentException, IllegalStateException {
         if (registro != null) {
             try {
                 getEntityManager().persist(registro);
@@ -40,7 +39,7 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
     }
 
     @Override
-    public void actualizar(T nuevo) throws IllegalArgumentException, IllegalStateException {
+    public void actualizar(Object nuevo) throws IllegalArgumentException, IllegalStateException {
         if (nuevo != null) {
             try {
                 getEntityManager().merge(nuevo);
@@ -55,7 +54,7 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
     }
 
     @Override
-    public void eliminar(T eliminar) {
+    public void eliminar(Object eliminar) throws IllegalArgumentException, IllegalStateException {
         if (eliminar != null) {
             try {
                 getEntityManager().remove(eliminar);
@@ -70,7 +69,7 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
     }
 
     @Override
-    public T buscar(UUID uuid) {
+    public Object buscar(Object uuid) throws IllegalArgumentException, IllegalStateException {
         if (uuid != null) {
             try {
                 return getEntityManager().find(entity, uuid);
@@ -88,10 +87,12 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
     public List<T> findRange(int first, int max) throws IllegalArgumentException, IllegalStateException {
         if (first >= 0 && max > 0) {
             try {
-                return getEntityManager().createQuery("SELECT e FROM " + entity.getSimpleName() + " e", entity)
-                                          .setFirstResult(first)
-                                          .setMaxResults(max)
-                                          .getResultList();
+                return getEntityManager().createQuery("SELECT e "
+                        + "FROM " + entity.getSimpleName() + " e"
+                        , entity)
+                        .setFirstResult(first)
+                        .setMaxResults(max)
+                        .getResultList();
             } catch (Exception ex) {
                 throw new IllegalStateException();
             }
@@ -99,4 +100,15 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
             throw new IllegalArgumentException("Pendejo");
         }
     }
+    
+    @Override
+    public int contar(){
+        return getEntityManager().createQuery(""
+                + "SELECT COUNT(*) e "
+                + "FROM " + entity.getSimpleName() + " e"
+                , entity)
+                .getMaxResults();
+    }
+    
+    
 }

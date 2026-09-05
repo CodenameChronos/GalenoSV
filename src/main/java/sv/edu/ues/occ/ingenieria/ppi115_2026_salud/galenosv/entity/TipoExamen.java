@@ -15,6 +15,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
@@ -42,8 +43,9 @@ public class TipoExamen implements Serializable {
     @Column(name = "id_tipo_examen")
     @Convert(converter = UUIDConverter.class)
     private UUID idTipoExamen;
-    @Size(max = 2147483647)
+    @Size(min = 3, max = 2147483647)
     @Column(name = "nombre")
+    @NotBlank
     private String nombre;
     @Column(name = "activo")
     private Boolean activo;

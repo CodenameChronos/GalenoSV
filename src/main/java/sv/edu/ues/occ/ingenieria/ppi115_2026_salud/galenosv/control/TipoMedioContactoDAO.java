@@ -20,31 +20,13 @@ public class TipoMedioContactoDAO extends DefaultDAO<TipoMedioContacto> {
 
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
-
-    public TipoMedioContactoDAO(Class<TipoMedioContacto> entity) {
-        super(entity);
+    
+    public TipoMedioContactoDAO() {
+        super(TipoMedioContacto.class);
     }
 
     @Override
     public EntityManager getEntityManager() {
         return em;
     }
-
-    /*
-    @Override
-    public List<TipoMedioContacto> findRange(int first, int max) {
-        if (first >= 0 && max > 0) {
-            try {
-                TypedQuery<TipoMedioContacto> q = em.createNamedQuery("TipoMedioContacto.findAll", TipoMedioContacto.class);
-                q.setFirstResult(first);
-                q.setMaxResults(max);
-                return q.getResultList();
-            } catch (Exception ex) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
-                throw new IllegalStateException(" Pendejo 1");
-            }
-        } else {
-            throw new IllegalArgumentException(" Pendejo 2");
-        }
-    }*/
 }

@@ -4,6 +4,8 @@
  */
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control;
 
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ProcedimientoPasoSecuencia;
@@ -12,13 +14,16 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Procedimiento
  *
  * @author kardia
  */
+
+@Stateless
+@LocalBean
 public class ProcedimientoPasoSecuenciaDAO extends DefaultDAO<ProcedimientoPasoSecuencia> {
     
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public ProcedimientoPasoSecuenciaDAO(Class<ProcedimientoPasoSecuencia> entity) {
-        super(entity);
+    public ProcedimientoPasoSecuenciaDAO() {
+        super(ProcedimientoPasoSecuencia.class);
     }
 
     @Override

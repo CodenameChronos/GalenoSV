@@ -13,14 +13,16 @@ import java.util.UUID;
  */
 public interface DAOInterface<T> {
     
-    public void crear(T registro) throws IllegalArgumentException, IllegalStateException;
+    public void crear(Object registro) throws IllegalArgumentException, IllegalStateException;
     
-    public void actualizar(T nuevo)throws IllegalArgumentException, IllegalStateException;
+    public void actualizar(Object nuevo)throws IllegalArgumentException, IllegalStateException;
     
-    public void eliminar(T eliminar) throws IllegalArgumentException, IllegalStateException;
+    public void eliminar(Object eliminar) throws IllegalArgumentException, IllegalStateException;
     
-    public T buscar(UUID uuid) throws IllegalArgumentException, IllegalStateException;
+    public Object buscar(Object uuid) throws IllegalArgumentException, IllegalStateException;
     
     public List<T> findRange(int first, int max) throws IllegalArgumentException, IllegalStateException;
+    
+    public int contar();
     
 }
