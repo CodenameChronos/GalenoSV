@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control;
 
 import jakarta.persistence.EntityManager;
@@ -22,7 +18,14 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
     public DefaultDAO(Class<T> entity) {
         this.entity = entity;
     }
-
+    
+    /**
+     * Persiste un nuevo registro en la base de datos utilizando el EntityManager.
+     *
+     * @param registro El objeto que se desea almacenar. No debe ser nulo.
+     * @throws IllegalArgumentException si el objeto proporcionado es nulo.
+     * @throws IllegalStateException si ocurre un error durante la operación de persistencia.
+     */
     @Override
     public void crear(Object registro) throws IllegalArgumentException, IllegalStateException {
         if (registro != null) {
@@ -33,11 +36,18 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
                 throw new IllegalStateException();
             }
         } else {
-            throw new IllegalArgumentException("Pendejo");
+            throw new IllegalArgumentException("El registro no puede ser nulo");
         }
 
     }
-
+    
+    /**
+     * Actualiza un registro existente en la base de datos utilizando el EntityManager.
+     *
+     * @param nuevo El objeto con los nuevos datos a fusionar o actualizar. No debe ser nulo.
+     * @throws IllegalArgumentException si el objeto proporcionado es nulo.
+     * @throws IllegalStateException si ocurre un error durante la operación de merge.
+     */
     @Override
     public void actualizar(Object nuevo) throws IllegalArgumentException, IllegalStateException {
         if (nuevo != null) {
@@ -48,10 +58,18 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
                 throw new IllegalStateException();
             }
         } else {
-            throw new IllegalArgumentException("Pendejo");
+            throw new IllegalArgumentException("El objeto a actualizar no puede ser nulo");
         }
 
     }
+    
+    /**
+     * Elimina un registro existente de la base de datos utilizando el EntityManager.
+     *
+     * @param eliminar El objeto que se desea eliminar. No debe ser nulo y debe estar gestionado (managed).
+     * @throws IllegalArgumentException si el objeto proporcionado es nulo.
+     * @throws IllegalStateException si ocurre un error durante la operación de eliminación.
+     */
 
     @Override
     public void eliminar(Object eliminar) throws IllegalArgumentException, IllegalStateException {
@@ -63,11 +81,19 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
                 throw new IllegalStateException();
             }
         } else {
-            throw new IllegalArgumentException("Pendejo");
+            throw new IllegalArgumentException("El objeto a eliminar no puede ser nulo");
         }
 
     }
 
+    /**
+     * Busca y recupera una entidad de la base de datos utilizando su identificador único (UUID).
+     *
+     * @param uuid El identificador único del registro que se desea buscar. No debe ser nulo.
+     * @return El objeto encontrado que corresponde a la entidad, o null si no existe.
+     * @throws IllegalArgumentException si el identificador proporcionado es nulo.
+     * @throws IllegalStateException si ocurre un error durante la operación de consulta.
+     */
     @Override
     public Object buscar(Object uuid) throws IllegalArgumentException, IllegalStateException {
         if (uuid != null) {
@@ -78,10 +104,20 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
                 throw new IllegalStateException();
             }
         } else {
-            throw new IllegalArgumentException("Pendejo");
+            throw new IllegalArgumentException("Se requiere un UUID válido para realizar la búsqueda");
         }
 
     }
+    
+    /**
+     * Obtiene un rango paginado de registros de la entidad utilizando el EntityManager.
+     *
+     * @param first El índice del primer resultado que se desea obtener (debe ser mayor o igual a 0).
+     * @param max El número máximo de resultados que se deben devolver 
+     * (debe ser @return Una lista con los elementos encontrados dentro del rango especificado.
+     * @throws IllegalArgumentException si los parámetros de paginación no son válidos.
+     * @throws IllegalStateException si ocurre un error durante la ejecución de la consulta.
+     */
 
     @Override
     public List<T> findRange(int first, int max) throws IllegalArgumentException, IllegalStateException {
@@ -97,9 +133,16 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
                 throw new IllegalStateException();
             }
         } else {
-            throw new IllegalArgumentException("Pendejo");
+            throw new IllegalArgumentException("El índice inicial no puede ser negativo y el máximo de resultados debe ser mayor a cero");
         }
     }
+    
+    /**
+     * Cuenta el número total de registros existentes para la entidad en la base
+     * de datos.
+     *
+     * @return La cantidad total de registros de la entidad.
+     */
     
     @Override
     public int contar(){
