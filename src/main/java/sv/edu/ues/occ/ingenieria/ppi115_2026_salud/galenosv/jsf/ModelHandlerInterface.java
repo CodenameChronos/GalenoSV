@@ -2,10 +2,6 @@ package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.jsf;
 
 import jakarta.faces.event.ActionEvent;
 
-/**
- *
- * @author kardia
- */
 public interface ModelHandlerInterface <T> {
     
     public void nuevo();
