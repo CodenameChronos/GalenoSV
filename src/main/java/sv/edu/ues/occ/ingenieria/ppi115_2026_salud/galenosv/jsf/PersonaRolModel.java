@@ -4,7 +4,9 @@
  */
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.jsf;
 
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaRolDAO;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.PersonaRol;
@@ -13,6 +15,8 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.PersonaRol;
  *
  * @author kardia
  */
+@Named
+@ViewScoped
 public class PersonaRolModel extends ModelHandler<PersonaRol> {
 
     private static final long serialVersionUID = 1L;
@@ -32,6 +36,16 @@ public class PersonaRolModel extends ModelHandler<PersonaRol> {
     @Override
     public PersonaRol instanciarRegistro() {
         return new PersonaRol();
+    }
+
+    @Override
+    public PersonaRol getRegistroById(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Object getIdByRegistro(PersonaRol registro) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

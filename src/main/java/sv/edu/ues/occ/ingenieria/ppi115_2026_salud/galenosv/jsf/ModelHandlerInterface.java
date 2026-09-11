@@ -10,11 +10,11 @@ public interface ModelHandlerInterface <T> {
     
     public void nuevo();
     
-    public void seleccionar(T registro) throws IllegalArgumentException;
-    
     public void guardarHandler(ActionEvent ae) throws IllegalStateException;
     
     public void eliminarHandler(ActionEvent ae) throws IllegalStateException;
+    
+    public void cancelarHandler(ActionEvent ae);
     
     public void obtenerRegistros(int first, int max) throws IllegalStateException;
     

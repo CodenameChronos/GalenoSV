@@ -9,6 +9,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
@@ -34,11 +36,8 @@ public class ProcedimientoPasoSecuencia implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
-    @Lob
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_procedimiento_paso_secuencia")
-    @Convert(converter = UUIDConverter.class)
     private UUID idProcedimientoPasoSecuencia;
     @Lob
     @Column(name = "id_procedimiento_paso_referencia")

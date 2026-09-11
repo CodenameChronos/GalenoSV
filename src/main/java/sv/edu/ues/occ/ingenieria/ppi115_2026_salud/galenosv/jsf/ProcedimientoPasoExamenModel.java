@@ -4,7 +4,9 @@
  */
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.jsf;
 
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoPasoExamenDAO;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ProcedimientoPasoExamen;
@@ -13,6 +15,8 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Procedimiento
  *
  * @author kardia
  */
+@Named
+@ViewScoped
 public class ProcedimientoPasoExamenModel extends ModelHandler<ProcedimientoPasoExamen> {
     
     private static final long serialVersionUID = 1L;
@@ -32,5 +36,15 @@ public class ProcedimientoPasoExamenModel extends ModelHandler<ProcedimientoPaso
     @Override
     public ProcedimientoPasoExamen instanciarRegistro() {
         return new ProcedimientoPasoExamen();
+    }
+
+    @Override
+    public ProcedimientoPasoExamen getRegistroById(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Object getIdByRegistro(ProcedimientoPasoExamen registro) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

@@ -85,29 +85,32 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
 
     @Override
     public List<T> findRange(int first, int max) throws IllegalArgumentException, IllegalStateException {
-        if (first >= 0 && max > 0) {
-            try {
-                return getEntityManager().createQuery("SELECT e "
-                        + "FROM " + entity.getSimpleName() + " e"
-                        , entity)
-                        .setFirstResult(first)
-                        .setMaxResults(max)
-                        .getResultList();
-            } catch (Exception ex) {
-                throw new IllegalStateException();
-            }
-        } else {
-            throw new IllegalArgumentException("Pendejo");
+        if (first < 0 || max < 0) {
+            throw new IllegalArgumentException("first debe ser >= 0 y max debe ser >= 0");
+        }
+        if (max == 0) {
+            return List.of(); // Sin necesidad de ir a la base de datos
+        }
+        try {
+            return getEntityManager().createQuery(
+                    "SELECT e FROM " + entity.getSimpleName() + " e",
+                    entity)
+                    .setFirstResult(first)
+                    .setMaxResults(max)
+                    .getResultList();
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            throw new IllegalStateException(ex);
         }
     }
     
     @Override
     public int contar(){
-        return getEntityManager().createQuery(""
-                + "SELECT COUNT(*) e "
-                + "FROM " + entity.getSimpleName() + " e"
-                , entity)
-                .getMaxResults();
+        return getEntityManager().createQuery(
+                "SELECT COUNT(e) FROM " + entity.getSimpleName() + " e",
+                Long.class)
+                .getSingleResult()
+                .intValue();
     }
     
     

@@ -38,5 +38,15 @@ public class TipoMedioContactoModel extends ModelHandler<TipoMedioContacto> {
         return new TipoMedioContacto();
     }
 
+    @Override
+    public TipoMedioContacto getRegistroById(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Object getIdByRegistro(TipoMedioContacto registro) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     
 }

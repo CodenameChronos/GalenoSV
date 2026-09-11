@@ -33,5 +33,15 @@ public class ConsultaModel extends ModelHandler<Consulta> {
     public Consulta instanciarRegistro() {
         return new Consulta();
     }    
+
+    @Override
+    public Consulta getRegistroById(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Object getIdByRegistro(Consulta registro) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }

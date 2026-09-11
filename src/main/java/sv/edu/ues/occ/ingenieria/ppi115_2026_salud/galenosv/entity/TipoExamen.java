@@ -4,19 +4,17 @@
  */
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity;
 
-import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
@@ -26,8 +24,8 @@ import java.util.UUID;
  *
  * @author kardia
  */
-@Entity
-@Table(name = "tipo_examen", catalog = "clinica", schema = "public")
+    @Entity
+@Table(name = "tipo_examen", schema = "public")
 @NamedQueries({
     @NamedQuery(name = "TipoExamen.findAll", query = "SELECT t FROM TipoExamen t"),
     @NamedQuery(name = "TipoExamen.findByNombre", query = "SELECT t FROM TipoExamen t WHERE t.nombre = :nombre"),
@@ -37,11 +35,8 @@ public class TipoExamen implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
-    @Lob
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_tipo_examen")
-    @Convert(converter = UUIDConverter.class)
     private UUID idTipoExamen;
     @Size(min = 3, max = 2147483647)
     @Column(name = "nombre")
