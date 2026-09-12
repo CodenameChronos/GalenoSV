@@ -15,13 +15,14 @@
                 <p:commandButton value="Nuevo" rendered="#{tipoExamenModel.estado=='NINGUNO'}"
                               styleClass="ui-button-raised ui-button-flat"
                               actionListener="#{tipoExamenModel.nuevo}"
-                              update="pnlCrear pnlData"/>
+                              process="@this" update="pnlCrear pnlData" />
                 <p:dataTable value="#{tipoExamenModel.lazyModel}" var="r" lazy="true"
                              selectionMode="single" selection="#{tipoExamenModel.registroActual}"
                              cellNavigation="true"
                              paginator="true" rows="10" rowKey="#{r.idTipoExamen}"
-                             rendered="#{tipoExamenModel.estado=='NINGUNO'}">
-                    <p:ajax event="rowSelect" listener="#{tipoExamenModel.seleccionar}" update=":frmTipoExamen:pnlCrear"/>
+                             rendered="#{tipoExamenModel.estado=='NINGUNO' or tipoExamenModel.estado=='MODIFICAR'}">
+                    <p:ajax event="rowSelect" listener="#{tipoExamenModel.seleccionar}" 
+                            update=":frmTipoExamen:pnlCrear :frmTipoExamen:pnlData"/>
                     <p:column headerText="Codigo">
                         <h:outputText value="#{r.idTipoExamen}" />
                     </p:column>
@@ -56,11 +57,14 @@
                               styleClass="ui-button-raised ui-button-flat"
                               actionListener="#{tipoExamenModel.guardarHandler}"
                               update="pnlCrear pnlData"/>
+                <p:commandButton value="Eliminar" rendered="#{tipoExamenModel.estado=='MODIFICAR'}" 
+                                 styleClass="ui-button-raised ui-button-danger"
+                                 actionListener="#{tipoExamenModel.eliminarHandler}"
+                                 update="pnlCrear pnlData"/>
                 <p:commandButton value="Cancelar" rendered="#{tipoExamenModel.estado=='CREAR' or tipoExamenModel.estado=='MODIFICAR'}"
                               styleClass="ui-button-raised ui-button-secondary ui-button-flat"
                               actionListener="#{tipoExamenModel.cancelarHandler}"
-                              immediate="true"
-                              update="pnlCrear pnlData"/>
+                              process="@this" update="pnlCrear pnlData"/>
             </h:panelGroup>
         </h:form>
     </h:body>

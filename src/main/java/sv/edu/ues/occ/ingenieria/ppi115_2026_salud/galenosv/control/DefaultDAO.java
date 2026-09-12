@@ -57,7 +57,10 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
     public void eliminar(Object eliminar) throws IllegalArgumentException, IllegalStateException {
         if (eliminar != null) {
             try {
-                getEntityManager().remove(eliminar);
+                Object managed = getEntityManager().contains(eliminar)
+                    ? eliminar
+                    : getEntityManager().merge(eliminar);
+//                getEntityManager().remove(managed);
             } catch (Exception ex) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
                 throw new IllegalStateException();

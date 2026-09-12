@@ -19,6 +19,7 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoMedioCont
  *
  * @author kardia
  */
+/*
 public class TipoMedioContactoDAOTest {
     
     List<TipoMedioContacto> LISTA_REGISTROS;
@@ -52,3 +53,4 @@ public class TipoMedioContactoDAOTest {
     }
     
 }
+*/

@@ -50,7 +50,6 @@ public abstract class ModelHandler<T> implements ModelHandlerInterface<T>, Seria
                 getDAO().actualizar(registroActual);
             }
             this.estado = ESTADO_CRUD.NINGUNO;
-            //obtenerRegistros();
         }  catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
             throw new IllegalStateException(ex);
@@ -63,7 +62,6 @@ public abstract class ModelHandler<T> implements ModelHandlerInterface<T>, Seria
         try {
             getDAO().eliminar(registroActual);
             estado = ESTADO_CRUD.NINGUNO;
-            //obtenerRegistros();
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
             throw new IllegalStateException(ex);
@@ -73,7 +71,6 @@ public abstract class ModelHandler<T> implements ModelHandlerInterface<T>, Seria
     @Override
     public void cancelarHandler(ActionEvent ae) {
         this.estado = ESTADO_CRUD.NINGUNO;
-        this.registroActual = instanciarRegistro();
     }
     
     @Override
@@ -92,8 +89,8 @@ public abstract class ModelHandler<T> implements ModelHandlerInterface<T>, Seria
     }
 
     public void seleccionar(SelectEvent<T> registro) {
-        this.registroActual = registro.getObject();
         this.estado = ESTADO_CRUD.MODIFICAR;
+        this.registroActual = registro.getObject();
     }
     
     public List<T> getRegistros() {
