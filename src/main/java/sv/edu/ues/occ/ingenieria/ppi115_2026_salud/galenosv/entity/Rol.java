@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity;
 
 import jakarta.persistence.Column;
@@ -19,12 +15,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
-/**
- *
- * @author kardia
- */
 @Entity
-@Table(name = "rol", catalog = "clinica", schema = "public")
+@Table(name = "rol", schema = "public")
 @NamedQueries({
     @NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r"),
     @NamedQuery(name = "Rol.findByNombre", query = "SELECT r FROM Rol r WHERE r.nombre = :nombre"),

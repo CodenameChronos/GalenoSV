@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity;
 
 import jakarta.persistence.Column;
@@ -19,12 +15,9 @@ import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.UUID;
 
-/**
- *
- * @author kardia
- */
+
 @Entity
-@Table(name = "documento", catalog = "clinica", schema = "public")
+@Table(name = "documento", schema = "public")
 @NamedQueries({
     @NamedQuery(name = "Documento.findAll", query = "SELECT d FROM Documento d"),
     @NamedQuery(name = "Documento.findByValor", query = "SELECT d FROM Documento d WHERE d.valor = :valor"),
