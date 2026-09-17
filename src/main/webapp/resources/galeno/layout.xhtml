@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="jakarta.faces.composite"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="primefaces">
+
+    <cc:interface>
+        <cc:facet name="workspace"/>
+    </cc:interface>
+
+    <cc:implementation>
+
+        <div class="ui-g">
+
+            <!-- Header -->
+            <div class="ui-g-12">
+
+                <div class="ui-g-4">
+                    <p:graphicImage
+                        library="imagenes"
+                        name="nombreIcono.png"/>
+                </div>
+
+                <div class="ui-g-4">
+                    <h1>
+                        <h:outputText value="Galeno-SV"/>
+                    </h1>
+                </div>
+
+                <div class="ui-g-4">
+                    <!-- Menu -->
+                </div>
+
+            </div>
+
+            <!-- Contenido -->
+            <div class="ui-g-12">
+
+                <!-- Navegación -->
+                <div class="ui-g-2">
+
+                    <p:link
+                        value="Tipo de Examen"
+                        href="#{request.contextPath}/paginas/TipoExamen.jsf"/>
+
+                </div>
+
+                <!-- Workspace -->
+                <div class="ui-g-10">
+                    <cc:renderFacet name="workspace"/>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="ui-g-12">
+
+                <h:outputText
+                    value="© 2026 Galeno-SV. Todos los derechos reservados."/>
+
+            </div>
+
+        </div>
+
+    </cc:implementation>
+
+</html>
