@@ -18,13 +18,15 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
     public DefaultDAO(Class<T> entity) {
         this.entity = entity;
     }
-    
+
     /**
-     * Persiste un nuevo registro en la base de datos utilizando el EntityManager.
+     * Persiste un nuevo registro en la base de datos utilizando el
+     * EntityManager.
      *
      * @param registro El objeto que se desea almacenar. No debe ser nulo.
      * @throws IllegalArgumentException si el objeto proporcionado es nulo.
-     * @throws IllegalStateException si ocurre un error durante la operación de persistencia.
+     * @throws IllegalStateException si ocurre un error durante la operación de
+     * persistencia.
      */
     @Override
     public void crear(Object registro) throws IllegalArgumentException, IllegalStateException {
@@ -40,13 +42,16 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
         }
 
     }
-    
+
     /**
-     * Actualiza un registro existente en la base de datos utilizando el EntityManager.
+     * Actualiza un registro existente en la base de datos utilizando el
+     * EntityManager.
      *
-     * @param nuevo El objeto con los nuevos datos a fusionar o actualizar. No debe ser nulo.
+     * @param nuevo El objeto con los nuevos datos a fusionar o actualizar. No
+     * debe ser nulo.
      * @throws IllegalArgumentException si el objeto proporcionado es nulo.
-     * @throws IllegalStateException si ocurre un error durante la operación de merge.
+     * @throws IllegalStateException si ocurre un error durante la operación de
+     * merge.
      */
     @Override
     public void actualizar(Object nuevo) throws IllegalArgumentException, IllegalStateException {
@@ -62,22 +67,24 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
         }
 
     }
-    
-    /**
-     * Elimina un registro existente de la base de datos utilizando el EntityManager.
-     *
-     * @param eliminar El objeto que se desea eliminar. No debe ser nulo y debe estar gestionado (managed).
-     * @throws IllegalArgumentException si el objeto proporcionado es nulo.
-     * @throws IllegalStateException si ocurre un error durante la operación de eliminación.
-     */
 
+    /**
+     * Elimina un registro existente de la base de datos utilizando el
+     * EntityManager.
+     *
+     * @param eliminar El objeto que se desea eliminar. No debe ser nulo y debe
+     * estar gestionado (managed).
+     * @throws IllegalArgumentException si el objeto proporcionado es nulo.
+     * @throws IllegalStateException si ocurre un error durante la operación de
+     * eliminación.
+     */
     @Override
     public void eliminar(Object eliminar) throws IllegalArgumentException, IllegalStateException {
         if (eliminar != null) {
             try {
                 Object managed = getEntityManager().contains(eliminar)
-                    ? eliminar
-                    : getEntityManager().merge(eliminar);
+                        ? eliminar
+                        : getEntityManager().merge(eliminar);
 //                getEntityManager().remove(managed);
             } catch (Exception ex) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
@@ -90,12 +97,17 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
     }
 
     /**
-     * Busca y recupera una entidad de la base de datos utilizando su identificador único (UUID).
+     * Busca y recupera una entidad de la base de datos utilizando su
+     * identificador único (UUID).
      *
-     * @param uuid El identificador único del registro que se desea buscar. No debe ser nulo.
-     * @return El objeto encontrado que corresponde a la entidad, o null si no existe.
-     * @throws IllegalArgumentException si el identificador proporcionado es nulo.
-     * @throws IllegalStateException si ocurre un error durante la operación de consulta.
+     * @param uuid El identificador único del registro que se desea buscar. No
+     * debe ser nulo.
+     * @return El objeto encontrado que corresponde a la entidad, o null si no
+     * existe.
+     * @throws IllegalArgumentException si el identificador proporcionado es
+     * nulo.
+     * @throws IllegalStateException si ocurre un error durante la operación de
+     * consulta.
      */
     @Override
     public Object buscar(Object uuid) throws IllegalArgumentException, IllegalStateException {
@@ -111,17 +123,21 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
         }
 
     }
-    
-    /**
-     * Obtiene un rango paginado de registros de la entidad utilizando el EntityManager.
-     *
-     * @param first El índice del primer resultado que se desea obtener (debe ser mayor o igual a 0).
-     * @param max El número máximo de resultados que se deben devolver 
-     * (debe ser @return Una lista con los elementos encontrados dentro del rango especificado.
-     * @throws IllegalArgumentException si los parámetros de paginación no son válidos.
-     * @throws IllegalStateException si ocurre un error durante la ejecución de la consulta.
-     */
 
+    /**
+     * Obtiene un rango paginado de registros de la entidad utilizando el
+     * EntityManager.
+     *
+     * @param first El índice del primer resultado que se desea obtener (debe
+     * ser mayor o igual a 0).
+     * @param max El número máximo de resultados que se deben devolver (debe ser
+     * @return Una lista con los elementos encontrados dentro del rango
+     * especificado.
+     * @throws IllegalArgumentException si los parámetros de paginación no son
+     * válidos.
+     * @throws IllegalStateException si ocurre un error durante la ejecución de
+     * la consulta.
+     */
     @Override
     public List<T> findRange(int first, int max) throws IllegalArgumentException, IllegalStateException {
         if (first < 0 || max < 0) {
@@ -132,7 +148,7 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
         }
         try {
             return getEntityManager().createQuery(
-                    "SELECT e FROM " + entity.getSimpleName() + " e",
+                    "SELECT e FROM " + entity.getSimpleName() + " e ORDER BY e.id" + entity.getSimpleName(),
                     entity)
                     .setFirstResult(first)
                     .setMaxResults(max)
@@ -142,22 +158,20 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
             throw new IllegalStateException(ex);
         }
     }
-    
+
     /**
      * Cuenta el número total de registros existentes para la entidad en la base
      * de datos.
      *
      * @return La cantidad total de registros de la entidad.
      */
-    
     @Override
-    public int contar(){
+    public int contar() {
         return getEntityManager().createQuery(
                 "SELECT COUNT(e) FROM " + entity.getSimpleName() + " e",
                 Long.class)
                 .getSingleResult()
                 .intValue();
     }
-    
-    
+
 }

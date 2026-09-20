@@ -1,71 +1,85 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
-      xmlns:p="primefaces">
+      xmlns:p="primefaces"
+      xmlns:g="jakarta.faces.composite/galeno">
+
     <h:head>
-        <title>Tipo Examen</title>
+        <title>Tipo Examen - Galeno-SV</title>
     </h:head>
+
     <h:body>
-        <h1>Tipo Examen</h1>
 
-        <h:form id="frmTipoExamen">
-            <h:panelGroup id="pnlData" layout="block">
-                <p:commandButton value="Nuevo" rendered="#{tipoExamenModel.estado=='NINGUNO'}"
-                              styleClass="ui-button-raised ui-button-flat"
-                              actionListener="#{tipoExamenModel.nuevo}"
-                              process="@this" update="pnlCrear pnlData" />
-                <p:dataTable value="#{tipoExamenModel.lazyModel}" var="r" lazy="true"
-                             selectionMode="single" selection="#{tipoExamenModel.registroActual}"
-                             cellNavigation="true"
-                             paginator="true" rows="10" rowKey="#{r.idTipoExamen}"
-                             rendered="#{tipoExamenModel.estado=='NINGUNO' or tipoExamenModel.estado=='MODIFICAR'}">
-                    <p:ajax event="rowSelect" listener="#{tipoExamenModel.seleccionar}" 
-                            update=":frmTipoExamen:pnlCrear :frmTipoExamen:pnlData"/>
+        <g:layout>
+
+            <f:facet name="workspace">
+
+                <g:crud
+                    titulo="Tipo Examen"
+                    modelo="#{tipoExamenModel}"
+                    rowKey="#{r.idTipoExamen}">
+
+                    <!-- Columnas de la tabla (variable de fila: r) -->
                     <p:column headerText="Codigo">
-                        <h:outputText value="#{r.idTipoExamen}" />
+                        <h:outputText value="#{r.idTipoExamen}"/>
                     </p:column>
+
                     <p:column headerText="Nombre">
-                        <h:outputText value="#{r.nombre}" />
+                        <h:outputText value="#{r.nombre}"/>
                     </p:column>
+
                     <p:column headerText="Activo">
-                        <h:outputText value="#{r.activo  ? 'Activo' : 'Inactivo'}" />
+                        <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
                     </p:column>
+
                     <p:column headerText="Observaciones">
-                        <h:outputText value="#{r.observaciones}" />
+                        <h:outputText value="#{r.observaciones}"/>
                     </p:column>
-                </p:dataTable>
-            </h:panelGroup>
-            <h:panelGroup id="pnlCrear" layout="block">
-                <p:panelGrid columns="4" layout="grid"
-                             columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
-                             contentStyleClass="align-items-baseline ui-fluid"
-                             rendered="#{tipoExamenModel.estado=='CREAR' or tipoExamenModel.estado=='MODIFICAR'}">
 
-                    <p:outputLabel for="nombre" value="Nombre tipo examen" />
-                    <p:inputText id="nombre" value="#{tipoExamenModel.registroActual.nombre}" />
+                    <!-- Formulario de edicion -->
+                    <f:facet name="formulario">
 
-                    <p:outputLabel for="activo" value="Activo" />
-                    <p:toggleSwitch id="activo" value="#{tipoExamenModel.registroActual.activo}"/>
+                        <p:panelGrid
+                            columns="4"
+                            layout="grid"
+                            columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                            contentStyleClass="align-items-baseline ui-fluid">
 
-                    <p:outputLabel for="observaciones" value="Observaciones" />
-                    <p:inputTextarea id="observaciones" value="#{tipoExamenModel.registroActual.observaciones}"/>
+                            <p:outputLabel
+                                for="nombre"
+                                value="Nombre tipo examen"/>
 
-                </p:panelGrid>
-                <p:commandButton value="Guardar" rendered="#{tipoExamenModel.estado=='CREAR' or tipoExamenModel.estado=='MODIFICAR'}"
-                              styleClass="ui-button-raised ui-button-flat"
-                              actionListener="#{tipoExamenModel.guardarHandler}"
-                              update="pnlCrear pnlData"/>
-                <p:commandButton value="Eliminar" rendered="#{tipoExamenModel.estado=='MODIFICAR'}" 
-                                 styleClass="ui-button-raised ui-button-danger"
-                                 actionListener="#{tipoExamenModel.eliminarHandler}"
-                                 update="pnlCrear pnlData"/>
-                <p:commandButton value="Cancelar" rendered="#{tipoExamenModel.estado=='CREAR' or tipoExamenModel.estado=='MODIFICAR'}"
-                              styleClass="ui-button-raised ui-button-secondary ui-button-flat"
-                              actionListener="#{tipoExamenModel.cancelarHandler}"
-                              process="@this" update="pnlCrear pnlData"/>
-            </h:panelGroup>
-        </h:form>
+                            <p:inputText
+                                id="nombre"
+                                value="#{tipoExamenModel.registroActual.nombre}"/>
+
+                            <p:outputLabel
+                                for="activo"
+                                value="Activo"/>
+
+                            <p:toggleSwitch
+                                id="activo"
+                                value="#{tipoExamenModel.registroActual.activo}"/>
+
+                            <p:outputLabel
+                                for="observaciones"
+                                value="Observaciones"/>
+
+                            <p:inputTextarea
+                                id="observaciones"
+                                value="#{tipoExamenModel.registroActual.observaciones}"/>
+
+                        </p:panelGrid>
+
+                    </f:facet>
+
+                </g:crud>
+
+            </f:facet>
+
+        </g:layout>
+
     </h:body>
 </html>
