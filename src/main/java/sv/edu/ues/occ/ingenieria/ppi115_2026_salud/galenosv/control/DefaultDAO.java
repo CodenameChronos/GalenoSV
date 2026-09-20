@@ -72,28 +72,29 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
      * Elimina un registro existente de la base de datos utilizando el
      * EntityManager.
      *
-     * @param eliminar El objeto que se desea eliminar. No debe ser nulo y debe
-     * estar gestionado (managed).
+     * Si el objeto recibido no está gestionado (por ejemplo, porque proviene de
+     * una selección en la vista y su contexto de persistencia ya se cerró), se
+     * incorpora primero al contexto con merge, ya que remove solo acepta
+     * entidades gestionadas.
+     *
+     * @param eliminar El objeto que se desea eliminar. No debe ser nulo.
      * @throws IllegalArgumentException si el objeto proporcionado es nulo.
      * @throws IllegalStateException si ocurre un error durante la operación de
      * eliminación.
      */
     @Override
     public void eliminar(Object eliminar) throws IllegalArgumentException, IllegalStateException {
-        if (eliminar != null) {
-            try {
-                Object managed = getEntityManager().contains(eliminar)
-                        ? eliminar
-                        : getEntityManager().merge(eliminar);
-//                getEntityManager().remove(managed);
-            } catch (Exception ex) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
-                throw new IllegalStateException();
-            }
-        } else {
+        if (eliminar == null) {
             throw new IllegalArgumentException("El objeto a eliminar no puede ser nulo");
         }
-
+        try {
+            EntityManager em = getEntityManager();
+            Object managed = em.contains(eliminar) ? eliminar : em.merge(eliminar);
+            em.remove(managed);
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            throw new IllegalStateException("No se pudo eliminar el registro", ex);
+        }
     }
 
     /**

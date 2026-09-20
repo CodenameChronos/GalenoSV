@@ -42,9 +42,12 @@
                 <!-- Navegación -->
                 <div class="ui-g-2">
 
-                    <p:link
-                        value="Tipo de Examen"
-                        href="#{request.contextPath}/paginas/TipoExamen.jsf"/>
+                    <p:menu>
+                        <p:menuitem value="Tipo de Examen"
+                                    url="#{request.contextPath}/paginas/TipoExamen.jsf"/>
+                        <p:menuitem value="Procedimiento"
+                                    url="#{request.contextPath}/paginas/Procedimiento.jsf"/>
+                    </p:menu>
 
                 </div>
 
