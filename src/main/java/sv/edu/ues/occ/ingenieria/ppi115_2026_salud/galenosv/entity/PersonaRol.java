@@ -14,9 +14,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -27,24 +30,35 @@ import java.util.UUID;
 public class PersonaRol implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_persona_rol")
     private UUID idPersonaRol;
-    @Column(name = "fecha_creacion")
+
+    @NotNull(message = "La fecha de creación es obligatoria")
+    @PastOrPresent(message = "La fecha de creación no puede ser una fecha futura")
+    @Column(name = "fecha_creacion", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaCreacion;
+    private Date fechaCreacion = new Date();
+
     @OneToMany(mappedBy = "idPersonaRol", fetch = FetchType.LAZY)
     private List<ConsultaProcedimientoPaso> consultaProcedimientoPasoList;
+
     @JoinColumn(name = "id_clinica", referencedColumnName = "id_clinica")
     @ManyToOne(fetch = FetchType.LAZY)
     private Clinica idClinica;
-    @JoinColumn(name = "id_persona", referencedColumnName = "id_persona")
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @NotNull(message = "La persona es obligatoria")
+    @JoinColumn(name = "id_persona", referencedColumnName = "id_persona", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Persona idPersona;
-    @JoinColumn(name = "id_rol", referencedColumnName = "id_rol")
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @NotNull(message = "El rol es obligatorio")
+    @JoinColumn(name = "id_rol", referencedColumnName = "id_rol", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Rol idRol;
+
     @OneToMany(mappedBy = "idPersonaRol", fetch = FetchType.LAZY)
     private List<Consulta> consultaList;
 
@@ -113,27 +127,26 @@ public class PersonaRol implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idPersonaRol != null ? idPersonaRol.hashCode() : 0);
-        return hash;
+        return (idPersonaRol != null) ? idPersonaRol.hashCode() : super.hashCode();
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (this == object) {
+            return true;
+        }
         if (!(object instanceof PersonaRol)) {
             return false;
         }
         PersonaRol other = (PersonaRol) object;
-        if ((this.idPersonaRol == null && other.idPersonaRol != null) || (this.idPersonaRol != null && !this.idPersonaRol.equals(other.idPersonaRol))) {
+        if (this.idPersonaRol == null || other.idPersonaRol == null) {
             return false;
         }
-        return true;
+        return Objects.equals(this.idPersonaRol, other.idPersonaRol);
     }
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.pp115_2026_salud.galenosv.resources.PersonaRol[ idPersonaRol=" + idPersonaRol + " ]";
+        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.PersonaRol[ idPersonaRol=" + idPersonaRol + " ]";
     }
-    
 }

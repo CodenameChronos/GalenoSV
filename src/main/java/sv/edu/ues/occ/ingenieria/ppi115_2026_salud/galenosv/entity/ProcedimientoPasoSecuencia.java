@@ -7,13 +7,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -24,18 +27,24 @@ import java.util.UUID;
 public class ProcedimientoPasoSecuencia implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_procedimiento_paso_secuencia")
     private UUID idProcedimientoPasoSecuencia;
-    @Lob
-    @Column(name = "id_procedimiento_paso_referencia")
+
+    @NotNull(message = "El ID del paso de referencia es obligatorio")
+    @Column(name = "id_procedimiento_paso_referencia", nullable = false)
     private UUID idProcedimientoPasoReferencia;
-    @Size(max = 20)
-    @Column(name = "tipo_secuencia")
+
+    @NotBlank(message = "El tipo de secuencia es obligatorio")
+    @Size(max = 20, message = "El tipo de secuencia no debe exceder los 20 caracteres")
+    @Column(name = "tipo_secuencia", nullable = false, length = 20)
     private String tipoSecuencia;
-    @JoinColumn(name = "id_procedimiento_paso", referencedColumnName = "id_procedimiento_paso")
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @NotNull(message = "El paso de procedimiento asociado es obligatorio")
+    @JoinColumn(name = "id_procedimiento_paso", referencedColumnName = "id_procedimiento_paso", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private ProcedimientoPaso idProcedimientoPaso;
 
     public ProcedimientoPasoSecuencia() {
@@ -43,6 +52,14 @@ public class ProcedimientoPasoSecuencia implements Serializable {
 
     public ProcedimientoPasoSecuencia(UUID idProcedimientoPasoSecuencia) {
         this.idProcedimientoPasoSecuencia = idProcedimientoPasoSecuencia;
+    }
+
+    @AssertTrue(message = "Un paso de procedimiento no puede ser su propia referencia")
+    public boolean isReferenciaValida() {
+        if (idProcedimientoPaso == null || idProcedimientoPaso.getIdProcedimientoPaso() == null || idProcedimientoPasoReferencia == null) {
+            return true;
+        }
+        return !idProcedimientoPasoReferencia.equals(idProcedimientoPaso.getIdProcedimientoPaso());
     }
 
     public UUID getIdProcedimientoPasoSecuencia() {
@@ -66,7 +83,7 @@ public class ProcedimientoPasoSecuencia implements Serializable {
     }
 
     public void setTipoSecuencia(String tipoSecuencia) {
-        this.tipoSecuencia = tipoSecuencia;
+        this.tipoSecuencia = (tipoSecuencia != null && !tipoSecuencia.isBlank()) ? tipoSecuencia.trim() : null;
     }
 
     public ProcedimientoPaso getIdProcedimientoPaso() {
@@ -79,27 +96,26 @@ public class ProcedimientoPasoSecuencia implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idProcedimientoPasoSecuencia != null ? idProcedimientoPasoSecuencia.hashCode() : 0);
-        return hash;
+        return (idProcedimientoPasoSecuencia != null) ? idProcedimientoPasoSecuencia.hashCode() : super.hashCode();
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (this == object) {
+            return true;
+        }
         if (!(object instanceof ProcedimientoPasoSecuencia)) {
             return false;
         }
         ProcedimientoPasoSecuencia other = (ProcedimientoPasoSecuencia) object;
-        if ((this.idProcedimientoPasoSecuencia == null && other.idProcedimientoPasoSecuencia != null) || (this.idProcedimientoPasoSecuencia != null && !this.idProcedimientoPasoSecuencia.equals(other.idProcedimientoPasoSecuencia))) {
+        if (this.idProcedimientoPasoSecuencia == null || other.idProcedimientoPasoSecuencia == null) {
             return false;
         }
-        return true;
+        return Objects.equals(this.idProcedimientoPasoSecuencia, other.idProcedimientoPasoSecuencia);
     }
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.pp115_2026_salud.galenosv.resources.ProcedimientoPasoSecuencia[ idProcedimientoPasoSecuencia=" + idProcedimientoPasoSecuencia + " ]";
+        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ProcedimientoPasoSecuencia[ idProcedimientoPasoSecuencia=" + idProcedimientoPasoSecuencia + " ]";
     }
-    
 }
