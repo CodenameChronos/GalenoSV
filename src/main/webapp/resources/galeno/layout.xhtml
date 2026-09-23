@@ -3,6 +3,7 @@
 <ui:composition 
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="jakarta.faces.composite"
+      xmlns:f="jakarta.faces.core"
       xmlns:h="jakarta.faces.html"
       xmlns:p="primefaces"
       xmlns:ui="jakarta.faces.facelets">
@@ -30,8 +31,35 @@
                     </h1>
                 </div>
 
+                <!-- Selector de idioma (i18n) -->
                 <div class="ui-g-4">
-                    <!-- Menu -->
+
+                    <h:form id="frmIdioma">
+
+                        <p:outputLabel
+                            for="idioma"
+                            value="#{msg['idioma.selector.etiqueta']}"/>
+
+                        <p:selectOneMenu
+                            id="idioma"
+                            value="#{localeBean.idioma}">
+
+                            <f:selectItem
+                                itemValue="es"
+                                itemLabel="#{msg['idioma.es']}"/>
+
+                            <f:selectItem
+                                itemValue="en"
+                                itemLabel="#{msg['idioma.en']}"/>
+
+                            <p:ajax
+                                process="@this"
+                                update="@all"/>
+
+                        </p:selectOneMenu>
+
+                    </h:form>
+
                 </div>
 
             </div>
@@ -43,9 +71,9 @@
                 <div class="ui-g-2">
 
                     <p:menu>
-                        <p:menuitem value="Tipo de Examen"
+                        <p:menuitem value="#{msg['menu.tipoExamen']}"
                                     url="#{request.contextPath}/paginas/TipoExamen.jsf"/>
-                        <p:menuitem value="Procedimiento"
+                        <p:menuitem value="#{msg['menu.procedimiento']}"
                                     url="#{request.contextPath}/paginas/Procedimiento.jsf"/>
                     </p:menu>
 
@@ -62,7 +90,7 @@
             <div class="ui-g-12">
 
                 <h:outputText
-                    value="© 2026 Galeno-SV. Todos los derechos reservados."/>
+                    value="#{msg['footer.derechos']}"/>
 
             </div>
 

@@ -29,7 +29,16 @@
             <default-locale>es</default-locale>
             <supported-locale>es</supported-locale>
             <supported-locale>en</supported-locale>
-            <supported-locale>zh</supported-locale>
+            <supported-locale>fr</supported-locale>
         </locale-config>
+        <resource-bundle>
+            <base-name>jakarta.faces.messages</base-name>
+            <var>msg</var>
+        </resource-bundle>
     </application>
+    <lifecycle>
+    <phase-listener>
+        sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.jsf.LocaleListener
+    </phase-listener>
+</lifecycle>
 </faces-config>

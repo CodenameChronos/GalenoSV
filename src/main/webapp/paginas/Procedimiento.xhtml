@@ -7,7 +7,7 @@
       xmlns:g="jakarta.faces.composite/galeno">
 
     <h:head>
-        <title>Procedimiento - Galeno-SV</title>
+        <title>#{msg['procedimiento.titulo']} - Galeno-SV</title>
     </h:head>
 
     <h:body>
@@ -16,25 +16,27 @@
 
             <f:facet name="workspace">
 
+                <h:form id = "frmProcedimiento">
+                
                     <g:crud
-                        titulo="Procedimiento"
+                        titulo="#{msg['procedimiento.titulo']}"
                         modelo="#{procedimientoModel}"
                         rowKey="#{r.idProcedimiento}">
 
                         <!-- Columnas de la tabla (variable de fila: r) -->
-                        <p:column headerText="Codigo">
+                        <p:column headerText="#{msg['campo.comun.codigo']}">
                             <h:outputText value="#{r.idProcedimiento}"/>
                         </p:column>
 
-                        <p:column headerText="Nombre">
+                        <p:column headerText="#{msg['procedimiento.nombre']}">
                             <h:outputText value="#{r.nombre}"/>
                         </p:column>
 
-                        <p:column headerText="Activo">
+                        <p:column headerText="#{msg['campo.comun.activo']}">
                             <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
                         </p:column>
 
-                        <p:column headerText="Observaciones">
+                        <p:column headerText="#{msg['campo.comun.observaciones']}">
                             <h:outputText value="#{r.observaciones}"/>
                         </p:column>
 
@@ -49,7 +51,7 @@
 
                                 <p:outputLabel
                                     for="nombre"
-                                    value="Nombre procedimiento"/>
+                                    value="#{msg['procedimiento.nombre']}"/>
 
                                 <p:inputText
                                     id="nombre"
@@ -57,7 +59,7 @@
 
                                 <p:outputLabel
                                     for="activo"
-                                    value="Activo"/>
+                                    value="#{msg['campo.comun.activo']}"/>
 
                                 <p:toggleSwitch
                                     id="activo"
@@ -65,7 +67,7 @@
 
                                 <p:outputLabel
                                     for="observaciones"
-                                    value="Observaciones"/>
+                                    value="#{msg['campo.comun.observaciones']}"/>
 
                                 <p:inputTextarea
                                     id="observaciones"
@@ -76,6 +78,8 @@
                         </f:facet>
 
                     </g:crud>
+                    
+                </h:form>>
 
             </f:facet>
 

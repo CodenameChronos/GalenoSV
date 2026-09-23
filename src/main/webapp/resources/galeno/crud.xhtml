@@ -8,32 +8,6 @@
 
     <cc:interface>
 
-        <!--
-            g:crud - Plantilla CRUD reutilizable de Galeno-SV.
-
-            Encapsula el flujo completo de una pantalla de mantenimiento:
-            tabla paginada (lazy) + panel de edicion + botones de accion.
-            La pantalla concreta solo aporta lo que cambia entre entidades:
-            las columnas de la tabla y los campos del formulario.
-
-            Contrato que debe cumplir el bean indicado en el atributo modelo
-            (todos los modelos que heredan de ModelHandler ya lo cumplen):
-              - estado          : ESTADO_CRUD (NINGUNO, CREAR, MODIFICAR)
-              - lazyModel       : LazyDataModel de la entidad
-              - registroActual  : entidad en edicion / fila seleccionada
-              - nuevo()         : pasa a estado CREAR
-              - seleccionar()   : listener de rowSelect
-              - guardarHandler(ActionEvent)
-              - eliminarHandler(ActionEvent)
-              - cancelarHandler(ActionEvent)
-
-            Convenciones:
-              - La variable de fila de la tabla siempre se llama r.
-              - Los hijos directos del tag deben ser p:column (van dentro del p:dataTable).
-              - El formulario se declara en el facet formulario.
-              - El composite ya incluye su propio h:form: no anidarlo dentro de otro.
-        -->
-
         <cc:attribute
             name="modelo"
             required="true"
@@ -68,79 +42,75 @@
             <h:outputText value="#{cc.attrs.titulo}"/>
         </h1>
 
-        <h:form id="frm">
+        <!-- Listado: visible en NINGUNO y MODIFICAR -->
+        <h:panelGroup id="pnlData" layout="block">
 
-            <!-- Listado: visible en NINGUNO y MODIFICAR -->
-            <h:panelGroup id="pnlData" layout="block">
+            <g:botonCrud
+                value="#{msg['boton.nuevo']}"
+                rendered="#{cc.attrs.modelo.estado=='NINGUNO'}"
+                styleClass="ui-button-raised ui-button-flat"
+                action="#{cc.attrs.modelo.nuevo}"
+                process="@this"
+                update="pnlCrear pnlData"/>
 
-                <g:botonCrud
-                    value="Nuevo"
-                    rendered="#{cc.attrs.modelo.estado=='NINGUNO'}"
-                    styleClass="ui-button-raised ui-button-flat"
-                    action="#{cc.attrs.modelo.nuevo}"
+            <p:dataTable
+                value="#{cc.attrs.modelo.lazyModel}"
+                var="r"
+                lazy="true"
+                selectionMode="single"
+                selection="#{cc.attrs.modelo.registroActual}"
+                cellNavigation="true"
+                paginator="true"
+                rows="#{cc.attrs.filas}"
+                rowKey="#{cc.attrs.rowKey}"
+                rendered="#{cc.attrs.modelo.estado=='NINGUNO' or cc.attrs.modelo.estado=='MODIFICAR'}">
+
+                <p:ajax
+                    event="rowSelect"
+                    listener="#{cc.attrs.modelo.seleccionar}"
                     process="@this"
                     update="pnlCrear pnlData"/>
 
-                <p:dataTable
-                    value="#{cc.attrs.modelo.lazyModel}"
-                    var="r"
-                    lazy="true"
-                    selectionMode="single"
-                    selection="#{cc.attrs.modelo.registroActual}"
-                    cellNavigation="true"
-                    paginator="true"
-                    rows="#{cc.attrs.filas}"
-                    rowKey="#{cc.attrs.rowKey}"
-                    rendered="#{cc.attrs.modelo.estado=='NINGUNO' or cc.attrs.modelo.estado=='MODIFICAR'}">
+                <!-- Columnas aportadas por la pantalla -->
+                <cc:insertChildren/>
 
-                    <p:ajax
-                        event="rowSelect"
-                        listener="#{cc.attrs.modelo.seleccionar}"
-                        process="@this"
-                        update="pnlCrear pnlData"/>
+            </p:dataTable>
 
-                    <!-- Columnas aportadas por la pantalla -->
-                    <cc:insertChildren/>
+        </h:panelGroup>
 
-                </p:dataTable>
+        <!-- Edicion: el contenedor pnlCrear siempre existe para poder actualizarse por AJAX -->
+        <h:panelGroup id="pnlCrear" layout="block">
 
-            </h:panelGroup>
+            <h:panelGroup
+                layout="block"
+                rendered="#{cc.attrs.modelo.estado=='CREAR' or cc.attrs.modelo.estado=='MODIFICAR'}">
 
-            <!-- Edicion: el contenedor pnlCrear siempre existe para poder actualizarse por AJAX -->
-            <h:panelGroup id="pnlCrear" layout="block">
+                <!-- Campos aportados por la pantalla -->
+                <cc:renderFacet name="formulario" required="true"/>
 
-                <h:panelGroup
-                    layout="block"
-                    rendered="#{cc.attrs.modelo.estado=='CREAR' or cc.attrs.modelo.estado=='MODIFICAR'}">
+                <g:botonCrud
+                    value="#{msg['boton.guardar']}"
+                    styleClass="ui-button-raised ui-button-flat"
+                    actionListener="#{cc.attrs.modelo.guardarHandler}"
+                    update="pnlCrear pnlData"/>
 
-                    <!-- Campos aportados por la pantalla -->
-                    <cc:renderFacet name="formulario" required="true"/>
+                <g:botonCrud
+                    value="#{msg['boton.eliminar']}"
+                    rendered="#{cc.attrs.modelo.estado=='MODIFICAR'}"
+                    styleClass="ui-button-raised ui-button-danger"
+                    actionListener="#{cc.attrs.modelo.eliminarHandler}"
+                    update="pnlCrear pnlData"/>
 
-                    <g:botonCrud
-                        value="Guardar"
-                        styleClass="ui-button-raised ui-button-flat"
-                        actionListener="#{cc.attrs.modelo.guardarHandler}"
-                        update="pnlCrear pnlData"/>
-
-                    <g:botonCrud
-                        value="Eliminar"
-                        rendered="#{cc.attrs.modelo.estado=='MODIFICAR'}"
-                        styleClass="ui-button-raised ui-button-danger"
-                        actionListener="#{cc.attrs.modelo.eliminarHandler}"
-                        update="pnlCrear pnlData"/>
-
-                    <g:botonCrud
-                        value="Cancelar"
-                        styleClass="ui-button-raised ui-button-secondary ui-button-flat"
-                        actionListener="#{cc.attrs.modelo.cancelarHandler}"
-                        process="@this"
-                        update="pnlCrear pnlData"/>
-
-                </h:panelGroup>
+                <g:botonCrud
+                    value="#{msg['boton.cancelar']}"
+                    styleClass="ui-button-raised ui-button-secondary ui-button-flat"
+                    actionListener="#{cc.attrs.modelo.cancelarHandler}"
+                    process="@this"
+                    update="pnlCrear pnlData"/>
 
             </h:panelGroup>
 
-        </h:form>
+        </h:panelGroup>
 
     </cc:implementation>
 
