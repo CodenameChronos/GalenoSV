@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,12 +15,15 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
-
 
 @Entity
 @Table(name = "consulta", schema = "public")
@@ -32,25 +36,36 @@ import java.util.UUID;
 public class Consulta implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_consulta")
     private UUID idConsulta;
-    @Column(name = "fecha_inicio")
+
+    @NotNull(message = "La fecha de inicio de la consulta es obligatoria")
+    @PastOrPresent(message = "La fecha de inicio no puede ser una fecha futura")
+    @Column(name = "fecha_inicio", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaInicio;
+
+    @PastOrPresent(message = "La fecha de fin no puede ser una fecha futura")
     @Column(name = "fecha_fin")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaFin;
-    @Size(max = 2147483647)
-    @Column(name = "referencia_externa")
+
+    @Size(max = 255, message = "La referencia externa no debe exceder los 255 caracteres")
+    @Column(name = "referencia_externa", length = 255)
     private String referenciaExterna;
-    @Size(max = 2147483647)
-    @Column(name = "observaciones")
+
+    @Size(max = 2000, message = "Las observaciones no deben exceder los 2000 caracteres")
+    @Column(name = "observaciones", columnDefinition = "TEXT")
     private String observaciones;
-    @JoinColumn(name = "id_persona_rol", referencedColumnName = "id_persona_rol")
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @NotNull(message = "La persona asociada a la consulta es obligatoria")
+    @JoinColumn(name = "id_persona_rol", referencedColumnName = "id_persona_rol", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private PersonaRol idPersonaRol;
+
     @OneToMany(mappedBy = "idConsulta", fetch = FetchType.LAZY)
     private List<ConsultaProcedimiento> consultaProcedimientoList;
 
@@ -59,6 +74,13 @@ public class Consulta implements Serializable {
 
     public Consulta(UUID idConsulta) {
         this.idConsulta = idConsulta;
+    }
+
+    // --- Validación entre múltiples campos ---
+    @JsonbTransient
+    @AssertTrue(message = "La fecha de fin no puede ser anterior a la fecha de inicio")
+    public boolean isRangoFechasValido() {
+        return fechaInicio == null || fechaFin == null || !fechaFin.before(fechaInicio);
     }
 
     public UUID getIdConsulta() {
@@ -90,7 +112,7 @@ public class Consulta implements Serializable {
     }
 
     public void setReferenciaExterna(String referenciaExterna) {
-        this.referenciaExterna = referenciaExterna;
+        this.referenciaExterna = (referenciaExterna != null && !referenciaExterna.isBlank()) ? referenciaExterna.trim() : null;
     }
 
     public String getObservaciones() {
@@ -98,7 +120,7 @@ public class Consulta implements Serializable {
     }
 
     public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
+        this.observaciones = (observaciones != null && !observaciones.isBlank()) ? observaciones.trim() : null;
     }
 
     public PersonaRol getIdPersonaRol() {
@@ -119,27 +141,26 @@ public class Consulta implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idConsulta != null ? idConsulta.hashCode() : 0);
-        return hash;
+        return (idConsulta != null) ? idConsulta.hashCode() : super.hashCode();
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (this == object) {
+            return true;
+        }
         if (!(object instanceof Consulta)) {
             return false;
         }
         Consulta other = (Consulta) object;
-        if ((this.idConsulta == null && other.idConsulta != null) || (this.idConsulta != null && !this.idConsulta.equals(other.idConsulta))) {
+        if (this.idConsulta == null || other.idConsulta == null) {
             return false;
         }
-        return true;
+        return Objects.equals(this.idConsulta, other.idConsulta);
     }
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.pp115_2026_salud.galenosv.resources.Consulta[ idConsulta=" + idConsulta + " ]";
+        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Consulta[ idConsulta=" + idConsulta + " ]";
     }
-    
 }

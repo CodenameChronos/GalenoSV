@@ -11,10 +11,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
-
 
 @Entity
 @Table(name = "documento", schema = "public")
@@ -25,21 +27,29 @@ import java.util.UUID;
 public class Documento implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_documento")
     private UUID idDocumento;
-    @Size(max = 2147483647)
-    @Column(name = "valor")
+
+    @NotBlank(message = "El valor del documento es obligatorio")
+    @Size(max = 255, message = "El valor del documento no debe exceder los 255 caracteres")
+    @Column(name = "valor", nullable = false, length = 255)
     private String valor;
-    @Size(max = 2147483647)
-    @Column(name = "ruta_fisica")
+
+    @Size(max = 500, message = "La ruta física del documento no debe exceder los 500 caracteres")
+    @Column(name = "ruta_fisica", length = 500)
     private String rutaFisica;
-    @JoinColumn(name = "id_persona", referencedColumnName = "id_persona")
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @NotNull(message = "La persona asociada al documento es obligatoria")
+    @JoinColumn(name = "id_persona", referencedColumnName = "id_persona", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Persona idPersona;
-    @JoinColumn(name = "id_tipo_documento", referencedColumnName = "id_tipo_documento")
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @NotNull(message = "El tipo de documento es obligatorio")
+    @JoinColumn(name = "id_tipo_documento", referencedColumnName = "id_tipo_documento", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private TipoDocumento idTipoDocumento;
 
     public Documento() {
@@ -62,7 +72,7 @@ public class Documento implements Serializable {
     }
 
     public void setValor(String valor) {
-        this.valor = valor;
+        this.valor = (valor != null && !valor.isBlank()) ? valor.trim() : null;
     }
 
     public String getRutaFisica() {
@@ -70,7 +80,7 @@ public class Documento implements Serializable {
     }
 
     public void setRutaFisica(String rutaFisica) {
-        this.rutaFisica = rutaFisica;
+        this.rutaFisica = (rutaFisica != null && !rutaFisica.isBlank()) ? rutaFisica.trim() : null;
     }
 
     public Persona getIdPersona() {
@@ -91,27 +101,26 @@ public class Documento implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idDocumento != null ? idDocumento.hashCode() : 0);
-        return hash;
+        return (idDocumento != null) ? idDocumento.hashCode() : super.hashCode();
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (this == object) {
+            return true;
+        }
         if (!(object instanceof Documento)) {
             return false;
         }
         Documento other = (Documento) object;
-        if ((this.idDocumento == null && other.idDocumento != null) || (this.idDocumento != null && !this.idDocumento.equals(other.idDocumento))) {
+        if (this.idDocumento == null || other.idDocumento == null) {
             return false;
         }
-        return true;
+        return Objects.equals(this.idDocumento, other.idDocumento);
     }
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.pp115_2026_salud.galenosv.resources.Documento[ idDocumento=" + idDocumento + " ]";
+        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Documento[ idDocumento=" + idDocumento + " ]";
     }
-    
 }

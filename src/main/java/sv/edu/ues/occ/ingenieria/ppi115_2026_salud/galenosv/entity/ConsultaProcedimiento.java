@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -7,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
@@ -15,12 +15,15 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
-
 
 @Entity
 @Table(name = "consulta_procedimiento", schema = "public")
@@ -32,33 +35,50 @@ import java.util.UUID;
 public class ConsultaProcedimiento implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_consulta_procedimiento")
     private UUID idConsultaProcedimiento;
-    @Lob
-    @Column(name = "id_procedimiento")
+
+    @NotNull(message = "El identificador del procedimiento es obligatorio")
+    @Column(name = "id_procedimiento", nullable = false)
     private UUID idProcedimiento;
-    @Column(name = "fecha_inicio")
+
+    @NotNull(message = "La fecha de inicio del procedimiento es obligatoria")
+    @PastOrPresent(message = "La fecha de inicio no puede ser una fecha futura")
+    @Column(name = "fecha_inicio", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaInicio;
+
+    @PastOrPresent(message = "La fecha de fin no puede ser una fecha futura")
     @Column(name = "fecha_fin")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaFin;
-    @Size(max = 2147483647)
-    @Column(name = "observaciones")
+
+    @Size(max = 2000, message = "Las observaciones no deben exceder los 2000 caracteres")
+    @Column(name = "observaciones", columnDefinition = "TEXT")
     private String observaciones;
+
+    @NotNull(message = "La consulta asociada es obligatoria")
+    @JoinColumn(name = "id_consulta", referencedColumnName = "id_consulta", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Consulta idConsulta;
+
     @OneToMany(mappedBy = "idConsultaProcedimiento", fetch = FetchType.LAZY)
     private List<ConsultaProcedimientoPaso> consultaProcedimientoPasoList;
-    @JoinColumn(name = "id_consulta", referencedColumnName = "id_consulta")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Consulta idConsulta;
 
     public ConsultaProcedimiento() {
     }
 
     public ConsultaProcedimiento(UUID idConsultaProcedimiento) {
         this.idConsultaProcedimiento = idConsultaProcedimiento;
+    }
+
+    @JsonbTransient
+    @AssertTrue(message = "La fecha de fin no puede ser anterior a la fecha de inicio")
+    public boolean isRangoFechasValido() {
+        return fechaInicio == null || fechaFin == null || !fechaFin.before(fechaInicio);
     }
 
     public UUID getIdConsultaProcedimiento() {
@@ -98,7 +118,7 @@ public class ConsultaProcedimiento implements Serializable {
     }
 
     public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
+        this.observaciones = (observaciones != null && !observaciones.isBlank()) ? observaciones.trim() : null;
     }
 
     public List<ConsultaProcedimientoPaso> getConsultaProcedimientoPasoList() {
@@ -119,27 +139,26 @@ public class ConsultaProcedimiento implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idConsultaProcedimiento != null ? idConsultaProcedimiento.hashCode() : 0);
-        return hash;
+        return (idConsultaProcedimiento != null) ? idConsultaProcedimiento.hashCode() : super.hashCode();
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (this == object) {
+            return true;
+        }
         if (!(object instanceof ConsultaProcedimiento)) {
             return false;
         }
         ConsultaProcedimiento other = (ConsultaProcedimiento) object;
-        if ((this.idConsultaProcedimiento == null && other.idConsultaProcedimiento != null) || (this.idConsultaProcedimiento != null && !this.idConsultaProcedimiento.equals(other.idConsultaProcedimiento))) {
+        if (this.idConsultaProcedimiento == null || other.idConsultaProcedimiento == null) {
             return false;
         }
-        return true;
+        return Objects.equals(this.idConsultaProcedimiento, other.idConsultaProcedimiento);
     }
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.pp115_2026_salud.galenosv.resources.ConsultaProcedimiento[ idConsultaProcedimiento=" + idConsultaProcedimiento + " ]";
+        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ConsultaProcedimiento[ idConsultaProcedimiento=" + idConsultaProcedimiento + " ]";
     }
-    
 }

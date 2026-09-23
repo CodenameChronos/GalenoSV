@@ -10,9 +10,12 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -25,20 +28,28 @@ import java.util.UUID;
 public class Rol implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_rol")
     private UUID idRol;
-    @Size(max = 155)
-    @Column(name = "nombre")
+
+    @NotBlank(message = "El nombre del rol es obligatorio")
+    @Size(max = 155, message = "El nombre no debe exceder los 155 caracteres")
+    @Column(name = "nombre", nullable = false, length = 155)
     private String nombre;
-    @Column(name = "activo")
-    private Boolean activo;
-    @Size(max = 2147483647)
-    @Column(name = "observaciones")
+
+    @NotNull(message = "El estado activo es obligatorio")
+    @Column(name = "activo", nullable = false)
+    private Boolean activo = true;
+
+    @Size(max = 2000, message = "Las observaciones no deben exceder los 2000 caracteres")
+    @Column(name = "observaciones", length = 2000)
     private String observaciones;
+
     @OneToMany(mappedBy = "idRol", fetch = FetchType.LAZY)
     private List<PersonaRol> personaRolList;
+
     @OneToMany(mappedBy = "idRol", fetch = FetchType.LAZY)
     private List<ProcedimientoPaso> procedimientoPasoList;
 
@@ -62,7 +73,7 @@ public class Rol implements Serializable {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = (nombre != null && !nombre.isBlank()) ? nombre.trim() : null;
     }
 
     public Boolean getActivo() {
@@ -78,7 +89,7 @@ public class Rol implements Serializable {
     }
 
     public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
+        this.observaciones = (observaciones != null && !observaciones.isBlank()) ? observaciones.trim() : null;
     }
 
     public List<PersonaRol> getPersonaRolList() {
@@ -99,27 +110,26 @@ public class Rol implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idRol != null ? idRol.hashCode() : 0);
-        return hash;
+        return (idRol != null) ? idRol.hashCode() : super.hashCode();
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (this == object) {
+            return true;
+        }
         if (!(object instanceof Rol)) {
             return false;
         }
         Rol other = (Rol) object;
-        if ((this.idRol == null && other.idRol != null) || (this.idRol != null && !this.idRol.equals(other.idRol))) {
+        if (this.idRol == null || other.idRol == null) {
             return false;
         }
-        return true;
+        return Objects.equals(this.idRol, other.idRol);
     }
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.pp115_2026_salud.galenosv.resources.Rol[ idRol=" + idRol + " ]";
+        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Rol[ idRol=" + idRol + " ]";
     }
-    
 }

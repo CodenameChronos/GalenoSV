@@ -12,9 +12,12 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -26,22 +29,32 @@ import java.util.UUID;
 public class ProcedimientoPaso implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_procedimiento_paso")
     private UUID idProcedimientoPaso;
-    @Size(max = 155)
-    @Column(name = "nombre")
+
+    @NotBlank(message = "El nombre del paso del procedimiento es obligatorio")
+    @Size(max = 155, message = "El nombre no debe exceder los 155 caracteres")
+    @Column(name = "nombre", nullable = false, length = 155)
     private String nombre;
-    @Column(name = "indica_fin")
-    private Boolean indicaFin;
+
+    @NotNull(message = "El campo indicaFin es obligatorio")
+    @Column(name = "indica_fin", nullable = false)
+    private Boolean indicaFin = false;
+
     @OneToMany(mappedBy = "idProcedimientoPaso", fetch = FetchType.LAZY)
     private List<ProcedimientoPasoSecuencia> procedimientoPasoSecuenciaList;
+
     @OneToMany(mappedBy = "idProcedimientoPaso", fetch = FetchType.LAZY)
     private List<ProcedimientoPasoExamen> procedimientoPasoExamenList;
-    @JoinColumn(name = "id_procedimiento", referencedColumnName = "id_procedimiento")
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @NotNull(message = "El procedimiento asociado es obligatorio")
+    @JoinColumn(name = "id_procedimiento", referencedColumnName = "id_procedimiento", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Procedimiento idProcedimiento;
+
     @JoinColumn(name = "id_rol", referencedColumnName = "id_rol")
     @ManyToOne(fetch = FetchType.LAZY)
     private Rol idRol;
@@ -66,7 +79,7 @@ public class ProcedimientoPaso implements Serializable {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = (nombre != null && !nombre.isBlank()) ? nombre.trim() : null;
     }
 
     public Boolean getIndicaFin() {
@@ -111,27 +124,26 @@ public class ProcedimientoPaso implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idProcedimientoPaso != null ? idProcedimientoPaso.hashCode() : 0);
-        return hash;
+        return (idProcedimientoPaso != null) ? idProcedimientoPaso.hashCode() : super.hashCode();
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (this == object) {
+            return true;
+        }
         if (!(object instanceof ProcedimientoPaso)) {
             return false;
         }
         ProcedimientoPaso other = (ProcedimientoPaso) object;
-        if ((this.idProcedimientoPaso == null && other.idProcedimientoPaso != null) || (this.idProcedimientoPaso != null && !this.idProcedimientoPaso.equals(other.idProcedimientoPaso))) {
+        if (this.idProcedimientoPaso == null || other.idProcedimientoPaso == null) {
             return false;
         }
-        return true;
+        return Objects.equals(this.idProcedimientoPaso, other.idProcedimientoPaso);
     }
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.pp115_2026_salud.galenosv.resources.ProcedimientoPaso[ idProcedimientoPaso=" + idProcedimientoPaso + " ]";
+        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ProcedimientoPaso[ idProcedimientoPaso=" + idProcedimientoPaso + " ]";
     }
-    
 }

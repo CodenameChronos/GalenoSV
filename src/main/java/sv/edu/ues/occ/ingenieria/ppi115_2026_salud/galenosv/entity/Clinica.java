@@ -11,12 +11,14 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
-
 
 @Entity
 @Table(name = "clinica", schema = "public")
@@ -29,23 +31,31 @@ import java.util.UUID;
 public class Clinica implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_clinica")
     private UUID idClinica;
+
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "nombre")
+    @NotBlank(message = "El nombre de la clínica es obligatorio")
+    @Size(max = 255, message = "El nombre no debe exceder los 255 caracteres")
+    @Column(name = "nombre", nullable = false, length = 255)
     private String nombre;
-    @Column(name = "activo")
-    private Boolean activo;
-    @Size(max = 20)
-    @Column(name = "tipo")
+
+    @NotNull(message = "El estado de la clínica es obligatorio")
+    @Column(name = "activo", nullable = false)
+    private Boolean activo = Boolean.TRUE; // Inicialización única
+
+    // Opción A: Si 'tipo' es un conjunto cerrado de opciones (Ajusta la expresión regular según tus tipos reales)
+    @Size(max = 20, message = "El tipo de clínica no debe exceder los 20 caracteres")
+    @Column(name = "tipo", length = 20)
     private String tipo;
-    @Size(max = 2147483647)
-    @Column(name = "comentarios")
+
+    @Size(max = 2000, message = "Los comentarios no deben exceder los 2000 caracteres")
+    @Column(name = "comentarios", columnDefinition = "TEXT")
     private String comentarios;
+
     @OneToMany(mappedBy = "idClinica", fetch = FetchType.LAZY)
     private List<PersonaRol> personaRolList;
 
@@ -74,7 +84,7 @@ public class Clinica implements Serializable {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = (nombre != null && !nombre.isBlank()) ? nombre.trim() : null;
     }
 
     public Boolean getActivo() {
@@ -90,7 +100,8 @@ public class Clinica implements Serializable {
     }
 
     public void setTipo(String tipo) {
-        this.tipo = tipo;
+        // Texto libre: limpia espacios y convierte vacíos ("   ") a null
+        this.tipo = (tipo != null && !tipo.isBlank()) ? tipo.trim() : null;
     }
 
     public String getComentarios() {
@@ -98,7 +109,7 @@ public class Clinica implements Serializable {
     }
 
     public void setComentarios(String comentarios) {
-        this.comentarios = comentarios;
+        this.comentarios = (comentarios != null && !comentarios.isBlank()) ? comentarios.trim() : null;
     }
 
     public List<PersonaRol> getPersonaRolList() {
@@ -109,29 +120,29 @@ public class Clinica implements Serializable {
         this.personaRolList = personaRolList;
     }
 
+    // Mejora en equals() y hashCode() para evitar colisiones en entidades no persistidas (sin ID)
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idClinica != null ? idClinica.hashCode() : 0);
-        return hash;
+        return (idClinica != null) ? idClinica.hashCode() : super.hashCode();
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (this == object) {
+            return true;
+        }
         if (!(object instanceof Clinica)) {
             return false;
         }
         Clinica other = (Clinica) object;
-        if ((this.idClinica == null && other.idClinica != null) || (this.idClinica != null && !this.idClinica.equals(other.idClinica))) {
-            return false;
+        if (this.idClinica == null || other.idClinica == null) {
+            return false; // Entidades sin ID no son iguales entre sí a menos que sean la misma instancia
         }
-        return true;
+        return Objects.equals(this.idClinica, other.idClinica);
     }
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.pp115_2026_salud.galenosv.resources.Clinica[ idClinica=" + idClinica + " ]";
+        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Clinica[ idClinica=" + idClinica + " ]";
     }
-    
 }

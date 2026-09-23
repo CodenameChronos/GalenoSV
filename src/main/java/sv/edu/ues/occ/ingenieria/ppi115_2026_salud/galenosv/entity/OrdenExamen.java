@@ -14,12 +14,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
-
 
 @Entity
 @Table(name = "orden_examen", schema = "public")
@@ -30,20 +32,28 @@ import java.util.UUID;
 public class OrdenExamen implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_orden_examen")
     private UUID idOrdenExamen;
-    @Column(name = "fecha_creacion")
+
+    @NotNull(message = "La fecha de creación es obligatoria")
+    @PastOrPresent(message = "La fecha de creación no puede ser una fecha futura")
+    @Column(name = "fecha_creacion", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaCreacion;
-    @Size(max = 2147483647)
-    @Column(name = "indicaciones")
+    private Date fechaCreacion = new Date();
+
+    @Size(max = 2000, message = "Las indicaciones no deben exceder los 2000 caracteres")
+    @Column(name = "indicaciones", length = 2000)
     private String indicaciones;
+
     @OneToMany(mappedBy = "idOrdenExamen", fetch = FetchType.LAZY)
     private List<ExamenResultado> examenResultadoList;
-    @JoinColumn(name = "id_consulta_procedimiento_paso", referencedColumnName = "id_consulta_procedimiento_paso")
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @NotNull(message = "El paso del procedimiento en consulta es obligatorio")
+    @JoinColumn(name = "id_consulta_procedimiento_paso", referencedColumnName = "id_consulta_procedimiento_paso", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private ConsultaProcedimientoPaso idConsultaProcedimientoPaso;
 
     public OrdenExamen() {
@@ -74,7 +84,7 @@ public class OrdenExamen implements Serializable {
     }
 
     public void setIndicaciones(String indicaciones) {
-        this.indicaciones = indicaciones;
+        this.indicaciones = (indicaciones != null && !indicaciones.isBlank()) ? indicaciones.trim() : null;
     }
 
     public List<ExamenResultado> getExamenResultadoList() {
@@ -95,27 +105,26 @@ public class OrdenExamen implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idOrdenExamen != null ? idOrdenExamen.hashCode() : 0);
-        return hash;
+        return (idOrdenExamen != null) ? idOrdenExamen.hashCode() : super.hashCode();
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (this == object) {
+            return true;
+        }
         if (!(object instanceof OrdenExamen)) {
             return false;
         }
         OrdenExamen other = (OrdenExamen) object;
-        if ((this.idOrdenExamen == null && other.idOrdenExamen != null) || (this.idOrdenExamen != null && !this.idOrdenExamen.equals(other.idOrdenExamen))) {
+        if (this.idOrdenExamen == null || other.idOrdenExamen == null) {
             return false;
         }
-        return true;
+        return Objects.equals(this.idOrdenExamen, other.idOrdenExamen);
     }
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.pp115_2026_salud.galenosv.resources.OrdenExamen[ idOrdenExamen=" + idOrdenExamen + " ]";
+        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.OrdenExamen[ idOrdenExamen=" + idOrdenExamen + " ]";
     }
-    
 }

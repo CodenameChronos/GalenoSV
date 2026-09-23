@@ -13,11 +13,14 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
-
 
 @Entity
 @Table(name = "medio_contacto", schema = "public")
@@ -28,21 +31,31 @@ import java.util.UUID;
 public class MedioContacto implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_medio_contacto")
     private UUID idMedioContacto;
-    @Size(max = 2147483647)
-    @Column(name = "valor")
+
+    @NotBlank(message = "El valor del medio de contacto es obligatorio")
+    @Size(max = 255, message = "El valor no debe exceder los 255 caracteres")
+    @Column(name = "valor", nullable = false, length = 255)
     private String valor;
-    @Column(name = "fecha_creacion")
+
+    @NotNull(message = "La fecha de creación es obligatoria")
+    @PastOrPresent(message = "La fecha de creación no puede ser una fecha futura")
+    @Column(name = "fecha_creacion", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaCreacion;
-    @JoinColumn(name = "id_persona", referencedColumnName = "id_persona")
-    @ManyToOne(fetch = FetchType.LAZY)
+    private Date fechaCreacion = new Date();
+
+    @NotNull(message = "La persona asociada es obligatoria")
+    @JoinColumn(name = "id_persona", referencedColumnName = "id_persona", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Persona idPersona;
-    @JoinColumn(name = "id_tipo_medio_contacto", referencedColumnName = "id_tipo_medio_contacto")
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @NotNull(message = "El tipo de medio de contacto es obligatorio")
+    @JoinColumn(name = "id_tipo_medio_contacto", referencedColumnName = "id_tipo_medio_contacto", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private TipoMedioContacto idTipoMedioContacto;
 
     public MedioContacto() {
@@ -65,7 +78,7 @@ public class MedioContacto implements Serializable {
     }
 
     public void setValor(String valor) {
-        this.valor = valor;
+        this.valor = (valor != null && !valor.isBlank()) ? valor.trim() : null;
     }
 
     public Date getFechaCreacion() {
@@ -94,27 +107,26 @@ public class MedioContacto implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idMedioContacto != null ? idMedioContacto.hashCode() : 0);
-        return hash;
+        return (idMedioContacto != null) ? idMedioContacto.hashCode() : super.hashCode();
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (this == object) {
+            return true;
+        }
         if (!(object instanceof MedioContacto)) {
             return false;
         }
         MedioContacto other = (MedioContacto) object;
-        if ((this.idMedioContacto == null && other.idMedioContacto != null) || (this.idMedioContacto != null && !this.idMedioContacto.equals(other.idMedioContacto))) {
+        if (this.idMedioContacto == null || other.idMedioContacto == null) {
             return false;
         }
-        return true;
+        return Objects.equals(this.idMedioContacto, other.idMedioContacto);
     }
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.pp115_2026_salud.galenosv.resources.MedioContacto[ idMedioContacto=" + idMedioContacto + " ]";
+        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.MedioContacto[ idMedioContacto=" + idMedioContacto + " ]";
     }
-    
 }

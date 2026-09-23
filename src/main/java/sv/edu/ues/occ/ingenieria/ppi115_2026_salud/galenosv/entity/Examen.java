@@ -10,11 +10,13 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
-
 
 @Entity
 @Table(name = "examen", schema = "public")
@@ -26,20 +28,28 @@ import java.util.UUID;
 public class Examen implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_examen")
     private UUID idExamen;
-    @Size(max = 255)
-    @Column(name = "nombre")
+
+    @NotBlank(message = "El nombre del examen es obligatorio")
+    @Size(max = 255, message = "El nombre del examen no debe exceder los 255 caracteres")
+    @Column(name = "nombre", nullable = false, length = 255)
     private String nombre;
-    @Column(name = "activo")
-    private Boolean activo;
-    @Size(max = 2147483647)
-    @Column(name = "observaciones")
+
+    @NotNull(message = "El estado activo/inactivo es obligatorio")
+    @Column(name = "activo", nullable = false)
+    private Boolean activo = Boolean.TRUE;
+
+    @Size(max = 1000, message = "Las observaciones no deben exceder los 1000 caracteres")
+    @Column(name = "observaciones", length = 1000)
     private String observaciones;
+
     @OneToMany(mappedBy = "idExamen", fetch = FetchType.LAZY)
     private List<ExamenTipoExamen> examenTipoExamenList;
+
     @OneToMany(mappedBy = "idExamen", fetch = FetchType.LAZY)
     private List<ProcedimientoPasoExamen> procedimientoPasoExamenList;
 
@@ -63,7 +73,7 @@ public class Examen implements Serializable {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = (nombre != null && !nombre.isBlank()) ? nombre.trim() : null;
     }
 
     public Boolean getActivo() {
@@ -79,7 +89,7 @@ public class Examen implements Serializable {
     }
 
     public void setObservaciones(String observaciones) {
-        this.observaciones = observaciones;
+        this.observaciones = (observaciones != null && !observaciones.isBlank()) ? observaciones.trim() : null;
     }
 
     public List<ExamenTipoExamen> getExamenTipoExamenList() {
@@ -100,27 +110,26 @@ public class Examen implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (idExamen != null ? idExamen.hashCode() : 0);
-        return hash;
+        return (idExamen != null) ? idExamen.hashCode() : super.hashCode();
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (this == object) {
+            return true;
+        }
         if (!(object instanceof Examen)) {
             return false;
         }
         Examen other = (Examen) object;
-        if ((this.idExamen == null && other.idExamen != null) || (this.idExamen != null && !this.idExamen.equals(other.idExamen))) {
+        if (this.idExamen == null || other.idExamen == null) {
             return false;
         }
-        return true;
+        return Objects.equals(this.idExamen, other.idExamen);
     }
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.pp115_2026_salud.galenosv.resources.Examen[ idExamen=" + idExamen + " ]";
+        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Examen[ idExamen=" + idExamen + " ]";
     }
-    
 }
