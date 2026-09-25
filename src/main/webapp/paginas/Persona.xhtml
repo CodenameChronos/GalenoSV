@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="primefaces"
+      xmlns:g="jakarta.faces.composite/galeno">
+
+    <h:head>
+        <title>Persona - Galeno SV </title>
+    </h:head>
+    <h:body>
+        <g:layout>
+            <f:facet name="workspace">
+
+                <g:crud 
+                    titulo="Persona"
+                    modelo="#{personaModel}"
+                    rowKey="#{r.idPersona}">
+
+                    <p:column headerText="Código">
+                        <h:outputText value="#{r.idPersona}"/>
+                    </p:column>
+
+                    <p:column headerText="Nombres">
+                        <h:outputText value="#{r.nombres}"/>
+                    </p:column>
+
+                    <p:column headerText="Apellidos">
+                        <h:outputText value="#{r.apellidos}"/>
+                    </p:column>
+
+                    <p:column headerText="Fecha de nacimiento">
+                        <h:outputText value="#{r.fechaNacimiento}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText> 
+                    </p:column>
+
+                    <p:column headerText="Fecha de creacion">
+                        <h:outputText value="#{r.fechaCreacion}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText> 
+                    </p:column>
+
+                    <f:facet name="formulario">
+                        <p:panelGrid
+                            columns="4"
+                            layout="grid"
+                            columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                            contentStyleClass="align-items-baseline ui-fluid">
+
+
+                            <p:outputLabel
+                                for="Nombres"
+                                value="Nombres"/>
+
+                            <p:inputText
+                                id="Nombres"
+                                value="#{personaModel.registroActual.nombres}"/>
+
+                            <p:outputLabel
+                                for="Apellidos"
+                                value="Apellidos"/>
+
+                            <p:inputText
+                                id="Apellidos"
+                                value="#{personaModel.registroActual.apellidos}"/> 
+
+                            <p:outputLabel
+                                for="fechaNacimiento"
+                                value="Fecha de nacimineto"/>
+
+                            <p:datePicker 
+                                id="fechaNacimiento" 
+                                value="#{personaModel.registroActual.fechaNacimiento}" showIcon="true" 
+                                buttonTabindex="0" maxdate="#{autoDate.hoy}" pattern="dd//MM/yyyy"  />
+
+
+                            <p:outputLabel 
+                                for="fechaCreacion"
+                                value="Fecha de creacion"/>
+
+                            <h:outputText id="fechaCreacion" value="#{autoDate.time}"/>
+
+                        </p:panelGrid>
+                    </f:facet>
+                </g:crud>    
+            </f:facet>
+        </g:layout>
+    </h:body>
+</html>
