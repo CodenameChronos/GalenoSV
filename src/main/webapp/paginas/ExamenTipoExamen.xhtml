@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="primefaces"
+      xmlns:g="jakarta.faces.composite/galeno">
+    <h:head>
+        <title>#{msg['examenTipoExamen.titulo']} - Galeno-SV</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <g:layout>
+            <f:facet name="workspace">
+                <h:form id="frmExamenTipoExamen">
+
+                    <g:crud
+                        titulo="#{msg['examenTipoExamen.titulo']}"
+                        modelo="#{examenTipoExamenModel}"
+                        rowKey="#{r.idExamenTipoExamen}">
+
+                        <p:column headerText="#{msg['campo.comun.codigo']}">
+                            <h:outputText value="#{r.idExamenTipoExamen}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg['campo.comun.fechaCreacion']}">
+                            <h:outputText value="#{r.fechaCreacion}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="#{msg['campo.comun.observaciones']}">
+                            <h:outputText value="#{r.observaciones}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg['examen.titulo']}">
+                            <h:outputText value="#{r.idExamen.nombre}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg['tipoExamen.titulo']}">
+                            <h:outputText value="#{r.idTipoExamen.nombre}"/>
+                        </p:column>
+
+                        <f:facet name="formulario">
+
+                            <p:panelGrid
+                                columns="4"
+                                layout="grid"
+                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                contentStyleClass="align-items-baseline ui-fluid">
+
+                                <p:outputLabel for="fechaCreacion" value="#{msg['campo.comun.fechaCreacion']}"/>
+                                <p:inputText disabled="true" id="fechaCreacion" value="#{examenTipoExamenModel.registroActual.fechaCreacion}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </p:inputText>
+
+                                <p:outputLabel for="idExamen" value="#{msg['examen.titulo']}"/>
+                                <p:autoComplete id="idExamen" dropdown="true" 
+                                                value="#{examenTipoExamenModel.registroActual.idExamen}"
+                                                completeMethod="#{examenTipoExamenModel.completarExamen}"
+                                                converter="entityConverter"
+                                                var="examen"
+                                                itemLabel="#{examen.nombre}"
+                                                itemValue="#{examen}"
+                                                forceSelection="true"
+                                                scrollHeight="250"
+                                                minQueryLength="3"
+                                                required="true"/>
+
+                                <p:outputLabel
+                                    for="observaciones"
+                                    value="#{msg['campo.comun.observaciones']}"/>
+
+                                <p:inputTextarea
+                                    id="observaciones"
+                                    value="#{examenTipoExamenModel.registroActual.observaciones}"/>
+
+                                <p:outputLabel for="idTipoExamen" value="#{msg['tipoExamen.titulo']}"/>
+                                <p:autoComplete id="idTipoExamen" dropdown="true" 
+                                                value="#{examenTipoExamenModel.registroActual.idTipoExamen}"
+                                                completeMethod="#{examenTipoExamenModel.completarTipoExamen}"
+                                                converter="entityConverter"
+                                                var="tipoExamen"
+                                                itemLabel="#{tipoExamen.nombre}"
+                                                itemValue="#{tipoExamen}"
+                                                forceSelection="true"
+                                                scrollHeight="250"
+                                                minQueryLength="3"
+                                                required="true"/>
+
+                            </p:panelGrid>
+
+                        </f:facet>
+
+                    </g:crud>
+
+                </h:form>
+
+            </f:facet>
+
+        </g:layout>
+
+    </h:body>
+
+</html>

@@ -1,6 +1,8 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control;
 
 import jakarta.persistence.EntityManager;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,60 +11,69 @@ import java.util.logging.Logger;
  *
  * @author kardia
  */
-public abstract class DefaultDAO<T> implements DAOInterface<T> {
+  
 
-    public final Class entity;
+    public abstract class DefaultDAO<T> implements DAOInterface<T> {
 
-    public abstract EntityManager getEntityManager();
+        public final Class entity;
 
-    public DefaultDAO(Class<T> entity) {
-        this.entity = entity;
-    }
+        public abstract EntityManager getEntityManager();
 
-    /**
-     * Persiste un nuevo registro en la base de datos utilizando el
-     * EntityManager.
-     *
-     * @param registro El objeto que se desea almacenar. No debe ser nulo.
-     * @throws IllegalArgumentException si el objeto proporcionado es nulo.
-     * @throws IllegalStateException si ocurre un error durante la operación de
-     * persistencia.
-     */
-    @Override
-    public void crear(Object registro) throws IllegalArgumentException, IllegalStateException {
-        if (registro != null) {
-            try {
-                getEntityManager().persist(registro);
-            } catch (Exception ex) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
-                throw new IllegalStateException();
-            }
-        } else {
-            throw new IllegalArgumentException("El registro no puede ser nulo");
+        public DefaultDAO(Class<T> entity) {
+            this.entity = entity;
         }
 
-    }
-
-    /**
-     * Actualiza un registro existente en la base de datos utilizando el
-     * EntityManager.
-     *
-     * @param nuevo El objeto con los nuevos datos a fusionar o actualizar. No
-     * debe ser nulo.
-     * @throws IllegalArgumentException si el objeto proporcionado es nulo.
-     * @throws IllegalStateException si ocurre un error durante la operación de
-     * merge.
-     */
-    @Override
-    public void actualizar(Object nuevo) throws IllegalArgumentException, IllegalStateException {
-        if (nuevo != null) {
-            try {
-                getEntityManager().merge(nuevo);
-            } catch (Exception ex) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
-                throw new IllegalStateException();
+        /**
+         * Persiste un nuevo registro en la base de datos utilizando el
+         * EntityManager.
+         *
+         * @param registro El objeto que se desea almacenar. No debe ser nulo.
+         * @throws IllegalArgumentException si el objeto proporcionado es nulo.
+         * @throws IllegalStateException si ocurre un error durante la operación
+         * de persistencia.
+         */
+        @Override
+        public void crear(Object registro) throws IllegalArgumentException, IllegalStateException {
+            if (registro != null) {
+                try {
+                    getEntityManager().persist(registro);
+                } catch (ConstraintViolationException cve) {
+                    throw new IllegalStateException(registrarViolaciones(cve), cve);
+                } catch (Exception ex) {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
+                    throw new IllegalStateException();
+                }
+            } else {
+                throw new IllegalArgumentException("El registro no puede ser nulo");
             }
-        } else {
+
+        }
+
+        /**
+         * Actualiza un registro existente en la base de datos utilizando el
+         * EntityManager.
+         *
+         * @param nuevo El objeto con los nuevos datos a fusionar o actualizar.
+         * No debe ser nulo.
+         * @throws IllegalArgumentException si el objeto proporcionado es nulo.
+         * @throws IllegalStateException si ocurre un error durante la operación
+         * de merge.
+         */
+        @Override
+        public void actualizar(Object nuevo) throws IllegalArgumentException, IllegalStateException {
+            if (nuevo != null) {
+                try {
+                    getEntityManager().merge(nuevo);
+                } catch (ConstraintViolationException cve) {
+                    throw new IllegalStateException(registrarViolaciones(cve), cve);
+                } catch (Exception ex) {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
+                    throw new IllegalStateException();
+            }
+        }
+
+        
+            else {
             throw new IllegalArgumentException("El objeto a actualizar no puede ser nulo");
         }
 
@@ -173,6 +184,25 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
                 Long.class)
                 .getSingleResult()
                 .intValue();
+    }
+
+    /**
+     * Registra en el log cada violación de restricción por separado (campo,
+     * mensaje y valor recibido), y devuelve un resumen apto para mostrarse al
+     * usuario final desde el handler de la vista.
+     *
+     * @param cve la excepción de validación capturada.
+     * @return un resumen de las violaciones, en una sola línea.
+     */
+    private String registrarViolaciones(ConstraintViolationException cve) {
+        StringBuilder resumen = new StringBuilder("Datos inválidos: ");
+        for (ConstraintViolation<?> violacion : cve.getConstraintViolations()) {
+            String detalle = violacion.getPropertyPath() + " " + violacion.getMessage()
+                    + " (valor recibido: " + violacion.getInvalidValue() + ")";
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, detalle);
+            resumen.append(violacion.getPropertyPath()).append(" ").append(violacion.getMessage()).append("; ");
+        }
+        return resumen.toString();
     }
 
 }

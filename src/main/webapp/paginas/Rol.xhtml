@@ -13,63 +13,69 @@
     <h:body>
         <g:layout>
             <f:facet name="workspace">
-                <g:crud
-                    titulo="Rol"
-                    modelo="#{rolModel}"
-                    rowKey="#{r.idRol}">
+                <h:form id="frmRol">
+                    <g:crud
+                        titulo="#{msg['rol.titulo']}"
+                        modelo="#{rolModel}"
+                        rowKey="#{r.idRol}">
 
-                    <p:column headerText="Codigo">
-                        <h:outputText value="#{r.idRol}"/>
-                    </p:column>
+                        <p:column headerText="#{msg['campo.comun.codigo']}">
+                            <h:outputText value="#{r.idRol}"/>
+                        </p:column>
 
-                    <p:column headerText="Nombre">
-                        <h:outputText value="#{r.nombre}"/>
-                    </p:column>
+                        <p:column headerText="#{msg['campo.comun.nombre']}">
+                            <h:outputText value="#{r.nombre}"/>
+                        </p:column>
 
-                    <p:column headerText="Activo">
-                        <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
-                    </p:column>
+                        <p:column headerText="#{msg['campo.comun.activo']}">
+                            <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
+                        </p:column>
 
-                    <p:column headerText="Observaciones">
-                        <h:outputText value="#{r.observaciones}"/>
-                    </p:column>
+                        <p:column headerText="#{msg['campo.comun.observaciones']}">
+                            <h:outputText value="#{r.observaciones}"/>
+                        </p:column>
 
-                    <f:facet name="formulario">
-                        <p:panelGrid
-                            columns="4"
-                            layout="grid"
-                            columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
-                            contentStyleClass="align-items-baseline ui-fluid">
+                        <f:facet name="formulario">
+                            <p:panelGrid
+                                columns="4"
+                                layout="grid"
+                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                contentStyleClass="align-items-baseline ui-fluid">
 
-                            <p:outputLabel
-                                for="nombre"
-                                value="Nombre"/>
+                                <p:outputLabel
+                                    for="nombre"
+                                    value="#{msg['campo.comun.nombre']}"/>
 
-                            <p:inputText
-                                id="nombre"
-                                value="#{rolModel.registroActual.nombre}"/>
+                                <p:inputText
+                                    id="nombre"
+                                    value="#{rolModel.registroActual.nombre}"/>
 
-                            <p:outputLabel
-                                for="activo"
-                                value="Activo"/>
+                                <p:outputLabel
+                                    for="activo"
+                                    value="#{msg['campo.comun.activo']}"/>
 
-                            <p:toggleSwitch
-                                id="activo"
-                                value="#{rolModel.registroActual.activo}"/>
+                                <p:toggleSwitch
+                                    id="activo"
+                                    value="#{rolModel.registroActual.activo}"/>
 
-                            <p:outputLabel
-                                for="observaciones"
-                                value="Observaciones"/>
+                                <p:outputLabel
+                                    for="observaciones"
+                                    value="#{msg['campo.comun.observaciones']}"/>
 
-                            <p:inputTextarea
-                                id="observaciones"
-                                value="#{rolModel.registroActual.observaciones}"/>
+                                <p:inputTextarea
+                                    id="observaciones"
+                                    value="#{rolModel.registroActual.observaciones}"/>
 
-                        </p:panelGrid>
-                    </f:facet>
+                            </p:panelGrid>
+                        </f:facet>
 
-                </g:crud>
+                    </g:crud>
+                    
+                </h:form>
             </f:facet>
+            
         </g:layout>
+        
     </h:body>
+    
 </html>

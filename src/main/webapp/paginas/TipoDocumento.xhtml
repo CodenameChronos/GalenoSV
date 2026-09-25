@@ -15,79 +15,81 @@
         <g:layout>
 
             <f:facet name="workspace">
+                <h:form id="frmTipoDocumento">
+                    <g:crud
+                        titulo="#{msg['tipoDocumento.titulo']}"
+                        modelo="#{tipoDocumentoModel}"
+                        rowKey="#{r.idTipoDocumento}">
 
-                <g:crud
-                    titulo="Tipo Documento"
-                    modelo="#{tipoDocumentoModel}"
-                    rowKey="#{r.idTipoDocumento}">
+                        <!-- Columnas de la tabla -->
+                        <p:column headerText="#{msg['campo.comun.codigo']}">
+                            <h:outputText value="#{r.idTipoDocumento}"/>
+                        </p:column>
 
-                    <!-- Columnas de la tabla -->
-                    <p:column headerText="Codigo">
-                        <h:outputText value="#{r.idTipoDocumento}"/>
-                    </p:column>
+                        <p:column headerText="#{msg['campo.comun.nombre']}">
+                            <h:outputText value="#{r.nombre}"/>
+                        </p:column>
 
-                    <p:column headerText="Nombre">
-                        <h:outputText value="#{r.nombre}"/>
-                    </p:column>
+                        <p:column headerText="#{msg['tipoDocumento.indicaciones']}">
+                            <h:outputText value="#{r.indicaciones}"/>
+                        </p:column>
 
-                    <p:column headerText="Indicaciones">
-                        <h:outputText value="#{r.indicaciones}"/>
-                    </p:column>
+                        <p:column headerText="#{msg['campo.comun.expresionRegular']}">
+                            <h:outputText value="#{r.expresionRegular}"/>
+                        </p:column>
 
-                    <p:column headerText="Expresión Regular">
-                        <h:outputText value="#{r.expresionRegular}"/>
-                    </p:column>
+                        <p:column headerText="#{msg['campo.comun.activo']}">
+                            <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
+                        </p:column>
 
-                    <p:column headerText="Activo">
-                        <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
-                    </p:column>
+                        <!-- Formulario de edición -->
+                        <f:facet name="formulario">
 
-                    <!-- Formulario de edición -->
-                    <f:facet name="formulario">
+                            <p:panelGrid
+                                columns="4"
+                                layout="grid"
+                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                contentStyleClass="align-items-baseline ui-fluid">
 
-                        <p:panelGrid
-                            columns="4"
-                            layout="grid"
-                            columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
-                            contentStyleClass="align-items-baseline ui-fluid">
+                                <p:outputLabel
+                                    for="nombre"
+                                    value="Nombre tipo documento"/>
 
-                            <p:outputLabel
-                                for="nombre"
-                                value="Nombre tipo documento"/>
+                                <p:inputText
+                                    id="nombre"
+                                    value="#{tipoDocumentoModel.registroActual.nombre}"/>
 
-                            <p:inputText
-                                id="nombre"
-                                value="#{tipoDocumentoModel.registroActual.nombre}"/>
+                                <p:outputLabel
+                                    for="activo"
+                                    value="Activo"/>
 
-                            <p:outputLabel
-                                for="activo"
-                                value="Activo"/>
+                                <p:toggleSwitch
+                                    id="activo"
+                                    value="#{tipoDocumentoModel.registroActual.activo}"/>
 
-                            <p:toggleSwitch
-                                id="activo"
-                                value="#{tipoDocumentoModel.registroActual.activo}"/>
+                                <p:outputLabel
+                                    for="indicaciones"
+                                    value="Indicaciones"/>
 
-                            <p:outputLabel
-                                for="indicaciones"
-                                value="Indicaciones"/>
+                                <p:inputTextarea
+                                    id="indicaciones"
+                                    value="#{tipoDocumentoModel.registroActual.indicaciones}"/>
 
-                            <p:inputTextarea
-                                id="indicaciones"
-                                value="#{tipoDocumentoModel.registroActual.indicaciones}"/>
+                                <p:outputLabel
+                                    for="expresionRegular"
+                                    value="Expresión regular"/>
 
-                            <p:outputLabel
-                                for="expresionRegular"
-                                value="Expresión regular"/>
+                                <p:inputText
+                                    id="expresionRegular"
+                                    value="#{tipoDocumentoModel.registroActual.expresionRegular}"/>
 
-                            <p:inputText
-                                id="expresionRegular"
-                                value="#{tipoDocumentoModel.registroActual.expresionRegular}"/>
+                            </p:panelGrid>
 
-                        </p:panelGrid>
+                        </f:facet>
 
-                    </f:facet>
-
-                </g:crud>
+                    </g:crud>
+                    
+                </h:form>
 
             </f:facet>
 
