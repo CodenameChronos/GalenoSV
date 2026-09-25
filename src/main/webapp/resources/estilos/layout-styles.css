@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    --galeno-primary: #0F6E6A;
+    --galeno-primary-dark: #0B504D;
+    --galeno-primary-tint: #E6F3F2;
+    --galeno-ink: #1B2B2A;
+    --galeno-surface: #FAFBFB;
+    --galeno-border: #D7E4E3;
+    --galeno-font: 'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif;
+    --galeno-radius: 8px;
+
+    --primary-color: var(--galeno-primary);
+    --primary-color-text: #FFFFFF;
+    --font-family: var(--galeno-font);
+    --border-radius: var(--galeno-radius);
+    --focus-ring: 0 0 0 2px var(--galeno-surface), 0 0 0 4px var(--galeno-primary);
+}
+
+/* Base */
+html, body {
+    background: var(--galeno-surface);
+    color: var(--galeno-ink);
+    font-family: var(--galeno-font);
+}
+
+h1, h2, h3, .ui-panel-title {
+    color: var(--galeno-ink);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+/* Contenedor general de la pagina */
+.galeno-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Encabezado (g:layout) */
+.galeno-header {
+    background: var(--galeno-primary-tint);
+    border-bottom: 1px solid var(--galeno-border);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+}
+
+/*
+ * Tres zonas: logo (ancho propio, pegado a la izquierda), titulo (crece
+ * para llenar el espacio central y centra su propio texto) y selector de
+ * idioma (ancho propio, empujado al extremo derecho por margin-left:auto).
+ * No depende de que tres columnas de igual ancho se repartan el espacio;
+ * cada zona se ancla por su cuenta.
+ */
+.galeno-header-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.galeno-brand {
+    flex: 0 0 auto;
+}
+
+.galeno-brand img {
+    max-height: 48px;
+    width: auto;
+    display: block;
+}
+
+.galeno-title {
+    flex: 1 1 auto;
+    margin: 0;
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--galeno-primary-dark);
+    min-width: 160px;
+}
+
+.galeno-lang {
+    flex: 0 0 auto;
+    margin-left: auto;
+}
+
+/*
+ * Sidebar fijo (220px) + area de trabajo flexible. Se mantiene lado a lado
+ * hasta 640px de ancho; por debajo de eso se apila, para pantallas
+ * realmente pequenas (telefono), no en tablet o ventanas de escritorio
+ * moderadas.
+ */
+.galeno-shell {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 0 1.25rem;
+    flex: 1 1 auto;
+}
+
+.galeno-nav {
+    flex: 0 0 220px;
+    width: 220px;
+}
+
+.galeno-workspace {
+    flex: 1 1 0%;
+    min-width: 0; /* evita que una tabla ancha desborde el contenedor flex */
+    overflow-x: auto; /* si aun asi la tabla es mas ancha, se desplaza en vez de romper el layout */
+}
+
+@media (max-width: 640px) {
+    .galeno-shell {
+        flex-direction: column;
+    }
+
+    .galeno-nav {
+        width: 100%;
+        flex-basis: auto;
+    }
+
+    .galeno-title {
+        text-align: left;
+    }
+}
+
+/* Navegacion lateral */
+.galeno-nav .ui-menu {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.galeno-nav .ui-menuitem-link {
+    border-radius: var(--galeno-radius);
+    color: var(--galeno-ink);
+    padding: 0.65rem 0.9rem;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.galeno-nav .ui-menuitem-link:hover {
+    background: var(--galeno-primary-tint);
+    color: var(--galeno-primary-dark);
+}
+
+.galeno-nav .ui-menuitem-link:focus-visible {
+    box-shadow: var(--focus-ring);
+    outline: none;
+}
+
+/* Tablas */
+.ui-datatable-tablewrapper table,
+.ui-datatable .ui-datatable-thead > tr > th {
+    border-color: var(--galeno-border);
+}
+
+.ui-datatable .ui-datatable-thead > tr > th {
+    background: var(--galeno-primary-tint);
+    color: var(--galeno-primary-dark);
+    font-weight: 600;
+}
+
+.ui-datatable .ui-datatable-data > tr:nth-child(even) {
+    background: #F4F8F8;
+}
+
+.ui-datatable .ui-datatable-data > tr:hover {
+    background: var(--galeno-primary-tint);
+    cursor: pointer;
+}
+
+/* Pie de pagina */
+.galeno-footer {
+    color: #5A6B6A;
+    font-size: 0.85rem;
+    padding: 1rem 1.25rem;
+    text-align: center;
+}
+
+/* Movimiento respetuoso de preferencias del sistema */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}

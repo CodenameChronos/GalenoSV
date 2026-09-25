@@ -14,88 +14,92 @@
 
     <cc:implementation>
 
-        <div class="ui-g">
+        <h:outputStylesheet library="estilos" name="layout-styles.css"/>
+
+        <div class="galeno-page">
 
             <!-- Header -->
-            <div class="ui-g-12">
+            <div class="galeno-header">
 
-                <div class="ui-g-4">
-                    <p:graphicImage
-                        library="img"
-                        name="galeno-17-09-2026.svg"/>
-                </div>
+                <div class="galeno-header-row">
 
-                <div class="ui-g-4">
-                    <h1>
+                    <div class="galeno-brand">
+                        <p:graphicImage
+                            library="img"
+                            name="galeno-17-09-2026.svg"/>
+                    </div>
+
+                    <h1 class="galeno-title">
                         <h:outputText value="Galeno-SV"/>
                     </h1>
-                </div>
 
-                <!-- Selector de idioma (i18n) -->
-                <div class="ui-g-4">
+                    <!-- Selector de idioma (i18n) -->
+                    <div class="galeno-lang">
 
-                    <h:form id="frmIdioma">
+                        <h:form id="frmIdioma">
 
-                        <p:outputLabel
-                            for="idioma"
-                            value="#{msg['idioma.selector.etiqueta']}"/>
+                            <p:outputLabel
+                                for="idioma"
+                                value="#{msg['idioma.selector.etiqueta']}"/>
 
-                        <p:selectOneMenu
-                            id="idioma"
-                            value="#{localeBean.idioma}">
+                            <p:selectOneMenu
+                                id="idioma"
+                                value="#{localeBean.idioma}">
 
-                            <f:selectItem
-                                itemValue="es"
-                                itemLabel="#{msg['idioma.es']}"/>
+                                <f:selectItem
+                                    itemValue="es"
+                                    itemLabel="#{msg['idioma.es']}"/>
 
-                            <f:selectItem
-                                itemValue="en"
-                                itemLabel="#{msg['idioma.en']}"/>
+                                <f:selectItem
+                                    itemValue="en"
+                                    itemLabel="#{msg['idioma.en']}"/>
 
-                            <p:ajax
-                                process="@this"
-                                update="@all"/>
+                                <p:ajax
+                                    process="@this"
+                                    update="@all"/>
 
-                        </p:selectOneMenu>
+                            </p:selectOneMenu>
 
-                    </h:form>
+                        </h:form>
+
+                    </div>
 
                 </div>
 
             </div>
 
-            <!-- Contenido -->
-            <div class="ui-g-12">
+            <!-- Contenido: sidebar + area de trabajo -->
+            <div class="galeno-shell">
 
                 <!-- Navegación -->
-                <div class="ui-g-2">
+                <div class="galeno-nav">
 
                     <p:menu>
-                        <p:menuitem value="#{msg['tipoExamen.titulo']}"
-                                    url="#{request.contextPath}/paginas/TipoExamen.jsf"/>
-                        <p:menuitem value="#{msg['procedimiento.titulo']}"
-                                    url="#{request.contextPath}/paginas/Procedimiento.jsf"/>
-                        <p:menuitem value="#{msg['examen.titulo']}"
-                                    url="#{request.contextPath}/paginas/Examen.jsf"/>
-                        <p:menuitem value="#{msg['rol.titulo']}"
-                                    url="#{request.contextPath}/paginas/Rol.jsf"/>
-                        <p:menuitem value="#{msg['tipoDocumento.titulo']}"
-                                    url="#{request.contextPath}/paginas/TipoDocumento.jsf"/>
-                        <p:menuitem value="#{msg['examenTipoExamen.titulo']}"
-                                    url="#{request.contextPath}/paginas/ExamenTipoExamen.jsf"/>
-                    </p:menu>
+                            <p:menuitem value="#{msg['tipoExamen.titulo']}"
+                                        url="#{request.contextPath}/paginas/TipoExamen.jsf"/>
+                            <p:menuitem value="#{msg['procedimiento.titulo']}"
+                                        url="#{request.contextPath}/paginas/Procedimiento.jsf"/>
+                            <p:menuitem value="#{msg['examen.titulo']}"
+                                        url="#{request.contextPath}/paginas/Examen.jsf"/>
+                            <p:menuitem value="#{msg['rol.titulo']}"
+                                        url="#{request.contextPath}/paginas/Rol.jsf"/>
+                            <p:menuitem value="#{msg['tipoDocumento.titulo']}"
+                                        url="#{request.contextPath}/paginas/TipoDocumento.jsf"/>
+                            <p:menuitem value="#{msg['examenTipoExamen.titulo']}"
+                                        url="#{request.contextPath}/paginas/ExamenTipoExamen.jsf"/>
+                        </p:menu>
 
                 </div>
 
                 <!-- Workspace -->
-                <div class="ui-g-10">
+                <div class="galeno-workspace">
                     <cc:renderFacet name="workspace"/>
                 </div>
 
             </div>
 
             <!-- Footer -->
-            <div class="ui-g-12">
+            <div class="galeno-footer">
 
                 <h:outputText
                     value="#{msg['footer.derechos']}"/>
