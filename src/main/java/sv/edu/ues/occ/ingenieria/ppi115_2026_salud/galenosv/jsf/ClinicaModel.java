@@ -3,6 +3,9 @@ package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.jsf;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ClinicaDAO;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Clinica;
@@ -20,8 +23,15 @@ public class ClinicaModel extends ModelHandler<Clinica> {
     @Inject
     private ClinicaDAO clDAO;
     
+    private GenericLazyDataModel<Clinica> lazyModel;
+    
     public ClinicaModel() {
         super(Clinica.class);
+        this.lazyModel = new GenericLazyDataModel<>(this);
+    }
+    
+    public GenericLazyDataModel<Clinica> getLazyModel() {
+        return lazyModel;
     }
 
     @Override
@@ -36,12 +46,19 @@ public class ClinicaModel extends ModelHandler<Clinica> {
 
     @Override
     public Clinica getRegistroById(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            UUID uuid = UUID.fromString(id);
+            return (Clinica) clDAO.buscar(uuid);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.WARNING,
+                "ID inválido recibido para Clinica: " + id, ex);
+            return null;
+        }
     }
 
     @Override
     public Object getIdByRegistro(Clinica registro) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return registro != null ? registro.getIdClinica() : null;
     }
     
 }

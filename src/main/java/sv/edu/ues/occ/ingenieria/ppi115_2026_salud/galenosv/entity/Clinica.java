@@ -47,7 +47,6 @@ public class Clinica implements Serializable {
     @Column(name = "activo", nullable = false)
     private Boolean activo = Boolean.TRUE; // Inicialización única
 
-    // Opción A: Si 'tipo' es un conjunto cerrado de opciones (Ajusta la expresión regular según tus tipos reales)
     @Size(max = 20, message = "El tipo de clínica no debe exceder los 20 caracteres")
     @Column(name = "tipo", length = 20)
     private String tipo;
