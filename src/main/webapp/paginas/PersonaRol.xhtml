@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="primefaces"
+      xmlns:g="jakarta.faces.composite/galeno">
+
+    <h:head>
+        <title>#{msg['personaRol.titulo']} - Galeno-SV</title>
+    </h:head>
+
+    <h:body>
+        <g:layout>
+            <f:facet name="workspace">
+                <h:form id="frmPersonaRol">
+                    <g:crud
+                        titulo="#{msg['personaRol.titulo']}"
+                        modelo="#{personaRolModel}"
+                        rowKey="#{r.idPersonaRol}">
+
+                        <p:column headerText="#{msg['campo.comun.codigo']}">
+                            <h:outputText value="#{r.idPersonaRol}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg['personaRol.persona']}">
+                            <h:outputText value="#{r.idPersona.nombres} #{r.idPersona.apellidos}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg['personaRol.rol']}">
+                            <h:outputText value="#{r.idRol.nombre}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg['personaRol.clinica']}">
+                            <h:outputText value="#{r.idClinica != null ? r.idClinica.nombre : ''}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg['personaRol.fechaCreacion']}">
+                            <h:outputText value="#{r.fechaCreacion}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <f:facet name="formulario">
+                            <p:panelGrid columns="2"
+                                         layout="grid"
+                                         contentStyleClass="align-items-baseline ui-fluid">
+
+                                <p:outputLabel for="persona"
+                                               value="#{msg['personaRol.persona']}"/>
+                                <p:selectOneMenu id="persona"
+                                                 value="#{personaRolModel.registroActual.idPersona}"
+                                                 converter="entityConverter"
+                                                 required="true">
+                                    <f:selectItem itemLabel="--"
+                                                  itemValue="#{null}"
+                                                  noSelectionOption="true"/>
+                                    <f:selectItems value="#{personaRolModel.personas}"
+                                                   var="persona"
+                                                   itemValue="#{persona}"
+                                                   itemLabel="#{persona.nombres} #{persona.apellidos}"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="rol"
+                                               value="#{msg['personaRol.rol']}"/>
+                                <p:selectOneMenu id="rol"
+                                                 value="#{personaRolModel.registroActual.idRol}"
+                                                 converter="entityConverter"
+                                                 required="true">
+                                    <f:selectItem itemLabel="--"
+                                                  itemValue="#{null}"
+                                                  noSelectionOption="true"/>
+                                    <f:selectItems value="#{personaRolModel.roles}"
+                                                   var="rol"
+                                                   itemValue="#{rol}"
+                                                   itemLabel="#{rol.nombre}"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="clinica"
+                                               value="#{msg['personaRol.clinica']}"/>
+                                <p:selectOneMenu id="clinica"
+                                                 value="#{personaRolModel.registroActual.idClinica}"
+                                                 converter="entityConverter"
+                                                 required="true">
+                                    <f:selectItem itemLabel="--"
+                                                  itemValue="#{null}"
+                                                  noSelectionOption="true"/>
+                                    <f:selectItems value="#{personaRolModel.clinicas}"
+                                                   var="clinica"
+                                                   itemValue="#{clinica}"
+                                                   itemLabel="#{clinica.nombre}"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="fechaCreacion"
+                                               value="#{msg['personaRol.fechaCreacion']}"/>
+                                <p:datePicker id="fechaCreacion"
+                                              value="#{personaRolModel.registroActual.fechaCreacion}"
+                                              pattern="dd/MM/yyyy HH:mm"
+                                              showTime="true"
+                                              required="true"/>
+
+                            </p:panelGrid>
+                        </f:facet>
+
+                    </g:crud>
+                </h:form>
+            </f:facet>
+        </g:layout>
+    </h:body>
+</html>

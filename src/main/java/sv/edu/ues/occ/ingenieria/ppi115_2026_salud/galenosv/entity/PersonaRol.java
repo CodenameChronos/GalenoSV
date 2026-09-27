@@ -45,8 +45,9 @@ public class PersonaRol implements Serializable {
     @OneToMany(mappedBy = "idPersonaRol", fetch = FetchType.LAZY)
     private List<ConsultaProcedimientoPaso> consultaProcedimientoPasoList;
 
-    @JoinColumn(name = "id_clinica", referencedColumnName = "id_clinica")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull(message = "La clínica es obligatoria")
+    @JoinColumn(name = "id_clinica", referencedColumnName = "id_clinica", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Clinica idClinica;
 
     @NotNull(message = "La persona es obligatoria")

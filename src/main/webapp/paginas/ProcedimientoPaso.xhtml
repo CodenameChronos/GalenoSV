@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="primefaces"
+      xmlns:g="jakarta.faces.composite/galeno">
+
+    <h:head>
+        <title>#{msg['procedimientoPaso.titulo']} - Galeno-SV</title>
+    </h:head>
+
+    <h:body>
+
+        <g:layout>
+
+            <f:facet name="workspace">
+
+                <h:form id="frmProcedimientoPaso">
+
+                    <g:crud
+                        titulo="#{msg['procedimientoPaso.titulo']}"
+                        modelo="#{procedimientoPasoModel}"
+                        rowKey="#{r.idProcedimientoPaso}">
+
+                        <!-- Columnas de la tabla -->
+                        <p:column headerText="#{msg['campo.comun.codigo']}">
+                            <h:outputText value="#{r.idProcedimientoPaso}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg['campo.comun.nombre']}">
+                            <h:outputText value="#{r.nombre}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg['procedimientoPaso.indicaFin']}">
+                            <h:outputText
+                                value="#{r.indicaFin ? msg['procedimientoPaso.si'] : msg['procedimientoPaso.no']}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg['procedimientoPaso.procedimiento']}">
+                            <h:outputText value="#{r.idProcedimiento.nombre}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg['procedimientoPaso.rol']}">
+                            <h:outputText
+                                value="#{r.idRol != null ? r.idRol.nombre : ''}"/>
+                        </p:column>
+
+                        <!-- Formulario de edición -->
+                        <f:facet name="formulario">
+
+                            <p:panelGrid
+                                columns="2"
+                                layout="grid"
+                                contentStyleClass="align-items-baseline ui-fluid">
+
+                                <p:outputLabel
+                                    for="nombre"
+                                    value="#{msg['campo.comun.nombre']}"/>
+
+                                <p:inputText
+                                    id="nombre"
+                                    value="#{procedimientoPasoModel.registroActual.nombre}"
+                                    required="true"
+                                    maxlength="155"/>
+
+                                <p:outputLabel
+                                    for="indicaFin"
+                                    value="#{msg['procedimientoPaso.indicaFin']}"/>
+
+                                <p:selectBooleanCheckbox
+                                    id="indicaFin"
+                                    value="#{procedimientoPasoModel.registroActual.indicaFin}"/>
+
+                                <p:outputLabel
+                                    for="procedimiento"
+                                    value="#{msg['procedimientoPaso.procedimiento']}"/>
+
+                                <p:selectOneMenu
+                                    id="procedimiento"
+                                    value="#{procedimientoPasoModel.registroActual.idProcedimiento}"
+                                    converter="entityConverter"
+                                    required="true">
+
+                                    <f:selectItem
+                                        itemLabel="--"
+                                        itemValue="#{null}"
+                                        noSelectionOption="true"/>
+
+                                    <f:selectItems
+                                        value="#{procedimientoPasoModel.procedimientos}"
+                                        var="p"
+                                        itemValue="#{p}"
+                                        itemLabel="#{p.nombre}"/>
+
+                                </p:selectOneMenu>
+
+                                <p:outputLabel
+                                    for="rol"
+                                    value="#{msg['procedimientoPaso.rol']}"/>
+
+                                <p:selectOneMenu
+                                    id="rol"
+                                    value="#{procedimientoPasoModel.registroActual.idRol}"
+                                    converter="entityConverter">
+
+                                    <f:selectItem
+                                        itemLabel="--"
+                                        itemValue="#{null}"
+                                        noSelectionOption="true"/>
+
+                                    <f:selectItems
+                                        value="#{procedimientoPasoModel.roles}"
+                                        var="r"
+                                        itemValue="#{r}"
+                                        itemLabel="#{r.nombre}"/>
+
+                                </p:selectOneMenu>
+
+                            </p:panelGrid>
+
+                        </f:facet>
+
+                    </g:crud>
+
+                </h:form>
+
+            </f:facet>
+
+        </g:layout>
+
+    </h:body>
+
+</html>
