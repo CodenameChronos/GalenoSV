@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:h="jakarta.faces.html"
+       xmlns:f="jakarta.faces.core"
+       xmlns:p="primefaces"
+       xmlns:g="jakarta.faces.composite/galeno">
+    
+    <h:head>
+        <title>TODO supply a title</title>
+    </h:head>
+    
+    <h:body>
+        <g:layout>
+            <f:facet name="workspace">
+                <h:form id="frmConsulta">
+                    <g:crud 
+                        titulo="#{msg['consulta.titulo']}"
+                            modelo="#{consultaModel}"
+                            rowKey="#{r.idConsulta}">
+
+                            <p:column headerText="#{msg['campo.comun.codigo']}">
+                                <h:outputText value="#{r.idConsulta}"/>
+                            </p:column>
+
+                            <p:column headerText="#{msg['consulta.fechaInicio']}">
+                                <h:outputText value="#{r.fechaInicio}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="#{msg['consulta.fechaFin']}">
+                                <h:outputText value="#{r.fechaFin}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="#{msg['consulta.referenciaExterna']}">
+                                <h:outputText value="#{r.referenciaExterna}" />
+                            </p:column>
+
+                            <p:column headerText="#{msg['campo.comun.observaciones']}">
+                                <h:outputText value="#{r.observaciones}" />
+                            </p:column>
+
+                            <p:column headerText="#{msg['consulta.persona']}">
+                                <h:outputText value="#{r.fechaCreacion}" />
+                            </p:column>
+
+                        <f:facet name="formulario">
+
+                            <p:panelGrid
+                                    columns="4"
+                                    layout="grid"
+                                    columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                    contentStyleClass="align-items-baseline ui-fluid">
+
+                                <p:outputLabel for="fechaInicio" value="#{msg['consulta.fechaInicio']}" />
+                                <p:inputText id="fechaInicio" value="#{r.fechaInicio}" />
+
+                                <p:outputLabel for="fechaFin" value="#{msg['consulta.fechaFin']}" />
+                                <p:inputText id="fechaFin" value="#{r.fechaFin}" />
+
+                                <p:outputLabel for="referenciaExterna" value="#{msg['consulta.referenciaExterna']}" />
+                                <p:inputText id="referenciaExterna"  value="#{r.referenciaExterna}" />
+
+                                <p:outputLabel for="observaciones" value="#{msg['campo.comun.observaciones']}" />
+                                <p:inputTextarea id="observaciones" value="#{r.observaciones}" />
+
+                                <p:outputLabel for="persona" value="#{msg['consulta.persona']}" />
+                                <p:autoComplete id="persona" dropdown="true" 
+                                                    value="#{consultaModel.registroActual.idPersonaRol}"
+                                                    completeMethod="#{consultaModel.completarPersonaRol}"
+                                                    converter="entityConverter"
+                                                    var="consulta"
+                                                    itemLabel="#{consulta.nombre}"
+                                                    itemValue="#{consulta}"
+                                                    forceSelection="true"
+                                                    scrollHeight="250"
+                                                    minQueryLength="3"
+                                                    required="true"/>
+
+                            </p:panelGrid>
+
+                        </f:facet>
+
+                    </g:crud>
+                    
+                </h:form>
+                    
+            </f:facet>
+            
+        </g:layout>
+        
+    </h:body>
+    
+</html>
