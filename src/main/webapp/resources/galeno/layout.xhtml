@@ -53,6 +53,14 @@
                                 <f:selectItem
                                     itemValue="en"
                                     itemLabel="#{msg['idioma.en']}"/>
+                                
+                                <f:selectItem
+                                    itemValue="fr"
+                                    itemLabel="#{msg['idioma.fr']}"/>
+                                
+                                <f:selectItem
+                                    itemValue="kr"
+                                    itemLabel="#{msg['idioma.kr']}"/>
 
                                 <p:ajax
                                     process="@this"
@@ -75,7 +83,6 @@
                 <div class="galeno-nav">
 
                     <p:menu>
-<<<<<<< HEAD
                             <p:menuitem value="#{msg['tipoExamen.titulo']}"
                                         url="#{request.contextPath}/paginas/TipoExamen.jsf"/>
                             <p:menuitem value="#{msg['procedimiento.titulo']}"
