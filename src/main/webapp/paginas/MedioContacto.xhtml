@@ -20,7 +20,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 <h:form id="frmMedioContacto">
                     <g:crud
                         titulo="#{msg['medioContacto.titulo']}"
-                        modelo="#{examenTipoExamenModel}"
+                        modelo="#{medioContactoModel}"
                         rowKey="#{r.idMedioContacto}">
 
                         <p:column headerText="#{msg['campo.comun.codigo']}">
@@ -38,7 +38,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         </p:column>
 
                         <p:column headerText="#{msg['persona.titulo']}">
-                            <h:outputText value="#{r.idPersona.nombre}"/>
+                            <h:outputText value="#{r.idPersona.nombreCompleto}"/>
                         </p:column> 
 
                         <p:column headerText="#{msg['tipoMedioContacto.titulo']}">
@@ -71,7 +71,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                                                 completeMethod="#{medioContactoModel.completarPersona}"
                                                 converter="entityConverter"
                                                 var="persona"
-                                                itemLabel="#{persona.nombre}"
+                                                itemLabel="#{persona.nombreCompleto}"
                                                 itemValue="#{persona}"
                                                 forceSelection="true"
                                                 scrollHeight="250"
@@ -80,10 +80,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                                 
                                  <p:outputLabel for="idTipoMedioContacto" value="#{msg['tipoMedioContacto.titulo']}"/>
                                 <p:autoComplete id="idTipoMedioContacto" dropdown="true" 
-                                                value="#{examenTipoMedioContactonModel.registroActual.idTipoMedioContacto}"
-                                                completeMethod="#{examenTipoMedioContactoModel.completarTipoMedioContacto}"
+                                                value="#{medioContactoModel.registroActual.idTipoMedioContacto}"
+                                                completeMethod="#{medioContactoModel.completarTipoMedioContacto}"
                                                 converter="entityConverter"
-                                                var="tipoExamen"
+                                                var="tipoMedioContacto"
                                                 itemLabel="#{tipoMedioContacto.nombre}"
                                                 itemValue="#{tipoMedioContacto}"
                                                 forceSelection="true"

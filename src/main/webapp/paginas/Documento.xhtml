@@ -28,7 +28,7 @@
                         </p:column>
                         
                         <p:column headerText="#{msg['persona.titulo']}">
-                            <h:outputText value="#{r.idPersona.nombres}"/>
+                            <h:outputText value="#{r.idPersona.nombreCompleto}"/>
                         </p:column>
                         
                         <p:column headerText="#{msg['tipoDocumento.titulo']}">
@@ -55,7 +55,7 @@
                                                 completeMethod="#{documentoModel.completarPersona}"
                                                 converter="entityConverter"
                                                 var="persona"
-                                                itemLabel="#{persona.nombre}"
+                                                itemLabel="#{persona.nombreCompleto}"
                                                 itemValue="#{persona}"
                                                 forceSelection="true"
                                                 scrollHeight="250"

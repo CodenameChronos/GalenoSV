@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DocumentoDAO;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.TipoDocumentoDAO;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Documento;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Persona;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoDocumento;
@@ -31,7 +32,7 @@ public class DocumentoModel extends ModelHandler<Documento> {
     private PersonaDAO pDAO;
     
     @Inject
-    private TipoDocumento tdDAO;
+    private TipoDocumentoDAO tdDAO;
     
        private GenericLazyDataModel<Documento> lazyModel;
 

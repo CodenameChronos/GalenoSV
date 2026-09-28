@@ -40,6 +40,10 @@ public class MedioContactoModel extends ModelHandler<MedioContacto> {
         super(MedioContacto.class);
         this.lazyModel = new GenericLazyDataModel<>(this);
     }
+    
+    public GenericLazyDataModel<MedioContacto> getLazyModel() {
+        return lazyModel;
+    }
 
     @Override
     public DAOInterface<MedioContacto> getDAO() {

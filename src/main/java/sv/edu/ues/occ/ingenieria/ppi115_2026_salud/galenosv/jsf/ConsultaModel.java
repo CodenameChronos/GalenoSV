@@ -3,7 +3,6 @@ package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.jsf;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;

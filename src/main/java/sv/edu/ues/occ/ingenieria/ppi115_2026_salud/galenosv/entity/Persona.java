@@ -12,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -31,12 +32,7 @@ import java.util.UUID;
     @NamedQuery(name = "Persona.findByApellidos", query = "SELECT p FROM Persona p WHERE p.apellidos = :apellidos"),
     @NamedQuery(name = "Persona.findByFechaNacimiento", query = "SELECT p FROM Persona p WHERE p.fechaNacimiento = :fechaNacimiento"),
     @NamedQuery(name = "Persona.findByFechaCreacion", query = "SELECT p FROM Persona p WHERE p.fechaCreacion = :fechaCreacion"),
-    @NamedQuery(
-        name = "Persona.findByNombreCompleto",
-        query = "SELECT p FROM Persona p "
-              + "WHERE UPPER(p.nombres) LIKE UPPER(:texto) "
-              + "OR UPPER(p.apellidos) LIKE UPPER(:texto) "
-              + "ORDER BY p.nombres, p.apellidos"
+    @NamedQuery(name = "Persona.findByNombreCompleto", query = "SELECT p FROM Persona p WHERE UPPER(CONCAT(p.nombres, ' ', p.apellidos)) LIKE UPPER(:texto) ORDER BY p.nombres, p.apellidos"
     )
 })
 public class Persona implements Serializable {
@@ -78,6 +74,19 @@ public class Persona implements Serializable {
 
     @OneToMany(mappedBy = "idPersona", fetch = FetchType.LAZY)
     private List<PersonaRol> personaRolList;
+    
+    /**
+     * Etiqueta para mostrar en vistas (autocomplete, tablas).
+     * No se persiste.
+     */
+    @Transient
+    public String getNombreCompleto() {
+        if (idPersona == null) {
+            return "";
+        }
+        return getNombres() + " " + getApellidos();
+    }
+
 
     public Persona() {
     }

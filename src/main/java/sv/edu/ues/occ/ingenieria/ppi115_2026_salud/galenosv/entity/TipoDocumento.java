@@ -28,7 +28,9 @@ import java.util.regex.PatternSyntaxException;
     @NamedQuery(name = "TipoDocumento.findByNombre", query = "SELECT t FROM TipoDocumento t WHERE t.nombre = :nombre"),
     @NamedQuery(name = "TipoDocumento.findByIndicaciones", query = "SELECT t FROM TipoDocumento t WHERE t.indicaciones = :indicaciones"),
     @NamedQuery(name = "TipoDocumento.findByExpresionRegular", query = "SELECT t FROM TipoDocumento t WHERE t.expresionRegular = :expresionRegular"),
-    @NamedQuery(name = "TipoDocumento.findByActivo", query = "SELECT t FROM TipoDocumento t WHERE t.activo = :activo")})
+    @NamedQuery(name = "TipoDocumento.findByActivo", query = "SELECT t FROM TipoDocumento t WHERE t.activo = :activo"),
+    @NamedQuery(name = "TipoDocumento.findActiveByNombre", query = "SELECT t FROM TipoDocumento t WHERE UPPER(t.nombre) LIKE UPPER(:nombre) AND t.activo = true ORDER BY t.nombre")
+})
 public class TipoDocumento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -151,7 +153,4 @@ public class TipoDocumento implements Serializable {
         return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoDocumento[ idTipoDocumento=" + idTipoDocumento + " ]";
     }
 
-    public List<TipoDocumento> buscarPorNombre(String texto, int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

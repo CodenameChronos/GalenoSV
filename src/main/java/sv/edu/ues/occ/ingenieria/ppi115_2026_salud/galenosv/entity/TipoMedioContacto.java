@@ -28,7 +28,9 @@ import java.util.regex.PatternSyntaxException;
     @NamedQuery(name = "TipoMedioContacto.findByNombre", query = "SELECT t FROM TipoMedioContacto t WHERE t.nombre = :nombre"),
     @NamedQuery(name = "TipoMedioContacto.findByIndicaciones", query = "SELECT t FROM TipoMedioContacto t WHERE t.indicaciones = :indicaciones"),
     @NamedQuery(name = "TipoMedioContacto.findByExpresionRegular", query = "SELECT t FROM TipoMedioContacto t WHERE t.expresionRegular = :expresionRegular"),
-    @NamedQuery(name = "TipoMedioContacto.findByActivo", query = "SELECT t FROM TipoMedioContacto t WHERE t.activo = :activo")})
+    @NamedQuery(name = "TipoMedioContacto.findByActivo", query = "SELECT t FROM TipoMedioContacto t WHERE t.activo = :activo"),
+    @NamedQuery(name = "TipoMedioContacto.findActiveByNombre", query = "SELECT t FROM TipoMedioContacto t WHERE UPPER(t.nombre) LIKE UPPER(:nombre) AND t.activo = true ORDER BY t.nombre")
+})
 public class TipoMedioContacto implements Serializable {
 
     private static final long serialVersionUID = 1L;
