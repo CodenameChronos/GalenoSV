@@ -30,7 +30,15 @@ import java.util.UUID;
     @NamedQuery(name = "Persona.findByNombres", query = "SELECT p FROM Persona p WHERE p.nombres = :nombres"),
     @NamedQuery(name = "Persona.findByApellidos", query = "SELECT p FROM Persona p WHERE p.apellidos = :apellidos"),
     @NamedQuery(name = "Persona.findByFechaNacimiento", query = "SELECT p FROM Persona p WHERE p.fechaNacimiento = :fechaNacimiento"),
-    @NamedQuery(name = "Persona.findByFechaCreacion", query = "SELECT p FROM Persona p WHERE p.fechaCreacion = :fechaCreacion")})
+    @NamedQuery(name = "Persona.findByFechaCreacion", query = "SELECT p FROM Persona p WHERE p.fechaCreacion = :fechaCreacion"),
+    @NamedQuery(
+        name = "Persona.findByNombreCompleto",
+        query = "SELECT p FROM Persona p "
+              + "WHERE UPPER(p.nombres) LIKE UPPER(:texto) "
+              + "OR UPPER(p.apellidos) LIKE UPPER(:texto) "
+              + "ORDER BY p.nombres, p.apellidos"
+    )
+})
 public class Persona implements Serializable {
 
     private static final long serialVersionUID = 1L;

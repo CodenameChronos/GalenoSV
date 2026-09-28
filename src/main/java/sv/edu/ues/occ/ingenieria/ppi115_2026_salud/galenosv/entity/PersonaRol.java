@@ -14,6 +14,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import java.io.Serializable;
@@ -26,7 +27,9 @@ import java.util.UUID;
 @Table(name = "persona_rol", schema = "public")
 @NamedQueries({
     @NamedQuery(name = "PersonaRol.findAll", query = "SELECT p FROM PersonaRol p"),
-    @NamedQuery(name = "PersonaRol.findByFechaCreacion", query = "SELECT p FROM PersonaRol p WHERE p.fechaCreacion = :fechaCreacion")})
+    @NamedQuery(name = "PersonaRol.findByFechaCreacion", query = "SELECT p FROM PersonaRol p WHERE p.fechaCreacion = :fechaCreacion"),
+    @NamedQuery(name = "PersonaRol.findByNombresApellidos", query = "SELECT pr FROM PersonaRol pr JOIN FETCH pr.idPersona p LEFT JOIN FETCH pr.idRol r WHERE UPPER(CONCAT(p.nombres, ' ', p.apellidos)) LIKE UPPER(:nombre) ORDER BY p.nombres, p.apellidos")
+})
 public class PersonaRol implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -45,8 +48,9 @@ public class PersonaRol implements Serializable {
     @OneToMany(mappedBy = "idPersonaRol", fetch = FetchType.LAZY)
     private List<ConsultaProcedimientoPaso> consultaProcedimientoPasoList;
 
-    @JoinColumn(name = "id_clinica", referencedColumnName = "id_clinica")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull(message = "La clínica es obligatoria")
+    @JoinColumn(name = "id_clinica", referencedColumnName = "id_clinica", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Clinica idClinica;
 
     @NotNull(message = "La persona es obligatoria")
@@ -61,6 +65,19 @@ public class PersonaRol implements Serializable {
 
     @OneToMany(mappedBy = "idPersonaRol", fetch = FetchType.LAZY)
     private List<Consulta> consultaList;
+    
+    /**
+     * Etiqueta para mostrar en vistas (autocomplete, tablas).
+     * No se persiste. Requiere que idPersona esté cargada; la consulta
+     * buscarPorNombresApellidos ya la trae con JOIN FETCH.
+     */
+    @Transient
+    public String getNombreCompleto() {
+        if (idPersona == null) {
+            return "";
+        }
+        return idPersona.getNombres() + " " + idPersona.getApellidos();
+    }
 
     public PersonaRol() {
     }

@@ -12,79 +12,80 @@
     <h:body>
         <g:layout>
             <f:facet name="workspace">
+                <h:form id="frmPersona">
+                    <g:crud 
+                        titulo="Persona"
+                        modelo="#{personaModel}"
+                        rowKey="#{r.idPersona}">
 
-                <g:crud 
-                    titulo="Persona"
-                    modelo="#{personaModel}"
-                    rowKey="#{r.idPersona}">
+                        <p:column headerText="Código">
+                            <h:outputText value="#{r.idPersona}"/>
+                        </p:column>
 
-                    <p:column headerText="Código">
-                        <h:outputText value="#{r.idPersona}"/>
-                    </p:column>
+                        <p:column headerText="Nombres">
+                            <h:outputText value="#{r.nombres}"/>
+                        </p:column>
 
-                    <p:column headerText="Nombres">
-                        <h:outputText value="#{r.nombres}"/>
-                    </p:column>
+                        <p:column headerText="Apellidos">
+                            <h:outputText value="#{r.apellidos}"/>
+                        </p:column>
 
-                    <p:column headerText="Apellidos">
-                        <h:outputText value="#{r.apellidos}"/>
-                    </p:column>
+                        <p:column headerText="Fecha de nacimiento">
+                            <h:outputText value="#{r.fechaNacimiento}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText> 
+                        </p:column>
 
-                    <p:column headerText="Fecha de nacimiento">
-                        <h:outputText value="#{r.fechaNacimiento}">
-                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                        </h:outputText> 
-                    </p:column>
+                        <p:column headerText="Fecha de creacion">
+                            <h:outputText value="#{r.fechaCreacion}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText> 
+                        </p:column>
 
-                    <p:column headerText="Fecha de creacion">
-                        <h:outputText value="#{r.fechaCreacion}">
-                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                        </h:outputText> 
-                    </p:column>
-
-                    <f:facet name="formulario">
-                        <p:panelGrid
-                            columns="4"
-                            layout="grid"
-                            columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
-                            contentStyleClass="align-items-baseline ui-fluid">
-
-
-                            <p:outputLabel
-                                for="Nombres"
-                                value="Nombres"/>
-
-                            <p:inputText
-                                id="Nombres"
-                                value="#{personaModel.registroActual.nombres}"/>
-
-                            <p:outputLabel
-                                for="Apellidos"
-                                value="Apellidos"/>
-
-                            <p:inputText
-                                id="Apellidos"
-                                value="#{personaModel.registroActual.apellidos}"/> 
-
-                            <p:outputLabel
-                                for="fechaNacimiento"
-                                value="Fecha de nacimineto"/>
-
-                            <p:datePicker 
-                                id="fechaNacimiento" 
-                                value="#{personaModel.registroActual.fechaNacimiento}" showIcon="true" 
-                                buttonTabindex="0" maxdate="#{autoDate.hoy}" pattern="dd//MM/yyyy"  />
+                        <f:facet name="formulario">
+                            <p:panelGrid
+                                columns="4"
+                                layout="grid"
+                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                contentStyleClass="align-items-baseline ui-fluid">
 
 
-                            <p:outputLabel 
-                                for="fechaCreacion"
-                                value="Fecha de creacion"/>
+                                <p:outputLabel
+                                    for="Nombres"
+                                    value="Nombres"/>
 
-                            <h:outputText id="fechaCreacion" value="#{autoDate.time}"/>
+                                <p:inputText
+                                    id="Nombres"
+                                    value="#{personaModel.registroActual.nombres}"/>
 
-                        </p:panelGrid>
-                    </f:facet>
-                </g:crud>    
+                                <p:outputLabel
+                                    for="Apellidos"
+                                    value="Apellidos"/>
+
+                                <p:inputText
+                                    id="Apellidos"
+                                    value="#{personaModel.registroActual.apellidos}"/> 
+
+                                <p:outputLabel
+                                    for="fechaNacimiento"
+                                    value="Fecha de nacimineto"/>
+
+                                <p:datePicker 
+                                    id="fechaNacimiento" 
+                                    value="#{personaModel.registroActual.fechaNacimiento}" showIcon="true" 
+                                    buttonTabindex="0" maxdate="#{autoDate.hoy}" pattern="dd/MM/yyyy"  />
+
+
+                                <p:outputLabel 
+                                    for="fechaCreacion"
+                                    value="Fecha de creacion"/>
+
+                                <h:outputText id="fechaCreacion" value="#{autoDate.time}"/>
+
+                            </p:panelGrid>
+                        </f:facet>
+                    </g:crud>    
+                </h:form>
             </f:facet>
         </g:layout>
     </h:body>

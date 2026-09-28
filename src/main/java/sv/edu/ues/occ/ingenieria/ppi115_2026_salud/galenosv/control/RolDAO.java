@@ -5,16 +5,16 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Rol;
+import java.util.List;
 
 /**
  *
  * @author kardia
  */
-
 @Stateless
 @LocalBean
 public class RolDAO extends DefaultDAO<Rol> {
-    
+
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
@@ -26,7 +26,13 @@ public class RolDAO extends DefaultDAO<Rol> {
     public EntityManager getEntityManager() {
         return em;
     }
-    
-    
-    
+
+    public List<Rol> buscarPorNombre(String texto, int max) {
+        return getEntityManager()
+                .createNamedQuery("Rol.findActiveByNombre", Rol.class)
+                .setParameter("nombre", "%" + texto.trim().toLowerCase() + "%")
+                .setMaxResults(max)
+                .getResultList();
+    }
+
 }

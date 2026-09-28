@@ -13,74 +13,82 @@
     <h:body>
         <g:layout>
             <f:facet name="workspace">
-                <g:crud 
-                    titulo="Tipo medio de contacto"
-                    modelo="#{tipoMedioContactoModel}"
-                    rowKey="#{r.idTipoMedioContacto}">
+                <h:form id="frmTipoMedioContacto">
+                    <g:crud 
+                        titulo="Tipo medio de contacto"
+                        modelo="#{tipoMedioContactoModel}"
+                        rowKey="#{r.idTipoMedioContacto}">
 
-                    <p:column headerText="Código">
-                        <h:outputText value="#{r.idTipoMedioContacto}"/>
-                    </p:column>
+                        <p:column headerText="Código">
+                            <h:outputText value="#{r.idTipoMedioContacto}"/>
+                        </p:column>
 
-                    <p:column headerText="Nombre">
-                        <h:outputText value="#{r.nombre}"/>
-                    </p:column>
+                        <p:column headerText="Nombre">
+                            <h:outputText value="#{r.nombre}"/>
+                        </p:column>
 
-                    <p:column headerText="Indicaciones">
-                        <h:outputText value="#{r.indicaciones}"/>
-                    </p:column>
+                        <p:column headerText="Indicaciones">
+                            <h:outputText value="#{r.indicaciones}"/>
+                        </p:column>
 
-                    <p:column headerText="Expresion regular">
-                        <h:outputText value="#{r.expresionRegular}"/>
-                    </p:column>
+                        <p:column headerText="Expresion regular">
+                            <h:outputText value="#{r.expresionRegular}"/>
+                        </p:column>
 
-                    <p:column headerText="Activo">
-                        <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
-                    </p:column>
+                        <p:column headerText="Activo">
+                            <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
+                        </p:column>
 
-                    <f:facet name="formulario">
-                        <p:panelGrid
-                            columns="4"
-                            layout="grid"
-                            columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
-                            contentStyleClass="align-items-baseline ui-fluid">
+                        <f:facet name="formulario">
+                            <p:panelGrid
+                                columns="4"
+                                layout="grid"
+                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                contentStyleClass="align-items-baseline ui-fluid">
 
-                            <p:outputLabel
-                                for="Nombres"
-                                value="Nombre"/>
+                                <p:outputLabel
+                                    for="Nombres"
+                                    value="Nombre"/>
 
-                            <p:inputText
-                                id="Nombres"
-                                value="#{tipoMedioContactoModel.registroActual.nombre}"/>
+                                <p:inputText
+                                    id="Nombres"
+                                    value="#{tipoMedioContactoModel.registroActual.nombre}"/>
 
-                            <p:outputLabel
-                                for="indicaciones"
-                                value="Indicaciones"/>
+                                <p:outputLabel
+                                    for="indicaciones"
+                                    value="Indicaciones"/>
 
-                            <p:inputTextarea
-                                id="indicaciones"
-                                value="#{tipoMedioContactoModel.registroActual.indicaciones}"/>
+                                <p:inputTextarea
+                                    id="indicaciones"
+                                    value="#{tipoMedioContactoModel.registroActual.indicaciones}"/>
 
-                            <p:outputLabel
-                                for="exregular"
-                                value="Expresion regular"/>
+                                <p:outputLabel
+                                    for="exregular"
+                                    value="Expresion regular"/>
 
-                            <p:inputText
-                                id="exregular"
-                                value="#{tipoMedioContactoModel.registroActual.expresionRegular}"/>
+                                <p:inputText
+                                    id="exregular"
+                                    value="#{tipoMedioContactoModel.registroActual.expresionRegular}"/>
 
-                            <p:outputLabel
-                                for="activo"
-                                value="Activo"/>
+                                <p:outputLabel
+                                    for="activo"
+                                    value="Activo"/>
 
-                            <p:toggleSwitch
-                                id="activo"
-                                value="#{tipoMedioContactoModel.registroActual.activo}"/>
+                                <p:toggleSwitch
+                                    id="activo"
+                                    value="#{tipoMedioContactoModel.registroActual.activo}"/>
 
-                        </p:panelGrid>
-                    </f:facet>
-                </g:crud>
+                            </p:panelGrid>
+                        </f:facet>
+                        
+                    </g:crud>
+                    
+                </h:form>
+                
             </f:facet>
+            
         </g:layout>
+        
     </h:body>
+    
 </html>
