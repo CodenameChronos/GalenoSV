@@ -4,6 +4,7 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.List;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ProcedimientoPaso;
 
 /**
@@ -14,7 +15,7 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Procedimiento
 @Stateless
 @LocalBean
 public class ProcedimientoPasoDAO extends DefaultDAO<ProcedimientoPaso> {
-    
+
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
@@ -26,6 +27,12 @@ public class ProcedimientoPasoDAO extends DefaultDAO<ProcedimientoPaso> {
     public EntityManager getEntityManager() {
         return em;
     }
-    
-    
+
+    public List<ProcedimientoPaso> buscarPorNombre(String texto, int max) {
+        return getEntityManager()
+                .createNamedQuery("ProcedimientoPaso.findActiveByNombre", ProcedimientoPaso.class)
+                .setParameter("nombre", "%" + texto.trim().toLowerCase() + "%")
+                .setMaxResults(max)
+                .getResultList();
+    }
 }
