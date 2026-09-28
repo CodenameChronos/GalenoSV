@@ -4,6 +4,7 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.List;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Persona;
 
 /**
@@ -25,6 +26,10 @@ public class PersonaDAO extends DefaultDAO<Persona> {
     @Override
     public EntityManager getEntityManager() {
         return em;
+    }
+
+    public List<Persona> buscarPorNombre(String texto, int i) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
     

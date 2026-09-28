@@ -31,7 +31,7 @@ public class ExamenTipoExamenDAO extends DefaultDAO<ExamenTipoExamen> implements
     public EntityManager getEntityManager() {
         return em;
     }
-
+    //-----------
     public List<ExamenTipoExamen> findByIdExamen(final UUID uuid, int first, int max) {
         try {
             TypedQuery<ExamenTipoExamen> tq = em.createNamedQuery("ExamenTipoExamen.findByIdTipoExamen", ExamenTipoExamen.class);

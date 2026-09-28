@@ -3,9 +3,16 @@ package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.jsf;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DocumentoDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaDAO;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Documento;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Persona;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoDocumento;
 
 /**
  *
@@ -19,9 +26,19 @@ public class DocumentoModel extends ModelHandler<Documento> {
     
     @Inject
     private DocumentoDAO docDAO;
+    
+    @Inject
+    private PersonaDAO pDAO;
+    
+    @Inject
+    private TipoDocumento tdDAO;
+    
+       private GenericLazyDataModel<Documento> lazyModel;
 
     public DocumentoModel() {
         super(Documento.class);
+        
+        this.lazyModel = new GenericLazyDataModel<>(this);
     }
 
     @Override
@@ -29,6 +46,10 @@ public class DocumentoModel extends ModelHandler<Documento> {
         return docDAO;
     }
 
+     public GenericLazyDataModel<Documento> getLazyModel() {
+        return lazyModel;
+    }
+     
     @Override
     public Documento instanciarRegistro() {
         return new Documento();
@@ -36,14 +57,34 @@ public class DocumentoModel extends ModelHandler<Documento> {
 
     @Override
     public Documento getRegistroById(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            UUID uuid = UUID.fromString(id);
+            return (Documento) docDAO.buscar(uuid);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(getClass().getName()).log(Level.WARNING,
+                "ID inválido recibido para Documento: " + id, ex);
+            return null;
+        }
     }
 
     @Override
     public Object getIdByRegistro(Documento registro) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return registro != null ? registro.getIdDocumento() : null;
     }
     
+    public List<Persona> completarPersona(String texto) {
+        if (texto == null || texto.isBlank()) {
+            return List.of();
+        }
+        return pDAO.buscarPorNombre(texto, 30);
+    }
+    
+    public List<TipoDocumento> completarTipoDocumento(String texto) {
+        if (texto == null || texto.isBlank()) {
+            return List.of();
+        }
+        return tdDAO.buscarPorNombre(texto, 30);
+    }
     
     
 }
