@@ -7,7 +7,7 @@
       xmlns:g="jakarta.faces.composite/galeno">
 
     <h:head>
-        <title>Tipo Documento - Galeno-SV</title>
+        <title>#{msg['tipoDocumento.titulo']} - Galeno-SV</title>
     </h:head>
 
     <h:body>
@@ -39,7 +39,7 @@
                         </p:column>
 
                         <p:column headerText="#{msg['campo.comun.activo']}">
-                            <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
+                            <h:outputText value="#{r.activo ? msg['campo.comun.activo'] : msg['campo.comun.inactivo']}"/>
                         </p:column>
 
                         <!-- Formulario de edición -->
@@ -53,7 +53,7 @@
 
                                 <p:outputLabel
                                     for="nombre"
-                                    value="Nombre tipo documento"/>
+                                    value="#{msg['tipoDocumento.nombre']}"/>
 
                                 <p:inputText
                                     id="nombre"
@@ -61,7 +61,7 @@
 
                                 <p:outputLabel
                                     for="activo"
-                                    value="Activo"/>
+                                    value="#{msg['campo.comun.activo']}"/>
 
                                 <p:toggleSwitch
                                     id="activo"
@@ -69,7 +69,7 @@
 
                                 <p:outputLabel
                                     for="indicaciones"
-                                    value="Indicaciones"/>
+                                    value="#{msg['campo.comun.indicaciones']}"/>
 
                                 <p:inputTextarea
                                     id="indicaciones"
@@ -77,7 +77,7 @@
 
                                 <p:outputLabel
                                     for="expresionRegular"
-                                    value="Expresión regular"/>
+                                    value="#{msg['campo.comun.expresionRegular']}"/>
 
                                 <p:inputText
                                     id="expresionRegular"
@@ -96,4 +96,5 @@
         </g:layout>
 
     </h:body>
+    
 </html>

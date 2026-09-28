@@ -150,4 +150,6 @@ public class TipoMedioContacto implements Serializable {
     public String toString() {
         return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoMedioContacto[ idTipoMedioContacto=" + idTipoMedioContacto + " ]";
     }
+    
+    
 }

@@ -7,7 +7,7 @@
        xmlns:g="jakarta.faces.composite/galeno">
 
     <h:head>
-        <title>Tipo medio de contacto - Galeno SV</title>
+        <title>#{msg['tipoMedioContacto.titulo']} - Galeno SV</title>
     </h:head>
 
     <h:body>
@@ -15,28 +15,28 @@
             <f:facet name="workspace">
                 <h:form id="frmTipoMedioContacto">
                     <g:crud 
-                        titulo="Tipo medio de contacto"
+                        titulo="#{msg['tipoMedioContacto.titulo']}"
                         modelo="#{tipoMedioContactoModel}"
                         rowKey="#{r.idTipoMedioContacto}">
 
-                        <p:column headerText="Código">
+                        <p:column headerText="#{msg['campo.comun.codigo']}">
                             <h:outputText value="#{r.idTipoMedioContacto}"/>
                         </p:column>
 
-                        <p:column headerText="Nombre">
+                        <p:column headerText="#{msg['campo.comun.nombre']}">
                             <h:outputText value="#{r.nombre}"/>
                         </p:column>
 
-                        <p:column headerText="Indicaciones">
+                        <p:column headerText="#{msg['campo.comun.indicaciones']}">
                             <h:outputText value="#{r.indicaciones}"/>
                         </p:column>
 
-                        <p:column headerText="Expresion regular">
+                        <p:column headerText="#{msg['campo.comun.expresionRegular']}">
                             <h:outputText value="#{r.expresionRegular}"/>
                         </p:column>
 
-                        <p:column headerText="Activo">
-                            <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
+                        <p:column headerText="#{msg['campo.comun.activo']}">
+                            <h:outputText value="#{r.activo ? msg['campo.comun.activo'] : msg['campo.comun.inactivo']}"/>
                         </p:column>
 
                         <f:facet name="formulario">
@@ -48,7 +48,7 @@
 
                                 <p:outputLabel
                                     for="Nombres"
-                                    value="Nombre"/>
+                                    value="#{msg['campo.comun.nombre']}"/>
 
                                 <p:inputText
                                     id="Nombres"
@@ -56,7 +56,7 @@
 
                                 <p:outputLabel
                                     for="indicaciones"
-                                    value="Indicaciones"/>
+                                    value="#{msg['campo.comun.indicaciones']}"/>
 
                                 <p:inputTextarea
                                     id="indicaciones"
@@ -64,7 +64,7 @@
 
                                 <p:outputLabel
                                     for="exregular"
-                                    value="Expresion regular"/>
+                                    value="#{msg['campo.comun.expresionRegular']}"/>
 
                                 <p:inputText
                                     id="exregular"
@@ -72,13 +72,14 @@
 
                                 <p:outputLabel
                                     for="activo"
-                                    value="Activo"/>
+                                    value="#{msg['campo.comun.activo']}"/>
 
                                 <p:toggleSwitch
                                     id="activo"
                                     value="#{tipoMedioContactoModel.registroActual.activo}"/>
 
                             </p:panelGrid>
+                            
                         </f:facet>
                         
                     </g:crud>

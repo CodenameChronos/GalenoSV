@@ -28,7 +28,7 @@
                         </p:column>
 
                         <p:column headerText="#{msg['campo.comun.activo']}">
-                            <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
+                            <h:outputText value="#{r.activo ? msg['campo.comun.activo'] : msg['campo.comun.inactivo']}"/>
                         </p:column>
 
                         <p:column headerText="#{msg['campo.comun.observaciones']}">

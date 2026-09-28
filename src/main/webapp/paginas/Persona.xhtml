@@ -7,36 +7,36 @@
       xmlns:g="jakarta.faces.composite/galeno">
 
     <h:head>
-        <title>Persona - Galeno SV </title>
+        <title>#{msg['persona.titulo']} - Galeno SV </title>
     </h:head>
     <h:body>
         <g:layout>
             <f:facet name="workspace">
                 <h:form id="frmPersona">
                     <g:crud 
-                        titulo="Persona"
+                        titulo="#{msg['persona.titulo']}"
                         modelo="#{personaModel}"
                         rowKey="#{r.idPersona}">
 
-                        <p:column headerText="Código">
+                        <p:column headerText="#{msg['campo.comun.codigo']}">
                             <h:outputText value="#{r.idPersona}"/>
                         </p:column>
 
-                        <p:column headerText="Nombres">
+                        <p:column headerText="#{msg['campo.comun.nombre']}">
                             <h:outputText value="#{r.nombres}"/>
                         </p:column>
 
-                        <p:column headerText="Apellidos">
+                        <p:column headerText="#{msg['persona.apellidos']}">
                             <h:outputText value="#{r.apellidos}"/>
                         </p:column>
 
-                        <p:column headerText="Fecha de nacimiento">
+                        <p:column headerText="#{msg['persona.fechaNacimiento']}">
                             <h:outputText value="#{r.fechaNacimiento}">
                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                             </h:outputText> 
                         </p:column>
 
-                        <p:column headerText="Fecha de creacion">
+                        <p:column headerText="#{msg['campo.comun.fechaCreacion']}">
                             <h:outputText value="#{r.fechaCreacion}">
                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                             </h:outputText> 
@@ -52,7 +52,7 @@
 
                                 <p:outputLabel
                                     for="Nombres"
-                                    value="Nombres"/>
+                                    value="#{msg['campo.comun.nombre']}"/>
 
                                 <p:inputText
                                     id="Nombres"
@@ -60,7 +60,7 @@
 
                                 <p:outputLabel
                                     for="Apellidos"
-                                    value="Apellidos"/>
+                                    value="#{msg['persona.apellidos']}"/>
 
                                 <p:inputText
                                     id="Apellidos"
@@ -68,25 +68,31 @@
 
                                 <p:outputLabel
                                     for="fechaNacimiento"
-                                    value="Fecha de nacimineto"/>
+                                    value="#{msg['persona.fechaNacimiento']}"/>
 
                                 <p:datePicker 
                                     id="fechaNacimiento" 
                                     value="#{personaModel.registroActual.fechaNacimiento}" showIcon="true" 
                                     buttonTabindex="0" maxdate="#{autoDate.hoy}" pattern="dd/MM/yyyy"  />
 
-
                                 <p:outputLabel 
                                     for="fechaCreacion"
-                                    value="Fecha de creacion"/>
+                                    value="#{msg['campo.comun.fechaCreacion']}"/>
 
                                 <h:outputText id="fechaCreacion" value="#{autoDate.time}"/>
 
                             </p:panelGrid>
+                            
                         </f:facet>
-                    </g:crud>    
+                        
+                    </g:crud>
+                    
                 </h:form>
+                
             </f:facet>
+            
         </g:layout>
+        
     </h:body>
+    
 </html>

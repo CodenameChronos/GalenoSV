@@ -150,4 +150,8 @@ public class TipoDocumento implements Serializable {
     public String toString() {
         return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoDocumento[ idTipoDocumento=" + idTipoDocumento + " ]";
     }
+
+    public List<TipoDocumento> buscarPorNombre(String texto, int i) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

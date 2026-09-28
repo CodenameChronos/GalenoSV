@@ -27,7 +27,10 @@ import java.util.UUID;
 @NamedQueries({
     @NamedQuery(name = "MedioContacto.findAll", query = "SELECT m FROM MedioContacto m"),
     @NamedQuery(name = "MedioContacto.findByValor", query = "SELECT m FROM MedioContacto m WHERE m.valor = :valor"),
-    @NamedQuery(name = "MedioContacto.findByFechaCreacion", query = "SELECT m FROM MedioContacto m WHERE m.fechaCreacion = :fechaCreacion")})
+    @NamedQuery(name = "MedioContacto.findByFechaCreacion", query = "SELECT m FROM MedioContacto m WHERE m.fechaCreacion = :fechaCreacion"),
+    @NamedQuery(name = "MedioContacto.findRangePadresHijos", query = "SELECT mc FROM MedioContacto mc LEFT JOIN FETCH mc.idPersona LEFT JOIN FETCH mc.idTipoMedioContacto ORDER BY mc.fechaCreacion DESC, mc.idMedioContacto"),
+    @NamedQuery(name = "MedioContacto.buscarPadresHijos", query = "SELECT mc FROM MedioContacto mc LEFT JOIN FETCH mc.idPersona LEFT JOIN FETCH mc.idTipoMedioContacto WHERE mc.idMedioContacto = :id")
+})
 public class MedioContacto implements Serializable {
 
     private static final long serialVersionUID = 1L;

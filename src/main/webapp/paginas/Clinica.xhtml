@@ -7,34 +7,34 @@
        xmlns:p="primefaces"
        xmlns:g="jakarta.faces.composite/galeno">
     <h:head>
-        <title>Clinica - Galeno SV</title>
+        <title>#{msg['clinica.titulo']} - Galeno-SV</title>
     </h:head>
     <h:body>
         <g:layout>
             <f:facet name="workspace">
                 <h:form id="frmClinica">
                     <g:crud 
-                        titulo="Clinica"
+                        titulo="#{msg['clinica.titulo']}"
                         modelo="#{clinicaModel}"
                         rowKey="#{r.idClinica}">
 
-                        <p:column headerText="Código">
+                        <p:column headerText="#{msg['campo.comun.codigo']}">
                             <h:outputText value="#{r.idClinica}"/>
                         </p:column>
 
-                        <p:column headerText="Nombres">
+                        <p:column headerText="#{msg['campo.comun.nombre']}">
                             <h:outputText value="#{r.nombre}"/>
                         </p:column>
 
-                        <p:column headerText="Activo">
-                            <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
+                        <p:column headerText="#{msg['campo.comun.activo']}">
+                            <h:outputText value="#{r.activo ? msg['campo.comun.activo'] : msg['campo.comun.inactivo']}"/>
                         </p:column>
 
-                        <p:column headerText="Tipo de clinica">
+                        <p:column headerText="#{msg['clinica.tipoClinica']}">
                             <h:outputText value="#{r.tipo}"/>
                         </p:column>
 
-                        <p:column headerText="Comentarios">
+                        <p:column headerText="#{msg['clinica.comentarios']}">
                             <h:outputText value="#{r.comentarios}"/>
                         </p:column>
 
@@ -47,7 +47,7 @@
 
                                 <p:outputLabel
                                     for="Nombres"
-                                    value="Nombres"/>
+                                    value="#{msg['campo.comun.nombre']}"/>
 
                                 <p:inputText
                                     id="Nombres"
@@ -55,7 +55,7 @@
 
                                 <p:outputLabel
                                     for="activo"
-                                    value="Activo"/>
+                                    value="#{msg['campo.comun.activo']}"/>
 
                                 <p:toggleSwitch
                                     id="activo"
@@ -63,7 +63,7 @@
 
                                 <p:outputLabel
                                     for="tipo"
-                                    value="Tipo clinica"/>
+                                    value="#{msg['clinica.tipoClinica']}"/>
 
                                 <p:inputText
                                     id="tipo"
@@ -71,7 +71,7 @@
 
                                 <p:outputLabel
                                     for="comentarios"
-                                    value="Comentarios"/>
+                                    value="#{msg['clinica.comentarios']}"/>
 
                                 <p:inputTextarea
                                     id="comentarios"
@@ -79,10 +79,16 @@
 
 
                             </p:panelGrid>
+                            
                         </f:facet>
-                    </g:crud> 
+                    </g:crud>
+                    
                 </h:form>
+                
             </f:facet>
+            
         </g:layout>
+        
     </h:body>
+    
 </html>
