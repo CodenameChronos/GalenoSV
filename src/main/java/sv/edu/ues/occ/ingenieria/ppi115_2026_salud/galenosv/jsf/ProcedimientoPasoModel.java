@@ -41,12 +41,18 @@ public class ProcedimientoPasoModel extends ModelHandler<ProcedimientoPaso> {
         return lazyModel;
     }
 
-    public List<Procedimiento> getProcedimientos() {
-        return prDAO.findRange(0, 1000);
+    public List<Procedimiento> completarProcedimiento(String texto) {
+        if (texto == null || texto.isBlank()) {
+            return List.of();
+        }
+        return prDAO.buscarPorNombre(texto, 30);
     }
 
-    public List<Rol> getRoles() {
-        return rolDAO.findRange(0, 1000);
+    public List<Rol> completarRol(String texto) {
+        if (texto == null || texto.isBlank()) {
+            return List.of();
+        }
+        return rolDAO.buscarPorNombre(texto, 30);
     }
 
     @Override

@@ -24,7 +24,11 @@ import java.util.UUID;
     @NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r"),
     @NamedQuery(name = "Rol.findByNombre", query = "SELECT r FROM Rol r WHERE r.nombre = :nombre"),
     @NamedQuery(name = "Rol.findByActivo", query = "SELECT r FROM Rol r WHERE r.activo = :activo"),
-    @NamedQuery(name = "Rol.findByObservaciones", query = "SELECT r FROM Rol r WHERE r.observaciones = :observaciones")})
+    @NamedQuery(name = "Rol.findByObservaciones", query = "SELECT r FROM Rol r WHERE r.observaciones = :observaciones"),
+    @NamedQuery(
+            name = "Rol.findActiveByNombre",
+            query = "SELECT r FROM Rol r WHERE UPPER(r.nombre) LIKE UPPER(:nombre) AND r.activo = true ORDER BY r.nombre"
+    )})
 public class Rol implements Serializable {
 
     private static final long serialVersionUID = 1L;

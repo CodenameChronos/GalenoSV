@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
@@ -7,14 +8,12 @@
 
     <h:head>
         <title>#{msg['procedimientoPaso.titulo']} - Galeno-SV</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </h:head>
 
     <h:body>
-
         <g:layout>
-
             <f:facet name="workspace">
-
                 <h:form id="frmProcedimientoPaso">
 
                     <g:crud
@@ -22,7 +21,6 @@
                         modelo="#{procedimientoPasoModel}"
                         rowKey="#{r.idProcedimientoPaso}">
 
-                        <!-- Columnas de la tabla -->
                         <p:column headerText="#{msg['campo.comun.codigo']}">
                             <h:outputText value="#{r.idProcedimientoPaso}"/>
                         </p:column>
@@ -45,7 +43,6 @@
                                 value="#{r.idRol != null ? r.idRol.nombre : ''}"/>
                         </p:column>
 
-                        <!-- Formulario de edición -->
                         <f:facet name="formulario">
 
                             <p:panelGrid
@@ -72,49 +69,39 @@
                                     value="#{procedimientoPasoModel.registroActual.indicaFin}"/>
 
                                 <p:outputLabel
-                                    for="procedimiento"
+                                    for="idProcedimiento"
                                     value="#{msg['procedimientoPaso.procedimiento']}"/>
 
-                                <p:selectOneMenu
-                                    id="procedimiento"
+                                <p:autoComplete
+                                    id="idProcedimiento"
+                                    dropdown="true"
                                     value="#{procedimientoPasoModel.registroActual.idProcedimiento}"
+                                    completeMethod="#{procedimientoPasoModel.completarProcedimiento}"
                                     converter="entityConverter"
-                                    required="true">
-
-                                    <f:selectItem
-                                        itemLabel="--"
-                                        itemValue="#{null}"
-                                        noSelectionOption="true"/>
-
-                                    <f:selectItems
-                                        value="#{procedimientoPasoModel.procedimientos}"
-                                        var="p"
-                                        itemValue="#{p}"
-                                        itemLabel="#{p.nombre}"/>
-
-                                </p:selectOneMenu>
+                                    var="procedimiento"
+                                    itemLabel="#{procedimiento.nombre}"
+                                    itemValue="#{procedimiento}"
+                                    forceSelection="true"
+                                    scrollHeight="250"
+                                    minQueryLength="3"
+                                    required="true"/>
 
                                 <p:outputLabel
-                                    for="rol"
+                                    for="idRol"
                                     value="#{msg['procedimientoPaso.rol']}"/>
 
-                                <p:selectOneMenu
-                                    id="rol"
+                                <p:autoComplete
+                                    id="idRol"
+                                    dropdown="true"
                                     value="#{procedimientoPasoModel.registroActual.idRol}"
-                                    converter="entityConverter">
-
-                                    <f:selectItem
-                                        itemLabel="--"
-                                        itemValue="#{null}"
-                                        noSelectionOption="true"/>
-
-                                    <f:selectItems
-                                        value="#{procedimientoPasoModel.roles}"
-                                        var="r"
-                                        itemValue="#{r}"
-                                        itemLabel="#{r.nombre}"/>
-
-                                </p:selectOneMenu>
+                                    completeMethod="#{procedimientoPasoModel.completarRol}"
+                                    converter="entityConverter"
+                                    var="rol"
+                                    itemLabel="#{rol.nombre}"
+                                    itemValue="#{rol}"
+                                    forceSelection="true"
+                                    scrollHeight="250"
+                                    minQueryLength="3"/>
 
                             </p:panelGrid>
 
@@ -123,11 +110,7 @@
                     </g:crud>
 
                 </h:form>
-
             </f:facet>
-
         </g:layout>
-
     </h:body>
-
 </html>

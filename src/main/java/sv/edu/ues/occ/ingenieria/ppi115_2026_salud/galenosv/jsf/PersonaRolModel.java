@@ -1,7 +1,5 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.jsf;
 
-import jakarta.faces.event.ActionEvent;
-import org.primefaces.event.SelectEvent;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -9,11 +7,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
+
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ClinicaDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaDAO;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaRolDAO;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.RolDAO;
+
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Clinica;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Persona;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.PersonaRol;
@@ -39,8 +39,6 @@ public class PersonaRolModel extends ModelHandler<PersonaRol> {
 
     private GenericLazyDataModel<PersonaRol> lazyModel;
 
-    private UUID idClinicaSeleccionada;
-
     public PersonaRolModel() {
         super(PersonaRol.class);
         this.lazyModel = new GenericLazyDataModel<>(this);
@@ -50,64 +48,25 @@ public class PersonaRolModel extends ModelHandler<PersonaRol> {
         return lazyModel;
     }
 
-    public List<Persona> getPersonas() {
-        return personaDAO.findRange(0, 1000);
-    }
-
-    public List<Rol> getRoles() {
-        return rolDAO.findRange(0, 1000);
-    }
-
-    public List<Clinica> getClinicas() {
-        return clinicaDAO.findRange(0, 1000);
-    }
-
-    public UUID getIdClinicaSeleccionada() {
-        return idClinicaSeleccionada;
-    }
-
-    public void setIdClinicaSeleccionada(UUID idClinicaSeleccionada) {
-        this.idClinicaSeleccionada = idClinicaSeleccionada;
-    }
-
-    @Override
-    public void nuevo() {
-        super.nuevo();
-        idClinicaSeleccionada = null;
-    }
-
-    @Override
-    public void seleccionar(SelectEvent<PersonaRol> registro) {
-        super.seleccionar(registro);
-
-        PersonaRol personaRol = registro.getObject();
-
-        if (personaRol.getIdClinica() != null) {
-            idClinicaSeleccionada =
-                    personaRol.getIdClinica().getIdClinica();
-        } else {
-            idClinicaSeleccionada = null;
+    public List<Persona> completarPersona(String texto) {
+        if (texto == null || texto.isBlank()) {
+            return List.of();
         }
+        return personaDAO.buscarPorNombre(texto, 30);
     }
 
-    @Override
-    public void guardarHandler(ActionEvent ae)
-            throws IllegalArgumentException, IllegalStateException {
-
-        if (idClinicaSeleccionada == null) {
-            getRegistroActual().setIdClinica(null);
-        } else {
-            Clinica clinica = (Clinica) clinicaDAO.buscar(idClinicaSeleccionada);
-            getRegistroActual().setIdClinica(clinica);
+    public List<Rol> completarRol(String texto) {
+        if (texto == null || texto.isBlank()) {
+            return List.of();
         }
-
-        super.guardarHandler(ae);
+        return rolDAO.buscarPorNombre(texto, 30);
     }
 
-    @Override
-    public void cancelarHandler(ActionEvent ae) {
-        super.cancelarHandler(ae);
-        idClinicaSeleccionada = null;
+    public List<Clinica> completarClinica(String texto) {
+        if (texto == null || texto.isBlank()) {
+            return List.of();
+        }
+        return clinicaDAO.buscarPorNombre(texto, 30);
     }
 
     @Override

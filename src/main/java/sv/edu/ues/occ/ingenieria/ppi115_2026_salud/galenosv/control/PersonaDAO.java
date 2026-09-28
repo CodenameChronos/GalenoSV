@@ -5,16 +5,16 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Persona;
+import java.util.List;
 
 /**
  *
  * @author kardia
  */
-
 @Stateless
 @LocalBean
 public class PersonaDAO extends DefaultDAO<Persona> {
-    
+
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
@@ -26,7 +26,13 @@ public class PersonaDAO extends DefaultDAO<Persona> {
     public EntityManager getEntityManager() {
         return em;
     }
-    
-    
-    
+
+    public List<Persona> buscarPorNombre(String texto, int max) {
+        return getEntityManager()
+                .createNamedQuery("Persona.findByNombreCompleto", Persona.class)
+                .setParameter("texto", "%" + texto.trim().toLowerCase() + "%")
+                .setMaxResults(max)
+                .getResultList();
+    }
+
 }
