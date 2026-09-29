@@ -55,7 +55,6 @@
                             
                             <p:tabView id="tabsConsultaProcedimiento" dynamic="false" styleClass="ui-fluid">
                                 
-                                <!-- ============ Pestaña 1: datos propios ============ -->
                                 <p:tab title="Datos generales">
                                     <p:panelGrid
                                         columns="4"
@@ -80,11 +79,9 @@
                                     </p:panelGrid>
                                 </p:tab>
                                 
-                                <!-- ============ Pestaña 2: Procedimiento ============ -->
                                 <p:tab title="#{msg['procedimiento.titulo']}">
                                     
                                     <p:outputPanel id="pnlProcedimiento">
-                                        <!-- Valor real que se valida y se envía -->
                                         <h:inputHidden id="procedimiento"
                                                        value="#{consultaProcedimientoModel.registroActual.idProcedimiento}"
                                                        converter="entityConverter"
@@ -124,7 +121,6 @@
                                     
                                 </p:tab>
                                 
-                                <!-- ============ Pestaña 3: Consulta ============ -->
                                 <p:tab title="#{msg['consulta.titulo']}">
                                     
                                     <p:outputPanel id="pnlConsulta">
