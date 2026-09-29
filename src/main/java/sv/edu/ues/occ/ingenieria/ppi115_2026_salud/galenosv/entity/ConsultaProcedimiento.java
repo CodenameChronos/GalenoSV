@@ -31,7 +31,9 @@ import java.util.UUID;
     @NamedQuery(name = "ConsultaProcedimiento.findAll", query = "SELECT c FROM ConsultaProcedimiento c"),
     @NamedQuery(name = "ConsultaProcedimiento.findByFechaInicio", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.fechaInicio = :fechaInicio"),
     @NamedQuery(name = "ConsultaProcedimiento.findByFechaFin", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.fechaFin = :fechaFin"),
-    @NamedQuery(name = "ConsultaProcedimiento.findByObservaciones", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.observaciones = :observaciones")})
+    @NamedQuery(name = "ConsultaProcedimiento.findByObservaciones", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.observaciones = :observaciones"),
+    @NamedQuery(name = "ConsultaProcedimiento.findByNombreProcedimiento", query = "SELECT consp FROM ConsultaProcedimiento consp LEFT JOIN FETCH consp.idProcedimiento LEFT JOIN FETCH consp.idConsulta c LEFT JOIN FETCH c.idPersonaRol pr LEFT JOIN FETCH pr.idPersona WHERE UPPER(consp.idProcedimiento.nombre) LIKE UPPER(:texto)")
+})
 public class ConsultaProcedimiento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,8 +44,8 @@ public class ConsultaProcedimiento implements Serializable {
     private UUID idConsultaProcedimiento;
 
     @NotNull(message = "El identificador del procedimiento es obligatorio")
-    @Column(name = "id_procedimiento", nullable = false)
-    private UUID idProcedimiento;
+    @JoinColumn(name = "id_procedimiento", referencedColumnName = "id_procedimiento", nullable = false)
+    private Procedimiento idProcedimiento;
 
     @NotNull(message = "La fecha de inicio del procedimiento es obligatoria")
     @PastOrPresent(message = "La fecha de inicio no puede ser una fecha futura")
@@ -89,11 +91,11 @@ public class ConsultaProcedimiento implements Serializable {
         this.idConsultaProcedimiento = idConsultaProcedimiento;
     }
 
-    public UUID getIdProcedimiento() {
+    public Procedimiento getIdProcedimiento() {
         return idProcedimiento;
     }
 
-    public void setIdProcedimiento(UUID idProcedimiento) {
+    public void setIdProcedimiento(Procedimiento idProcedimiento) {
         this.idProcedimiento = idProcedimiento;
     }
 

@@ -23,13 +23,13 @@
                             <h:outputText value="#{r.idConsulta}"/>
                         </p:column>
 
-                        <p:column headerText="#{msg['consulta.fechaInicio']}">
+                        <p:column headerText="#{msg['campo.comun.fechaInicio']}">
                             <h:outputText value="#{r.fechaInicio}">
                                 <f:convertDateTime pattern="dd/MM/yyyy"/>
                             </h:outputText>
                         </p:column>
 
-                        <p:column headerText="#{msg['consulta.fechaFin']}">
+                        <p:column headerText="#{msg['campo.comun.fechaFin']}">
                             <h:outputText value="#{r.fechaFin}">
                                 <f:convertDateTime pattern="dd/MM/yyyy"/>
                             </h:outputText>
@@ -55,13 +55,13 @@
                                     columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
                                     contentStyleClass="align-items-baseline ui-fluid">
 
-                                <p:outputLabel for="fechaInicio" value="#{msg['consulta.fechaInicio']}" />
+                                <p:outputLabel for="fechaInicio" value="#{msg['campo.comun.fechaInicio']}" />
                                 <p:datePicker 
                                     id="fechaInicio" 
                                     value="#{consultaModel.registroActual.fechaInicio}" showIcon="true" 
                                     buttonTabindex="0" pattern="dd/MM/yyyy"  />
 
-                                <p:outputLabel for="fechaFin" value="#{msg['consulta.fechaFin']}" />
+                                <p:outputLabel for="fechaFin" value="#{msg['campo.comun.fechaFin']}" />
                                 <p:datePicker 
                                     id="fechaFin" 
                                     value="#{consultaModel.registroActual.fechaFin}" showIcon="true" 

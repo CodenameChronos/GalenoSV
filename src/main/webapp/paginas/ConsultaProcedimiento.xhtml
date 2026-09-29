@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="primefaces"
+      xmlns:g="jakarta.faces.composite/galeno">
+    <h:head>
+        <title>#{msg['consultaProcedimiento.titulo']} - Galeno-SV</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    
+    <h:body>
+        
+        <g:layout>
+            
+            <f:facet name="workspace">
+                
+                <h:form id="frmConsultaProcedimiento">
+                    
+                    <g:crud
+                        titulo="#{msg['consultaProcedimiento.titulo']}"
+                        modelo="#{consultaProcedimientoModel}"
+                        rowKey="#{r.idConsultaProcedimiento}">
+                        
+                        <p:column headerText="#{msg['campo.comun.codigo']}">
+                            <h:outputText value="#{r.idConsultaProcedimiento}" />
+                        </p:column>
+                        
+                        <p:column headerText="#{msg['procedimiento.titulo']}">
+                            <h:outputText value="#{r.idProcedimiento.nombre}" />
+                        </p:column>
+                        
+                        <p:column headerText="#{msg['campo.comun.fechaInicio']}">
+                            <h:outputText value="#{r.fechaInicio}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column headerText="#{msg['campo.comun.fechaFin']}">
+                            <h:outputText value="#{r.fechaFin}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column headerText="#{msg['campo.comun.observaciones']}">
+                            <h:outputText value="#{r.idProcedimiento.nombre}" />
+                        </p:column>
+                        
+                        <!-- Navegacion bien cabrona para acceder al nombre del paciente de la consulta -->
+                        <p:column headerText="#{msg['consulta.titulo']}">
+                            <h:outputText value="#{r.idConsulta.idPersonaRol.idPersona.nombreCompleto}" />
+                        </p:column>
+                        
+                        <f:facet name="formulario">
+                            
+                            <p:panelGrid
+                                columns="4"
+                                layout="grid"
+                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                contentStyleClass="align-items-baseline ui-fluid">
+                                
+                                <p:outputLabel for="procedimiento" value="#{msg['procedimiento.titulo']}" />
+                                <p:autoComplete id="procedimiento" dropdown="true" 
+                                                value="#{consultaProcedimientoModel.registroActual.idProcedimiento}"
+                                                completeMethod="#{consultaProcedimientoModel.completarProcedimiento}"
+                                                converter="entityConverter"
+                                                var="procedimiento"
+                                                itemLabel="#{procedimiento.nombre}"
+                                                itemValue="#{procedimiento}"
+                                                forceSelection="true"
+                                                scrollHeight="250"
+                                                minQueryLength="3"
+                                                required="true"/>
+                        
+                                <p:outputLabel for="fechaInicio" value="#{msg['campo.comun.fechaInicio']}" />
+                                <p:datePicker 
+                                    id="fechaInicio" 
+                                    value="#{consultaProcedimientoModel.registroActual.fechaInicio}" showIcon="true" 
+                                    buttonTabindex="0" pattern="dd/MM/yyyy"  />
+                                
+                                <p:outputLabel for="consulta" value="#{msg['consulta.titulo']}" />
+                                <p:autoComplete id="consulta" dropdown="true" 
+                                                value="#{consultaProcedimientoModel.registroActual.idConsulta}"
+                                                completeMethod="#{consultaProcedimientoModel.completarConsulta}"
+                                                converter="entityConverter"
+                                                var="c"
+                                                itemLabel="#{consultaProcedimientoModel.etiquetaConsulta(c)}"
+                                                itemValue="#{c}"
+                                                forceSelection="true"
+                                                scrollHeight="250"
+                                                minQueryLength="3"
+                                                required="true"/>
+
+                                <p:outputLabel for="fechaFin" value="#{msg['campo.comun.fechaFin']}" />
+                                <p:datePicker 
+                                    id="fechaFin" 
+                                    value="#{consultaProcedimientoModel.registroActual.fechaFin}" showIcon="true" 
+                                    buttonTabindex="0" pattern="dd/MM/yyyy"  />
+                                
+                                <p:outputLabel for="observaciones" value="#{msg['campo.comun.observaciones']}" />
+                                <p:inputTextarea id="observaciones" value="#{consultaProcedimientoModel.registroActual.observaciones}" />
+                                
+                            </p:panelGrid>
+                            
+                        </f:facet>
+                        
+                    </g:crud>
+                    
+                </h:form>
+                
+            </f:facet>
+            
+        </g:layout>
+        
+    </h:body>
+    
+</html>
