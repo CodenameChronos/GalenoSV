@@ -38,6 +38,16 @@ public class ConsultaProcedimientoModel extends ModelHandler<ConsultaProcedimien
     
     private GenericLazyDataModel<ConsultaProcedimiento> lazyModel;
 
+    // Estado de las pestañas de selección de entidades foráneas
+    /** Sin criterio de búsqueda se cargan todos los registros. */
+    private static final int MAX_REGISTROS = Integer.MAX_VALUE;
+
+    private String filtroProcedimiento;
+    private List<Procedimiento> resultadosProcedimiento;
+
+    private String filtroConsulta;
+    private List<Consulta> resultadosConsulta;
+
     public ConsultaProcedimientoModel() {
         super(ConsultaProcedimiento.class);
         this.lazyModel = new GenericLazyDataModel<>(this);
@@ -75,35 +85,27 @@ public class ConsultaProcedimientoModel extends ModelHandler<ConsultaProcedimien
     }
     
     /**
-     * Método de búsqueda del p:autoComplete de examenes.
-     *
-     * @param texto texto escrito por el usuario; si está vacío no se
-     * consulta la base de datos.
-     * @return hasta 30 examenes cuyo nombre contenga el texto.
+     * Busca según el filtro de la pestaña; si el filtro está vacío devuelve
+     * todos los registros.
      */
-    public List<Procedimiento> completarProcedimiento(String texto) {
-        if (texto == null || texto.isBlank()) {
-            return List.of();
-        }
-        return pDAO.buscarPorNombre(texto, 30);
+    public void buscarProcedimiento() {
+        String texto = filtroProcedimiento == null ? "" : filtroProcedimiento.trim();
+        resultadosProcedimiento = pDAO.buscarPorNombre(texto, MAX_REGISTROS);
     }
-    
+
+
     /**
-     * Método de búsqueda del p:autoComplete de examenes.
-     *
-     * @param texto texto escrito por el usuario; si está vacío no se
-     * consulta la base de datos.
-     * @return hasta 30 examenes cuyo nombre contenga el texto.
+     * Busca según el filtro de la pestaña; si el filtro está vacío devuelve
+     * todos los registros.
      */
-    public List<Consulta> completarConsulta(String texto) {
-        if (texto == null || texto.isBlank()) {
-            return List.of();
-        }
-        return conDAO.buscarPorNombrePersona(texto, 30);
+    public void buscarConsulta() {
+        String texto = filtroConsulta == null ? "" : filtroConsulta.trim();
+        resultadosConsulta = conDAO.buscarPorNombrePersona(texto, MAX_REGISTROS);
     }
-    
+
+
     /**
-    * Construye la etiqueta mostrada en el autoComplete de Consulta: nombre
+    * Construye la etiqueta mostrada para la Consulta seleccionada: nombre
     * completo de la persona más la fecha de inicio, para distinguir entre
     * varias consultas de la misma persona.
     */
@@ -118,5 +120,35 @@ public class ConsultaProcedimientoModel extends ModelHandler<ConsultaProcedimien
        }
        return p.getNombres() + " " + p.getApellidos() + " — " + fecha;
    }
-    
+
+    public String getFiltroProcedimiento() {
+        return filtroProcedimiento;
+    }
+
+    public void setFiltroProcedimiento(String filtroProcedimiento) {
+        this.filtroProcedimiento = filtroProcedimiento;
+    }
+
+    public List<Procedimiento> getResultadosProcedimiento() {
+        if (resultadosProcedimiento == null) {
+            buscarProcedimiento();
+        }
+        return resultadosProcedimiento;
+    }
+
+    public String getFiltroConsulta() {
+        return filtroConsulta;
+    }
+
+    public void setFiltroConsulta(String filtroConsulta) {
+        this.filtroConsulta = filtroConsulta;
+    }
+
+    public List<Consulta> getResultadosConsulta() {
+        if (resultadosConsulta == null) {
+            buscarConsulta();
+        }
+        return resultadosConsulta;
+    }
+
 }

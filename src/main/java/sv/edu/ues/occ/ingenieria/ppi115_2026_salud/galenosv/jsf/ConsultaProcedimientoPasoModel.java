@@ -36,6 +36,16 @@ public class ConsultaProcedimientoPasoModel extends ModelHandler<ConsultaProcedi
     
     private GenericLazyDataModel<ConsultaProcedimientoPaso> lazyModel;
 
+    // Estado de las pestañas de selección de entidades foráneas
+    /** Sin criterio de búsqueda se cargan todos los registros. */
+    private static final int MAX_REGISTROS = Integer.MAX_VALUE;
+
+    private String filtroConsultaProcedimiento;
+    private List<ConsultaProcedimiento> resultadosConsultaProcedimiento;
+
+    private String filtroPersonaRol;
+    private List<PersonaRol> resultadosPersonaRol;
+
     public ConsultaProcedimientoPasoModel() {
         super(ConsultaProcedimientoPaso.class);
         this.lazyModel = new GenericLazyDataModel<>(this);
@@ -72,18 +82,18 @@ public class ConsultaProcedimientoPasoModel extends ModelHandler<ConsultaProcedi
         return registro != null ? registro.getIdConsultaProcedimientoPaso() : null;
     }
     
-    /** Método de búsqueda del p:autoComplete de ConsultaProcedimiento.
-     * @param consulta
-     * @return  */
-    public List<ConsultaProcedimiento> completarConsultaProcedimiento(String consulta) {
-        if (consulta == null || consulta.isBlank()) {
-            return List.of();
-        }
-        return conspDAO.buscarPorNombreProcedimiento(consulta, 30);
+    /**
+     * Busca según el filtro de la pestaña; si el filtro está vacío devuelve
+     * todos los registros.
+     */
+    public void buscarConsultaProcedimiento() {
+        String texto = filtroConsultaProcedimiento == null ? "" : filtroConsultaProcedimiento.trim();
+        resultadosConsultaProcedimiento = conspDAO.buscarPorNombreProcedimiento(texto, MAX_REGISTROS);
     }
 
+
     /**
-     * Etiqueta para el autoComplete y la columna de ConsultaProcedimiento:
+     * Etiqueta para la pestaña de selección y la columna de ConsultaProcedimiento:
      * nombre del procedimiento más el nombre de la persona de la consulta a
      * la que pertenece, para distinguir entre instancias del mismo
      * procedimiento en consultas distintas.
@@ -104,18 +114,18 @@ public class ConsultaProcedimientoPasoModel extends ModelHandler<ConsultaProcedi
         return nombreProcedimiento + " — " + nombrePersona;
     }
 
-    /** Método de búsqueda del p:autoComplete de PersonaRol.
-     * @param consulta
-     * @return  */
-    public List<PersonaRol> completarPersonaRol(String consulta) {
-        if (consulta == null || consulta.isBlank()) {
-            return List.of();
-        }
-        return prDAO.buscarPorNombresApellidos(consulta, 30);
+    /**
+     * Busca según el filtro de la pestaña; si el filtro está vacío devuelve
+     * todos los registros.
+     */
+    public void buscarPersonaRol() {
+        String texto = filtroPersonaRol == null ? "" : filtroPersonaRol.trim();
+        resultadosPersonaRol = prDAO.buscarPorNombresApellidos(texto, MAX_REGISTROS);
     }
 
+
     /**
-     * Etiqueta para el autoComplete y la columna de PersonaRol: nombre
+     * Etiqueta para la pestaña de selección y la columna de PersonaRol: nombre
      * completo de la persona más su rol, para diferenciar cuando la misma
      * persona tiene más de un rol asignado.
      * @param pr
@@ -128,5 +138,35 @@ public class ConsultaProcedimientoPasoModel extends ModelHandler<ConsultaProcedi
         String rol = pr.getIdRol() != null ? pr.getIdRol().getNombre() : "";
         return pr.getIdPersona().getNombreCompleto() + " (" + rol + ")";
     }
-    
+
+    public String getFiltroConsultaProcedimiento() {
+        return filtroConsultaProcedimiento;
+    }
+
+    public void setFiltroConsultaProcedimiento(String filtroConsultaProcedimiento) {
+        this.filtroConsultaProcedimiento = filtroConsultaProcedimiento;
+    }
+
+    public List<ConsultaProcedimiento> getResultadosConsultaProcedimiento() {
+        if (resultadosConsultaProcedimiento == null) {
+            buscarConsultaProcedimiento();
+        }
+        return resultadosConsultaProcedimiento;
+    }
+
+    public String getFiltroPersonaRol() {
+        return filtroPersonaRol;
+    }
+
+    public void setFiltroPersonaRol(String filtroPersonaRol) {
+        this.filtroPersonaRol = filtroPersonaRol;
+    }
+
+    public List<PersonaRol> getResultadosPersonaRol() {
+        if (resultadosPersonaRol == null) {
+            buscarPersonaRol();
+        }
+        return resultadosPersonaRol;
+    }
+
 }

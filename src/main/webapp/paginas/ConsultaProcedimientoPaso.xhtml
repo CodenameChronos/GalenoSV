@@ -53,58 +53,127 @@
                         
                         <f:facet name="formulario">
                             
-                            <p:panelGrid
-                                columns="4"
-                                layout="grid"
-                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
-                                contentStyleClass="align-items-baseline ui-fluid">
+                            <p:tabView id="tabsPaso" dynamic="false" styleClass="ui-fluid">
                                 
-                                <p:outputLabel for="fechaInicio" value="#{msg['campo.comun.fechaInicio']}" />
-                                <p:datePicker 
-                                    id="fechaInicio" 
-                                    value="#{consultaProcedimientoPasoModel.registroActual.fechaInicio}" showIcon="true" 
-                                    buttonTabindex="0" pattern="dd/MM/yyyy" required="true" />
-                                
-                                <p:outputLabel for="estado" value="#{msg['campo.comun.activo']}"/>
-                                <p:toggleSwitch id="estado" value="#{consultaProcedimientoPasoModel.registroActual.estado}"/>
-                                
-                                <p:outputLabel for="fechaFin" value="#{msg['campo.comun.fechaFin']}" />
-                                <p:datePicker 
-                                    id="fechaFin" 
-                                    value="#{consultaProcedimientoPasoModel.registroActual.fechaFin}" showIcon="true" 
-                                    buttonTabindex="0" pattern="dd/MM/yyyy"  />
+                                <!-- ============ Pestaña 1: datos propios ============ -->
+                                <p:tab title="Datos generales">
+                                    <p:panelGrid
+                                        columns="4"
+                                        layout="grid"
+                                        columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                        contentStyleClass="align-items-baseline ui-fluid">
 
-                                <p:outputLabel for="consultaProcedimiento" value="#{msg['consultaProcedimiento.titulo']}"/>
-                                <p:autoComplete
-                                    id="consultaProcedimiento" dropdown="true"
-                                    value="#{consultaProcedimientoPasoModel.registroActual.idConsultaProcedimiento}"
-                                    completeMethod="#{consultaProcedimientoPasoModel.completarConsultaProcedimiento}"
-                                    converter="entityConverter"
-                                    var="consp"
-                                    itemLabel="#{consultaProcedimientoPasoModel.etiquetaConsultaProcedimiento(consp)}"
-                                    itemValue="#{consp}"
-                                    scrollHeight="250"
-                                    minQueryLength="2"
-                                    forceSelection="true"
-                                    required="true"
-                                    />
+                                        <p:outputLabel for="fechaInicio" value="#{msg['campo.comun.fechaInicio']}" />
+                                        <p:datePicker 
+                                            id="fechaInicio" 
+                                            value="#{consultaProcedimientoPasoModel.registroActual.fechaInicio}" showIcon="true" 
+                                            buttonTabindex="0" pattern="dd/MM/yyyy" required="true" />
 
-                                <p:outputLabel for="personaRol" value="#{msg['personaRol.titulo']}"/>
-                                <p:autoComplete
-                                    id="personaRol" dropdown="true"
-                                    value="#{consultaProcedimientoPasoModel.registroActual.idPersonaRol}"
-                                    completeMethod="#{consultaProcedimientoPasoModel.completarPersonaRol}"
-                                    converter="entityConverter"
-                                    var="pr"
-                                    itemLabel="#{consultaProcedimientoPasoModel.etiquetaPersonaRol(pr)}"
-                                    itemValue="#{pr}"
-                                    scrollHeight="250"
-                                    minQueryLength="2"
-                                    forceSelection="true"
-                                    required="true"
-                                    />
+                                        <p:outputLabel for="estado" value="#{msg['campo.comun.activo']}"/>
+                                        <p:toggleSwitch id="estado" value="#{consultaProcedimientoPasoModel.registroActual.estado}"/>
+
+                                        <p:outputLabel for="fechaFin" value="#{msg['campo.comun.fechaFin']}" />
+                                        <p:datePicker 
+                                            id="fechaFin" 
+                                            value="#{consultaProcedimientoPasoModel.registroActual.fechaFin}" showIcon="true" 
+                                            buttonTabindex="0" pattern="dd/MM/yyyy"  />
+                                    </p:panelGrid>
+                                </p:tab>
                                 
-                            </p:panelGrid>
+                                <!-- ============ Pestaña 2: ConsultaProcedimiento ============ -->
+                                <p:tab title="#{msg['consultaProcedimiento.titulo']}">
+                                    
+                                    <p:outputPanel id="pnlConsultaProcedimiento">
+                                        <!-- Valor real que se valida y se envía -->
+                                        <h:inputHidden id="consultaProcedimiento"
+                                                       value="#{consultaProcedimientoPasoModel.registroActual.idConsultaProcedimiento}"
+                                                       converter="entityConverter"
+                                                       required="true"
+                                                       requiredMessage="Debe seleccionar un procedimiento de consulta"/>
+                                        <p:message for="consultaProcedimiento"/>
+                                        <div class="mb-3">
+                                            <strong>Seleccionado: </strong>
+                                            <h:outputText value="#{empty consultaProcedimientoPasoModel.registroActual.idConsultaProcedimiento ? 'Ninguno' : consultaProcedimientoPasoModel.etiquetaConsultaProcedimiento(consultaProcedimientoPasoModel.registroActual.idConsultaProcedimiento)}"/>
+                                        </div>
+                                    </p:outputPanel>
+                                    
+                                    <p:inputText id="filtroCP"
+                                                 value="#{consultaProcedimientoPasoModel.filtroConsultaProcedimiento}"
+                                                 placeholder="Filtrar por nombre del procedimiento (vacío = todos)"
+                                                 styleClass="mb-3">
+                                        <p:ajax event="keyup" delay="400"
+                                                listener="#{consultaProcedimientoPasoModel.buscarConsultaProcedimiento}"
+                                                update="tblCP"/>
+                                    </p:inputText>
+                                    
+                                    <p:dataTable id="tblCP"
+                                                 var="consp"
+                                                 value="#{consultaProcedimientoPasoModel.resultadosConsultaProcedimiento}"
+                                                 selectionMode="single"
+                                                 selection="#{consultaProcedimientoPasoModel.registroActual.idConsultaProcedimiento}"
+                                                 rowKey="#{consp.idConsultaProcedimiento}"
+                                                 paginator="true" rows="8"
+                                                 paginatorPosition="bottom"
+                                                 emptyMessage="No se encontraron registros">
+                                        <p:ajax event="rowSelect" update="pnlConsultaProcedimiento"/>
+                                        <p:ajax event="rowUnselect" update="pnlConsultaProcedimiento"/>
+                                        <p:column headerText="#{msg['procedimiento.titulo']}">
+                                            <h:outputText value="#{consp.idProcedimiento.nombre}"/>
+                                        </p:column>
+                                        <p:column headerText="Paciente">
+                                            <h:outputText value="#{consp.idConsulta.idPersonaRol.idPersona.nombreCompleto}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                    
+                                </p:tab>
+                                
+                                <!-- ============ Pestaña 3: PersonaRol ============ -->
+                                <p:tab title="#{msg['personaRol.titulo']}">
+                                    
+                                    <p:outputPanel id="pnlPersonaRol">
+                                        <h:inputHidden id="personaRol"
+                                                       value="#{consultaProcedimientoPasoModel.registroActual.idPersonaRol}"
+                                                       converter="entityConverter"
+                                                       required="true"
+                                                       requiredMessage="Debe seleccionar una persona con rol"/>
+                                        <p:message for="personaRol"/>
+                                        <div class="mb-3">
+                                            <strong>Seleccionado: </strong>
+                                            <h:outputText value="#{empty consultaProcedimientoPasoModel.registroActual.idPersonaRol ? 'Ninguno' : consultaProcedimientoPasoModel.etiquetaPersonaRol(consultaProcedimientoPasoModel.registroActual.idPersonaRol)}"/>
+                                        </div>
+                                    </p:outputPanel>
+                                    
+                                    <p:inputText id="filtroPR"
+                                                 value="#{consultaProcedimientoPasoModel.filtroPersonaRol}"
+                                                 placeholder="Filtrar por nombres o apellidos (vacío = todos)"
+                                                 styleClass="mb-3">
+                                        <p:ajax event="keyup" delay="400"
+                                                listener="#{consultaProcedimientoPasoModel.buscarPersonaRol}"
+                                                update="tblPR"/>
+                                    </p:inputText>
+                                    
+                                    <p:dataTable id="tblPR"
+                                                 var="pr"
+                                                 value="#{consultaProcedimientoPasoModel.resultadosPersonaRol}"
+                                                 selectionMode="single"
+                                                 selection="#{consultaProcedimientoPasoModel.registroActual.idPersonaRol}"
+                                                 rowKey="#{pr.idPersonaRol}"
+                                                 paginator="true" rows="8"
+                                                 paginatorPosition="bottom"
+                                                 emptyMessage="No se encontraron registros">
+                                        <p:ajax event="rowSelect" update="pnlPersonaRol"/>
+                                        <p:ajax event="rowUnselect" update="pnlPersonaRol"/>
+                                        <p:column headerText="Persona">
+                                            <h:outputText value="#{pr.idPersona.nombreCompleto}"/>
+                                        </p:column>
+                                        <p:column headerText="Rol">
+                                            <h:outputText value="#{pr.idRol.nombre}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                    
+                                </p:tab>
+                                
+                            </p:tabView>
                             
                         </f:facet>
                         

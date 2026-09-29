@@ -44,64 +44,135 @@
                         </p:column>
                         
                         <p:column headerText="#{msg['campo.comun.observaciones']}">
-                            <h:outputText value="#{r.idProcedimiento.nombre}" />
+                            <h:outputText value="#{r.observaciones}" />
                         </p:column>
                         
-                        <!-- Navegacion bien cabrona para acceder al nombre del paciente de la consulta -->
                         <p:column headerText="#{msg['consulta.titulo']}">
                             <h:outputText value="#{r.idConsulta.idPersonaRol.idPersona.nombreCompleto}" />
                         </p:column>
                         
                         <f:facet name="formulario">
                             
-                            <p:panelGrid
-                                columns="4"
-                                layout="grid"
-                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
-                                contentStyleClass="align-items-baseline ui-fluid">
+                            <p:tabView id="tabsConsultaProcedimiento" dynamic="false" styleClass="ui-fluid">
                                 
-                                <p:outputLabel for="procedimiento" value="#{msg['procedimiento.titulo']}" />
-                                <p:autoComplete id="procedimiento" dropdown="true" 
-                                                value="#{consultaProcedimientoModel.registroActual.idProcedimiento}"
-                                                completeMethod="#{consultaProcedimientoModel.completarProcedimiento}"
-                                                converter="entityConverter"
-                                                var="procedimiento"
-                                                itemLabel="#{procedimiento.nombre}"
-                                                itemValue="#{procedimiento}"
-                                                forceSelection="true"
-                                                scrollHeight="250"
-                                                minQueryLength="3"
-                                                required="true"/>
-                        
-                                <p:outputLabel for="fechaInicio" value="#{msg['campo.comun.fechaInicio']}" />
-                                <p:datePicker 
-                                    id="fechaInicio" 
-                                    value="#{consultaProcedimientoModel.registroActual.fechaInicio}" showIcon="true" 
-                                    buttonTabindex="0" pattern="dd/MM/yyyy"  />
-                                
-                                <p:outputLabel for="consulta" value="#{msg['consulta.titulo']}" />
-                                <p:autoComplete id="consulta" dropdown="true" 
-                                                value="#{consultaProcedimientoModel.registroActual.idConsulta}"
-                                                completeMethod="#{consultaProcedimientoModel.completarConsulta}"
-                                                converter="entityConverter"
-                                                var="c"
-                                                itemLabel="#{consultaProcedimientoModel.etiquetaConsulta(c)}"
-                                                itemValue="#{c}"
-                                                forceSelection="true"
-                                                scrollHeight="250"
-                                                minQueryLength="3"
-                                                required="true"/>
+                                <!-- ============ Pestaña 1: datos propios ============ -->
+                                <p:tab title="Datos generales">
+                                    <p:panelGrid
+                                        columns="4"
+                                        layout="grid"
+                                        columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                        contentStyleClass="align-items-baseline ui-fluid">
 
-                                <p:outputLabel for="fechaFin" value="#{msg['campo.comun.fechaFin']}" />
-                                <p:datePicker 
-                                    id="fechaFin" 
-                                    value="#{consultaProcedimientoModel.registroActual.fechaFin}" showIcon="true" 
-                                    buttonTabindex="0" pattern="dd/MM/yyyy"  />
+                                        <p:outputLabel for="fechaInicio" value="#{msg['campo.comun.fechaInicio']}" />
+                                        <p:datePicker 
+                                            id="fechaInicio" 
+                                            value="#{consultaProcedimientoModel.registroActual.fechaInicio}" showIcon="true" 
+                                            buttonTabindex="0" pattern="dd/MM/yyyy"  />
+
+                                        <p:outputLabel for="fechaFin" value="#{msg['campo.comun.fechaFin']}" />
+                                        <p:datePicker 
+                                            id="fechaFin" 
+                                            value="#{consultaProcedimientoModel.registroActual.fechaFin}" showIcon="true" 
+                                            buttonTabindex="0" pattern="dd/MM/yyyy"  />
+
+                                        <p:outputLabel for="observaciones" value="#{msg['campo.comun.observaciones']}" />
+                                        <p:inputTextarea id="observaciones" value="#{consultaProcedimientoModel.registroActual.observaciones}" />
+                                    </p:panelGrid>
+                                </p:tab>
                                 
-                                <p:outputLabel for="observaciones" value="#{msg['campo.comun.observaciones']}" />
-                                <p:inputTextarea id="observaciones" value="#{consultaProcedimientoModel.registroActual.observaciones}" />
+                                <!-- ============ Pestaña 2: Procedimiento ============ -->
+                                <p:tab title="#{msg['procedimiento.titulo']}">
+                                    
+                                    <p:outputPanel id="pnlProcedimiento">
+                                        <!-- Valor real que se valida y se envía -->
+                                        <h:inputHidden id="procedimiento"
+                                                       value="#{consultaProcedimientoModel.registroActual.idProcedimiento}"
+                                                       converter="entityConverter"
+                                                       required="true"
+                                                       requiredMessage="Debe seleccionar un procedimiento"/>
+                                        <p:message for="procedimiento"/>
+                                        <div class="mb-3">
+                                            <strong>Seleccionado: </strong>
+                                            <h:outputText value="#{empty consultaProcedimientoModel.registroActual.idProcedimiento ? 'Ninguno' : consultaProcedimientoModel.registroActual.idProcedimiento.nombre}"/>
+                                        </div>
+                                    </p:outputPanel>
+                                    
+                                    <p:inputText id="filtroProc"
+                                                 value="#{consultaProcedimientoModel.filtroProcedimiento}"
+                                                 placeholder="Filtrar por nombre del procedimiento (vacío = todos)"
+                                                 styleClass="mb-3">
+                                        <p:ajax event="keyup" delay="400"
+                                                listener="#{consultaProcedimientoModel.buscarProcedimiento}"
+                                                update="tblProc"/>
+                                    </p:inputText>
+                                    
+                                    <p:dataTable id="tblProc"
+                                                 var="proc"
+                                                 value="#{consultaProcedimientoModel.resultadosProcedimiento}"
+                                                 selectionMode="single"
+                                                 selection="#{consultaProcedimientoModel.registroActual.idProcedimiento}"
+                                                 rowKey="#{proc.idProcedimiento}"
+                                                 paginator="true" rows="8"
+                                                 paginatorPosition="bottom"
+                                                 emptyMessage="No se encontraron registros">
+                                        <p:ajax event="rowSelect" update="pnlProcedimiento"/>
+                                        <p:ajax event="rowUnselect" update="pnlProcedimiento"/>
+                                        <p:column headerText="#{msg['procedimiento.titulo']}">
+                                            <h:outputText value="#{proc.nombre}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                    
+                                </p:tab>
                                 
-                            </p:panelGrid>
+                                <!-- ============ Pestaña 3: Consulta ============ -->
+                                <p:tab title="#{msg['consulta.titulo']}">
+                                    
+                                    <p:outputPanel id="pnlConsulta">
+                                        <h:inputHidden id="consulta"
+                                                       value="#{consultaProcedimientoModel.registroActual.idConsulta}"
+                                                       converter="entityConverter"
+                                                       required="true"
+                                                       requiredMessage="Debe seleccionar una consulta"/>
+                                        <p:message for="consulta"/>
+                                        <div class="mb-3">
+                                            <strong>Seleccionada: </strong>
+                                            <h:outputText value="#{empty consultaProcedimientoModel.registroActual.idConsulta ? 'Ninguna' : consultaProcedimientoModel.etiquetaConsulta(consultaProcedimientoModel.registroActual.idConsulta)}"/>
+                                        </div>
+                                    </p:outputPanel>
+                                    
+                                    <p:inputText id="filtroCons"
+                                                 value="#{consultaProcedimientoModel.filtroConsulta}"
+                                                 placeholder="Filtrar por nombre o apellido del paciente (vacío = todos)"
+                                                 styleClass="mb-3">
+                                        <p:ajax event="keyup" delay="400"
+                                                listener="#{consultaProcedimientoModel.buscarConsulta}"
+                                                update="tblCons"/>
+                                    </p:inputText>
+                                    
+                                    <p:dataTable id="tblCons"
+                                                 var="c"
+                                                 value="#{consultaProcedimientoModel.resultadosConsulta}"
+                                                 selectionMode="single"
+                                                 selection="#{consultaProcedimientoModel.registroActual.idConsulta}"
+                                                 rowKey="#{c.idConsulta}"
+                                                 paginator="true" rows="8"
+                                                 paginatorPosition="bottom"
+                                                 emptyMessage="No se encontraron registros">
+                                        <p:ajax event="rowSelect" update="pnlConsulta"/>
+                                        <p:ajax event="rowUnselect" update="pnlConsulta"/>
+                                        <p:column headerText="Paciente">
+                                            <h:outputText value="#{c.idPersonaRol.idPersona.nombreCompleto}"/>
+                                        </p:column>
+                                        <p:column headerText="#{msg['campo.comun.fechaInicio']}">
+                                            <h:outputText value="#{c.fechaInicio}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+                                    </p:dataTable>
+                                    
+                                </p:tab>
+                                
+                            </p:tabView>
                             
                         </f:facet>
                         
