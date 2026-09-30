@@ -23,7 +23,9 @@ import java.util.UUID;
 @Table(name = "procedimiento_paso_secuencia", schema = "public")
 @NamedQueries({
     @NamedQuery(name = "ProcedimientoPasoSecuencia.findAll", query = "SELECT p FROM ProcedimientoPasoSecuencia p"),
-    @NamedQuery(name = "ProcedimientoPasoSecuencia.findByTipoSecuencia", query = "SELECT p FROM ProcedimientoPasoSecuencia p WHERE p.tipoSecuencia = :tipoSecuencia")})
+    @NamedQuery(name = "ProcedimientoPasoSecuencia.findByTipoSecuencia", query = "SELECT p FROM ProcedimientoPasoSecuencia p WHERE p.tipoSecuencia = :tipoSecuencia"),
+    @NamedQuery(name = "ProcedimientoPasoSecuencia.findByNombreProcedimientoPaso", query = "SELECT pps FROM ProcedimientoPasoSecuencia pps LEFT JOIN FETCH pps.idProcedimientoPaso pp WHERE UPPER(pp.nombre) LIKE UPPER(:texto) ORDER BY pps.idProcedimientoPaso DESC")
+})
 public class ProcedimientoPasoSecuencia implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -116,6 +118,6 @@ public class ProcedimientoPasoSecuencia implements Serializable {
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ProcedimientoPasoSecuencia[ idProcedimientoPasoSecuencia=" + idProcedimientoPasoSecuencia + " ]";
+        return "idProcedimientoPasoSecuencia=" + idProcedimientoPasoSecuencia;
     }
 }

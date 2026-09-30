@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="primefaces"
+      xmlns:g="jakarta.faces.composite/galeno">
+
+    <h:head>
+        <title>#{msg['procedimientoPasoSecuencia.titulo']} - Galeno-SV</title>
+    </h:head>
+
+    <h:body>
+        <g:layout>
+            <f:facet name="workspace">
+                <h:form id="frmConsulta">
+                    <g:crud 
+                        titulo="#{msg['procedimientoPasoSecuencia.titulo']}"
+                        modelo="#{procedimientoPasoSecuenciaModel}"
+                        rowKey="#{r.idProcedimientoPasoSecuencia}">
+
+                        <p:column headerText="#{msg['campo.comun.codigo']}">
+                            <h:outputText value="#{r.idProcedimientoPasoSecuencia}"/>
+                        </p:column>
+                        <!--
+                        <p:column headerText="#{msg['campo.comun.codigo']}">
+                            <h:outputText value="#{r.idProcedimientoPasoReferencia}"/>
+                        </p:column>
+                        -->
+                        <p:column headerText="#{msg['procedimientoPasoSecuencia.tipoSecuencia']}">
+                            <h:outputText value="#{r.tipoSecuencia}" />
+                        </p:column>
+
+                        <p:column headerText="#{msg['procedimientoPaso.titulo']}">
+                            <h:outputText value="#{r.idProcedimientoPaso}"/>
+                        </p:column>
+
+                        <f:facet name="formulario">
+
+                            <p:panelGrid
+                                columns="4"
+                                layout="grid"
+                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                contentStyleClass="align-items-baseline ui-fluid">
+                                
+                                
+                                <p:outputLabel for="referenciaExterna" value="#{msg['procedimientoPasoSecuencia.tipoSecuencia']}" />
+                                <p:inputText id="referenciaExterna"  value="#{procedimientoPasoSecuenciaModel.registroActual.tipoSecuencia}" />
+
+                                <p:outputLabel for="procedimiento" value="#{msg['procedimientoPasoSecuencia.procedimientoPaso']}" />
+                                <p:autoComplete id="procedimiento" dropdown="true" 
+                                                    value="#{procedimientoPasoSecuenciaModel.registroActual.idProcedimientoPaso}"
+                                                    completeMethod="#{procedimientoPasoSecuenciaModel.completarProcedimientoPaso}"
+                                                    converter="entityConverter"
+                                                    var="procedimientoPaso"
+                                                    itemLabel="#{procedimientoPaso.nombre}"
+                                                    itemValue="#{procedimientoPaso}"
+                                                    forceSelection="true"
+                                                    scrollHeight="250"
+                                                    minQueryLength="3"
+                                                    required="true"/>
+
+                            </p:panelGrid>
+                        </f:facet>
+                    </g:crud>
+                </h:form>
+            </f:facet>
+        </g:layout>
+    </h:body>
+
+</html>

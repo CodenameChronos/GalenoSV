@@ -146,6 +146,6 @@ public class ProcedimientoPaso implements Serializable {
 
     @Override
     public String toString() {
-        return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ProcedimientoPaso[ idProcedimientoPaso=" + idProcedimientoPaso + " ]";
+        return "" + idProcedimientoPaso;
     }
 }
