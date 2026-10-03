@@ -25,7 +25,7 @@ import java.util.UUID;
     @NamedQuery(name = "Examen.findByNombre", query = "SELECT e FROM Examen e WHERE e.nombre = :nombre"),
     @NamedQuery(name = "Examen.findByActivo", query = "SELECT e FROM Examen e WHERE e.activo = :activo"),
     @NamedQuery(name = "Examen.findByObservaciones", query = "SELECT e FROM Examen e WHERE e.observaciones = :observaciones"),
-    @NamedQuery(name = "Examen.findActiveByNombre", query = "SELECT e FROM Examen e WHERE UPPER(e.nombre) LIKE UPPER(:nombre) AND e.activo = true ORDER BY e.nombre")
+    @NamedQuery(name = "Examen.findActiveByNombre", query = "SELECT e FROM Examen e WHERE UPPER(e.nombre) LIKE UPPER(:nombre) AND e.activo = true ORDER BY e.nombre"),
 })
 public class Examen implements Serializable {
 

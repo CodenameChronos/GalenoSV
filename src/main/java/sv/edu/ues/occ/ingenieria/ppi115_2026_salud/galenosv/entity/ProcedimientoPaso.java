@@ -23,10 +23,13 @@ import java.util.UUID;
 @Entity
 @Table(name = "procedimiento_paso", schema = "public")
 @NamedQueries({
-    @NamedQuery(name = "ProcedimientoPaso.findAll", query = "SELECT p FROM ProcedimientoPaso p"),
-    @NamedQuery(name = "ProcedimientoPaso.findByNombre", query = "SELECT p FROM ProcedimientoPaso p WHERE p.nombre = :nombre"),
-    @NamedQuery(name = "ProcedimientoPaso.findByIndicaFin", query = "SELECT p FROM ProcedimientoPaso p WHERE p.indicaFin = :indicaFin"),
-    @NamedQuery(name = "ProcedimientoPaso.findActiveByNombre", query = "SELECT p FROM ProcedimientoPaso p WHERE UPPER(p.nombre) LIKE UPPER(:nombre) ORDER BY p.nombre")
+        @NamedQuery(name = "ProcedimientoPaso.findAll", query = "SELECT p FROM ProcedimientoPaso p"),
+        @NamedQuery(name = "ProcedimientoPaso.findByNombre", query = "SELECT p FROM ProcedimientoPaso p WHERE p.nombre = :nombre"),
+        @NamedQuery(name = "ProcedimientoPaso.findByIndicaFin", query = "SELECT p FROM ProcedimientoPaso p WHERE p.indicaFin = :indicaFin"),
+        @NamedQuery(name = "ProcedimientoPaso.findActiveByNombre", query = "SELECT p FROM ProcedimientoPaso p WHERE UPPER(p.nombre) LIKE UPPER(:nombre) ORDER BY p.nombre"),
+        @NamedQuery(name = "ProcedimientoPaso.findByProcedimiento", query = "SELECT p FROM ProcedimientoPaso p LEFT JOIN FETCH p.idRol WHERE p.idProcedimiento.idProcedimiento = :idProcedimiento"),
+        @NamedQuery(name = "ProcedimientoPaso.countPasoSinPadre", query = "SELECT COUNT(p) FROM ProcedimientoPaso p WHERE p.idProcedimiento.idProcedimiento = :idProcedimiento AND p NOT IN (SELECT pps.idProcedimientoPaso FROM ProcedimientoPasoSecuencia pps WHERE pps.idProcedimientoPaso.idProcedimiento.idProcedimiento = :idProcedimiento)"),
+        @NamedQuery(name = "ProcedimientoPaso.countHijos", query = "SELECT COUNT(s) FROM ProcedimientoPasoSecuencia s WHERE s.idProcedimientoPasoReferencia = :idPaso")
 })
 public class ProcedimientoPaso implements Serializable {
 

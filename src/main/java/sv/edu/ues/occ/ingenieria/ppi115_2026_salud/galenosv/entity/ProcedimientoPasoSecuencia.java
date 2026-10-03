@@ -22,9 +22,10 @@ import java.util.UUID;
 @Entity
 @Table(name = "procedimiento_paso_secuencia", schema = "public")
 @NamedQueries({
-    @NamedQuery(name = "ProcedimientoPasoSecuencia.findAll", query = "SELECT p FROM ProcedimientoPasoSecuencia p"),
-    @NamedQuery(name = "ProcedimientoPasoSecuencia.findByTipoSecuencia", query = "SELECT p FROM ProcedimientoPasoSecuencia p WHERE p.tipoSecuencia = :tipoSecuencia"),
-    @NamedQuery(name = "ProcedimientoPasoSecuencia.findByNombreProcedimientoPaso", query = "SELECT pps FROM ProcedimientoPasoSecuencia pps LEFT JOIN FETCH pps.idProcedimientoPaso pp WHERE UPPER(pp.nombre) LIKE UPPER(:texto) ORDER BY pps.idProcedimientoPaso DESC")
+        @NamedQuery(name = "ProcedimientoPasoSecuencia.findAll", query = "SELECT p FROM ProcedimientoPasoSecuencia p"),
+        @NamedQuery(name = "ProcedimientoPasoSecuencia.findByTipoSecuencia", query = "SELECT p FROM ProcedimientoPasoSecuencia p WHERE p.tipoSecuencia = :tipoSecuencia"),
+        @NamedQuery(name = "ProcedimientoPasoSecuencia.findByNombreProcedimientoPaso", query = "SELECT pps FROM ProcedimientoPasoSecuencia pps LEFT JOIN FETCH pps.idProcedimientoPaso pp WHERE UPPER(pp.nombre) LIKE UPPER(:texto) ORDER BY pps.idProcedimientoPaso DESC"),
+        @NamedQuery(name = "ProcedimientoPasoSecuencia.findByProcedimiento", query = "SELECT pps FROM ProcedimientoPasoSecuencia pps WHERE pps.idProcedimientoPaso.idProcedimiento.idProcedimiento = :idProcedimiento")
 })
 public class ProcedimientoPasoSecuencia implements Serializable {
 

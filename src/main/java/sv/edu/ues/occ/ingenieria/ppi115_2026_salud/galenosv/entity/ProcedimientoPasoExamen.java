@@ -24,10 +24,12 @@ import java.util.UUID;
 @Entity
 @Table(name = "procedimiento_paso_examen", schema = "public")
 @NamedQueries({
-    @NamedQuery(name = "ProcedimientoPasoExamen.findAll", query = "SELECT p FROM ProcedimientoPasoExamen p"),
-    @NamedQuery(name = "ProcedimientoPasoExamen.findByFechaCreacion", query = "SELECT p FROM ProcedimientoPasoExamen p WHERE p.fechaCreacion = :fechaCreacion"),
-    @NamedQuery(name = "ProcedimientoPasoExamen.findByActivo", query = "SELECT p FROM ProcedimientoPasoExamen p WHERE p.activo = :activo"),
-    @NamedQuery(name = "ProcedimientoPasoExamen.findByObservaciones", query = "SELECT p FROM ProcedimientoPasoExamen p WHERE p.observaciones = :observaciones")})
+        @NamedQuery(name = "ProcedimientoPasoExamen.findAll", query = "SELECT p FROM ProcedimientoPasoExamen p"),
+        @NamedQuery(name = "ProcedimientoPasoExamen.findByFechaCreacion", query = "SELECT p FROM ProcedimientoPasoExamen p WHERE p.fechaCreacion = :fechaCreacion"),
+        @NamedQuery(name = "ProcedimientoPasoExamen.findByActivo", query = "SELECT p FROM ProcedimientoPasoExamen p WHERE p.activo = :activo"),
+        @NamedQuery(name = "ProcedimientoPasoExamen.findByObservaciones", query = "SELECT p FROM ProcedimientoPasoExamen p WHERE p.observaciones = :observaciones"),
+        @NamedQuery(name = "ProcedimientoPasoExamen.findExamenByProcedimientoPaso", query = "SELECT e FROM ProcedimientoPasoExamen pe JOIN pe.idExamen e WHERE pe.idProcedimientoPaso.idProcedimientoPaso = :idPaso ORDER BY e.nombre")
+})
 public class ProcedimientoPasoExamen implements Serializable {
 
     private static final long serialVersionUID = 1L;

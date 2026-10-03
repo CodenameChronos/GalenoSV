@@ -35,4 +35,11 @@ public class RolDAO extends DefaultDAO<Rol> {
                 .getResultList();
     }
 
+    public List<Rol> findAllActive() {
+        return getEntityManager()
+                .createNamedQuery("Rol.findByActivo", Rol.class)
+                .setParameter("activo", Boolean.TRUE)
+                .getResultList();
+    }
+
 }

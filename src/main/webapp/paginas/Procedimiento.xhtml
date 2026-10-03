@@ -1,90 +1,277 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
       xmlns:p="primefaces"
       xmlns:g="jakarta.faces.composite/galeno">
+<h:head>
+    <title>#{msg['procedimiento.titulo']} - Galeno-SV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</h:head>
 
-    <h:head>
-        <title>#{msg['procedimiento.titulo']} - Galeno-SV</title>
-    </h:head>
+<h:body>
 
-    <h:body>
+    <g:layout>
 
-        <g:layout>
+        <f:facet name="workspace">
 
-            <f:facet name="workspace">
+            <h:form id="frmProcedimiento">
 
-                <h:form id = "frmProcedimiento">
-                
-                    <g:crud
+                <g:crud
                         titulo="#{msg['procedimiento.titulo']}"
                         modelo="#{procedimientoModel}"
                         rowKey="#{r.idProcedimiento}">
 
-                        <!-- Columnas de la tabla (variable de fila: r) -->
-                        <p:column headerText="#{msg['campo.comun.codigo']}">
-                            <h:outputText value="#{r.idProcedimiento}"/>
-                        </p:column>
+                    <p:column headerText="#{msg['campo.comun.nombre']}">
+                        <h:outputText value="#{r.nombre}"/>
+                    </p:column>
 
-                        <p:column headerText="#{msg['campo.comun.nombre']}">
-                            <h:outputText value="#{r.nombre}"/>
-                        </p:column>
+                    <p:column headerText="#{msg['campo.comun.activo']}">
+                        <h:outputText value="#{r.activo ? msg['campo.comun.activo'] : msg['campo.comun.inactivo']}"/>
+                    </p:column>
 
-                        <p:column headerText="#{msg['campo.comun.activo']}">
-                            <h:outputText value="#{r.activo ? msg['campo.comun.activo'] : msg['campo.comun.inactivo']}"/>
-                        </p:column>
+                    <f:facet name="formulario">
 
-                        <p:column headerText="#{msg['campo.comun.observaciones']}">
-                            <h:outputText value="#{r.observaciones}"/>
-                        </p:column>
+                        <p:tabView id="tabsProcedimiento">
 
-                        <!-- Formulario de edicion -->
-                        <f:facet name="formulario">
+                            <p:ajax event="tabChange"
+                                    listener="#{procedimientoArbolModel.alEntrarPestana}"
+                                    process="@this"
+                                    update="pnlArbol"/>
 
-                            <p:panelGrid
-                                columns="4"
-                                layout="grid"
-                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
-                                contentStyleClass="align-items-baseline ui-fluid">
+                            <p:tab title="#{msg['procedimiento.tabDatos']}">
 
-                                <p:outputLabel
-                                    for="nombre"
-                                    value="#{msg['procedimiento.nombre']}"/>
+                                <p:panelGrid
+                                        columns="2"
+                                        layout="grid"
+                                        columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                        contentStyleClass="align-items-baseline ui-fluid">
 
-                                <p:inputText
-                                    id="nombre"
-                                    value="#{procedimientoModel.registroActual.nombre}"/>
+                                    <p:outputLabel for="nombre" value="#{msg['campo.comun.nombre']}"/>
+                                    <p:inputText
+                                            id="nombre"
+                                            value="#{procedimientoModel.registroActual.nombre}"
+                                            required="true"
+                                            requiredMessage="#{msg['procedimiento.error.nombre']}"/>
 
-                                <p:outputLabel
-                                    for="activo"
-                                    value="#{msg['campo.comun.activo']}"/>
+                                    <p:outputLabel for="activo" value="#{msg['campo.comun.activo']}"/>
+                                    <p:toggleSwitch
+                                            id="activo"
+                                            value="#{procedimientoModel.registroActual.activo}"/>
 
-                                <p:toggleSwitch
-                                    id="activo"
-                                    value="#{procedimientoModel.registroActual.activo}"/>
+                                    <p:outputLabel for="observaciones" value="#{msg['campo.comun.observaciones']}"/>
+                                    <p:inputTextarea
+                                            id="observaciones"
+                                            value="#{procedimientoModel.registroActual.observaciones}"/>
 
-                                <p:outputLabel
-                                    for="observaciones"
-                                    value="#{msg['campo.comun.observaciones']}"/>
+                                </p:panelGrid>
 
-                                <p:inputTextarea
-                                    id="observaciones"
-                                    value="#{procedimientoModel.registroActual.observaciones}"/>
+                            </p:tab>
 
-                            </p:panelGrid>
+                            <p:tab title="#{msg['procedimiento.tabPasos']}"
+                                   disabled="#{procedimientoModel.estado == 'CREAR'}">
 
-                        </f:facet>
+                                <p:commandButton
+                                        value="#{msg['boton.guardarPasos']}"
+                                        actionListener="#{procedimientoArbolModel.guardarPaso}"
+                                        process="@this @([id$=vistaForm])"
+                                        update="@([id$=pnlArbol])"/>
 
-                    </g:crud>
-                    
-                </h:form>
+                                <h:panelGroup id="pnlArbol" layout="block">
 
-            </f:facet>
+                                    <p:messages id="msgPasos" showDetail="true" closable="true"/>
 
-        </g:layout>
+                                    <h:panelGroup id="vistaArbol" layout="block"
+                                                  rendered="#{!procedimientoArbolModel.editandoPaso}">
 
-    </h:body>
-    
+                                        <p:treeTable
+                                                value="#{procedimientoArbolModel.raiz}"
+                                                var="nodo"
+                                                rendered="#{procedimientoArbolModel.raiz != null}">
+
+                                            <p:column headerText="#{msg['campo.comun.nombre']}">
+                                                <h:outputText value="#{nodo.nombre}"/>
+                                            </p:column>
+
+                                            <p:column headerText="ID">
+                                                <h:outputText value="#{nodo.idProcedimientoPaso}"/>
+                                            </p:column>
+
+                                            <p:column headerText="#{msg['rol.titulo']}">
+                                                <h:outputText value="#{nodo.idRol.nombre}"/>
+                                            </p:column>
+
+                                            <p:column headerText="#{msg['procedimientoPaso.indicaFin']}">
+                                                <h:outputText value="#{nodo.indicaFin ? msg['campo.comun.si'] : msg['campo.comun.no']}"/>
+                                            </p:column>
+
+                                            <p:column headerText="#{msg['campo.comun.acciones']}">
+
+                                                <p:commandButton
+                                                        icon="pi pi-plus"
+                                                        rendered="#{procedimientoArbolModel.puedeAgregarHijo(nodo)}"
+                                                        title="#{msg['procedimiento.agregarHijo']}"
+                                                        actionListener="#{procedimientoArbolModel.abrirAgregarHijo(nodo)}"
+                                                        process="@this"
+                                                        update="@([id$=pnlArbol])"/>
+
+                                                <p:commandButton
+                                                        icon="pi pi-pencil"
+                                                        title="#{msg['boton.editar']}"
+                                                        actionListener="#{procedimientoArbolModel.abrirEditar(nodo)}"
+                                                        process="@this"
+                                                        update="@([id$=pnlArbol])"/>
+
+                                                <p:commandButton
+                                                        icon="pi pi-trash"
+                                                        rendered="#{procedimientoArbolModel.puedeEliminar(nodo)}"
+                                                        title="#{msg['boton.eliminar']}"
+                                                        actionListener="#{procedimientoArbolModel.eliminarPaso(nodo)}"
+                                                        onclick="if (!confirm('#{msg['procedimiento.arbol.confirmarEliminar']}')) return false;"
+                                                        process="@this"
+                                                        update="@([id$=pnlArbol])"/>
+
+                                            </p:column>
+
+                                        </p:treeTable>
+
+                                        <p:commandButton
+                                                rendered="#{procedimientoArbolModel.raiz == null}"
+                                                value="#{msg['procedimiento.agregarInicial']}"
+                                                actionListener="#{procedimientoArbolModel.abrirAgregarRaiz}"
+                                                process="@this"
+                                                update="@([id$=pnlArbol])"/>
+
+                                    </h:panelGroup>
+
+                                    <h:panelGroup id="vistaForm" layout="block"
+                                                  rendered="#{procedimientoArbolModel.editandoPaso}">
+
+                                        <p:panelGrid
+                                                columns="2"
+                                                layout="grid"
+                                                columnClasses="col-12 md:col-3, col-12 md:col-9"
+                                                contentStyleClass="align-items-baseline ui-fluid">
+
+                                            <p:outputLabel value="ID"/>
+                                            <p:inputText
+                                                    value="#{procedimientoArbolModel.idPasoForm}"
+                                                    readonly="true"
+                                                    disabled="true"/>
+
+                                            <p:outputLabel for="nombrePaso" value="#{msg['campo.comun.nombre']}"/>
+                                            <p:inputText
+                                                    id="nombrePaso"
+                                                    value="#{procedimientoArbolModel.nombreForm}"
+                                                    required="true"
+                                                    requiredMessage="#{msg['procedimiento.arbol.error.nombre']}"/>
+
+                                            <p:outputLabel for="rolPaso" value="#{msg['rol.titulo']}"/>
+                                            <p:selectOneMenu
+                                                    id="rolPaso"
+                                                    value="#{procedimientoArbolModel.rolForm}"
+                                                    disabled="#{procedimientoArbolModel.modoEdicion}"
+                                                    converter="entityConverter"
+                                                    required="true"
+                                                    requiredMessage="#{msg['procedimiento.arbol.error.rol']}">
+
+                                                <f:selectItem
+                                                        itemLabel="#{msg['procedimiento.estado.seleccione']}"
+                                                        itemValue="#{null}"
+                                                        noSelectionOption="true"/>
+
+                                                <f:selectItems
+                                                        value="#{procedimientoArbolModel.roles}"
+                                                        var="rl"
+                                                        itemLabel="#{rl.nombre}"
+                                                        itemValue="#{rl}"/>
+
+                                            </p:selectOneMenu>
+
+                                            <p:outputLabel value="#{msg['procedimiento.arbol.dependeDe']}"/>
+                                            <p:inputText
+                                                    value="#{procedimientoArbolModel.dependeDeNombre}"
+                                                    readonly="true"
+                                                    disabled="true"/>
+
+                                            <p:outputLabel for="indicaFinPaso" value="#{msg['procedimientoPaso.indicaFin']}"/>
+                                            <p:selectBooleanCheckbox
+                                                    id="indicaFinPaso"
+                                                    value="#{procedimientoArbolModel.indicaFinForm}"/>
+
+                                        </p:panelGrid>
+
+                                        <h:panelGroup id="pnlExamenes" layout="block">
+
+                                            <p:fieldset legend="#{msg['procedimiento.examenes']}">
+
+                                                <div class="flex align-items-center flex-wrap gap-2 mb-3">
+
+                                                    <p:autoComplete
+                                                            id="examenAgregar"
+                                                            value="#{procedimientoArbolModel.examenAgregar}"
+                                                            completeMethod="#{procedimientoArbolModel.completarExamen}"
+                                                            var="ex"
+                                                            itemLabel="#{ex.nombre}"
+                                                            itemValue="#{ex}"
+                                                            converter="entityConverter"
+                                                            forceSelection="true"
+                                                            minQueryLength="1"
+                                                            placeholder="#{msg['procedimiento.examenes.buscar']}"/>
+
+                                                    <p:commandButton
+                                                            value="#{msg['procedimiento.examenes.agregar']}"
+                                                            actionListener="#{procedimientoArbolModel.agregarExamen}"
+                                                            process="@this @([id$=pnlExamenes])"
+                                                            update="@([id$=pnlExamenes]) @([id$=msgPasos])"/>
+
+                                                    <p:commandButton
+                                                            value="#{msg['procedimiento.examenes.quitar']}"
+                                                            actionListener="#{procedimientoArbolModel.quitarExamen}"
+                                                            process="@this @([id$=pnlExamenes])"
+                                                            update="@([id$=pnlExamenes]) @([id$=msgPasos])"/>
+
+                                                </div>
+
+                                                <p:dataTable
+                                                        id="tblExamenes"
+                                                        value="#{procedimientoArbolModel.examenesForm}"
+                                                        var="ex"
+                                                        rowKey="#{ex.idExamen}"
+                                                        selection="#{procedimientoArbolModel.examenSeleccionado}"
+                                                        emptyMessage="#{msg['procedimiento.examenes.vacio']}">
+
+                                                    <p:column selectionMode="single" style="width:3rem;text-align:center"/>
+
+                                                    <p:column headerText="#{msg['campo.comun.nombre']}">
+                                                        <h:outputText value="#{ex.nombre}"/>
+                                                    </p:column>
+
+                                                </p:dataTable>
+
+                                            </p:fieldset>
+
+                                        </h:panelGroup>
+
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </p:tab>
+
+                        </p:tabView>
+
+                    </f:facet>
+
+                </g:crud>
+
+            </h:form>
+
+        </f:facet>
+
+    </g:layout>
+
+</h:body>
+
 </html>
