@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.SelectEvent;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaDAO;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Persona;
@@ -25,6 +27,15 @@ public class PersonaModel extends ModelHandler<Persona> {
     
     @Inject
     private PersonaDAO pDAO;
+    
+    @Inject
+    private DocumentoModel documentoModel;
+
+    @Inject
+    private MedioContactoModel medioContactoModel;
+
+    @Inject
+    private PersonaRolModel personaRolModel;
     
 
     private GenericLazyDataModel<Persona> lazyModel;
@@ -66,4 +77,23 @@ public class PersonaModel extends ModelHandler<Persona> {
     public Object getIdByRegistro(Persona registro) {
         return registro != null ? registro.getIdPersona() : null;
     }
+    
+     @Override
+    public void seleccionar(SelectEvent<Persona> registro) {
+        super.seleccionar(registro);
+        documentoModel.filtrarPorPersona(registroActual);
+        medioContactoModel.filtrarPorPersona(registroActual);
+        personaRolModel.filtrarPorPersona(registroActual);
+        PrimeFaces.current().ajax().update(":layout:tabsPersona");
+    }
+    
+    @Override
+    public void nuevo() {
+        super.nuevo();
+        documentoModel.filtrarPorPersona(null);
+        medioContactoModel.filtrarPorPersona(null);
+        personaRolModel.filtrarPorPersona(null);
+        PrimeFaces.current().ajax().update(":layout:tabsPersona");
+    }
+    
 }

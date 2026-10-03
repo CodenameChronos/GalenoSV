@@ -28,7 +28,9 @@ import java.util.UUID;
 @NamedQueries({
     @NamedQuery(name = "PersonaRol.findAll", query = "SELECT p FROM PersonaRol p"),
     @NamedQuery(name = "PersonaRol.findByFechaCreacion", query = "SELECT p FROM PersonaRol p WHERE p.fechaCreacion = :fechaCreacion"),
-    @NamedQuery(name = "PersonaRol.findByNombresApellidos", query = "SELECT pr FROM PersonaRol pr JOIN FETCH pr.idPersona p LEFT JOIN FETCH pr.idRol r WHERE UPPER(CONCAT(p.nombres, ' ', p.apellidos)) LIKE UPPER(:nombre) ORDER BY p.nombres, p.apellidos")
+    @NamedQuery(name = "PersonaRol.findByNombresApellidos", query = "SELECT pr FROM PersonaRol pr JOIN FETCH pr.idPersona p LEFT JOIN FETCH pr.idRol r WHERE UPPER(CONCAT(p.nombres, ' ', p.apellidos)) LIKE UPPER(:nombre) ORDER BY p.nombres, p.apellidos"),
+    
+        
 })
 public class PersonaRol implements Serializable {
 

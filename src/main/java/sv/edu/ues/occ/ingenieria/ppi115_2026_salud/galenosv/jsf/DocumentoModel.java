@@ -22,23 +22,23 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoDocumento
 @Named
 @ViewScoped
 public class DocumentoModel extends ModelHandler<Documento> {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Inject
     private DocumentoDAO docDAO;
-    
+
     @Inject
     private PersonaDAO pDAO;
-    
+
     @Inject
     private TipoDocumentoDAO tdDAO;
-    
-       private GenericLazyDataModel<Documento> lazyModel;
+
+    private GenericLazyDataModel<Documento> lazyModel;
 
     public DocumentoModel() {
         super(Documento.class);
-        
+
         this.lazyModel = new GenericLazyDataModel<>(this);
     }
 
@@ -47,10 +47,10 @@ public class DocumentoModel extends ModelHandler<Documento> {
         return docDAO;
     }
 
-     public GenericLazyDataModel<Documento> getLazyModel() {
+    public GenericLazyDataModel<Documento> getLazyModel() {
         return lazyModel;
     }
-     
+
     @Override
     public Documento instanciarRegistro() {
         return new Documento();
@@ -63,7 +63,7 @@ public class DocumentoModel extends ModelHandler<Documento> {
             return (Documento) docDAO.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING,
-                "ID inválido recibido para Documento: " + id, ex);
+                    "ID inválido recibido para Documento: " + id, ex);
             return null;
         }
     }
@@ -72,20 +72,42 @@ public class DocumentoModel extends ModelHandler<Documento> {
     public Object getIdByRegistro(Documento registro) {
         return registro != null ? registro.getIdDocumento() : null;
     }
-    
+
     public List<Persona> completarPersona(String texto) {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
         return pDAO.buscarPorNombre(texto, 30);
     }
-    
+
     public List<TipoDocumento> completarTipoDocumento(String texto) {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
         return tdDAO.buscarPorNombre(texto, 30);
     }
-    
-    
+
+    private Persona personaFiltro;
+
+    public void filtrarPorPersona(Persona persona) {
+        this.personaFiltro = persona;
+        if (persona != null) {
+            setFiltro("idPersona.idPersona", persona.getIdPersona());
+        } else {
+            limpiarFiltro();
+        }
+    }
+
+    public Persona getPersonaFiltro() {
+        return personaFiltro;
+    }
+
+    @Override
+    public void nuevo() {
+        super.nuevo();
+        if (personaFiltro != null) {
+            registroActual.setIdPersona(personaFiltro);
+        }
+    }
+
 }

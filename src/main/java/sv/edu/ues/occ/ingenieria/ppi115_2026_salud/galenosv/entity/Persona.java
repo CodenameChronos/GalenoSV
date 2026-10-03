@@ -32,7 +32,8 @@ import java.util.UUID;
     @NamedQuery(name = "Persona.findByApellidos", query = "SELECT p FROM Persona p WHERE p.apellidos = :apellidos"),
     @NamedQuery(name = "Persona.findByFechaNacimiento", query = "SELECT p FROM Persona p WHERE p.fechaNacimiento = :fechaNacimiento"),
     @NamedQuery(name = "Persona.findByFechaCreacion", query = "SELECT p FROM Persona p WHERE p.fechaCreacion = :fechaCreacion"),
-    @NamedQuery(name = "Persona.findByNombreCompleto", query = "SELECT p FROM Persona p WHERE UPPER(CONCAT(p.nombres, ' ', p.apellidos)) LIKE UPPER(:texto) ORDER BY p.nombres, p.apellidos"
+    @NamedQuery(name = "Persona.findByNombreCompleto",  query = "SELECT p FROM Persona p WHERE LOWER(CONCAT(p.nombres, ' ', p.apellidos)) LIKE :texto"
+                                                            
     )
 })
 public class Persona implements Serializable {
@@ -79,13 +80,13 @@ public class Persona implements Serializable {
      * Etiqueta para mostrar en vistas (autocomplete, tablas).
      * No se persiste.
      */
-    @Transient
-    public String getNombreCompleto() {
-        if (idPersona == null) {
-            return "";
-        }
-        return getNombres() + " " + getApellidos();
-    }
+  @Transient
+public String getNombreCompleto() {
+    return String.join(" ",
+        nombres != null ? nombres : "",
+        apellidos != null ? apellidos : "")
+        .trim();
+}
 
 
     public Persona() {
@@ -118,6 +119,7 @@ public class Persona implements Serializable {
     public void setApellidos(String apellidos) {
         this.apellidos = (apellidos != null && !apellidos.isBlank()) ? apellidos.trim() : null;
     }
+    
 
     public Date getFechaNacimiento() {
         return fechaNacimiento;

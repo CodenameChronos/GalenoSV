@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +14,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -21,6 +23,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.regex.PatternSyntaxException;
 
 @Entity
 @Table(name = "medio_contacto", schema = "public")
@@ -131,5 +134,22 @@ public class MedioContacto implements Serializable {
     @Override
     public String toString() {
         return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.MedioContacto[ idMedioContacto=" + idMedioContacto + " ]";
+    }
+
+    @JsonbTransient
+    @AssertTrue(message = "El valor no cumple con el formato esperado para el tipo de medio de contacto seleccionado")
+    public boolean isValorConformeAlTipo() {
+        if (idTipoMedioContacto == null || valor == null) {
+            return true; // @NotNull / @NotBlank ya cubren estos casos
+        }
+        String patron = idTipoMedioContacto.getExpresionRegular();
+        if (patron == null || patron.isBlank()) {
+            return true; // ese tipo de medio de contacto no exige formato
+        }
+        try {
+            return valor.matches(patron);
+        } catch (PatternSyntaxException e) {
+            return true; // el patrón mal formado es error de TipoMedioContacto, no de este MedioContacto
+        }
     }
 }

@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,12 +12,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.regex.PatternSyntaxException;
 
 @Entity
 @Table(name = "documento", schema = "public")
@@ -126,4 +129,23 @@ public class Documento implements Serializable {
     public String toString() {
         return "sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Documento[ idDocumento=" + idDocumento + " ]";
     }
+
+    @JsonbTransient
+    @AssertTrue(message = "El valor no cumple con el formato esperado para el tipo de documento seleccionado")
+    public boolean isValorConformeAlTipo() {
+        if (idTipoDocumento == null || valor == null) {
+            return true; // @NotNull / @NotBlank ya cubren estos casos
+        }
+        String patron = idTipoDocumento.getExpresionRegular();
+        if (patron == null || patron.isBlank()) {
+            return true; // ese tipo de documento no exige formato
+        }
+        try {
+            return valor.matches(patron);
+        } catch (PatternSyntaxException e) {
+            return true; // el patrón mal formado es error de TipoDocumento, no de este Documento
+        }
+    }
+    
+    
 }

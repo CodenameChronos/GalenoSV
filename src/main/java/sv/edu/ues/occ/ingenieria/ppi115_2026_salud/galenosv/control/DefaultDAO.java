@@ -11,69 +11,64 @@ import java.util.logging.Logger;
  *
  * @author kardia
  */
-  
+public abstract class DefaultDAO<T> implements DAOInterface<T> {
 
-    public abstract class DefaultDAO<T> implements DAOInterface<T> {
+    public final Class entity;
 
-        public final Class entity;
+    public abstract EntityManager getEntityManager();
 
-        public abstract EntityManager getEntityManager();
+    public DefaultDAO(Class<T> entity) {
+        this.entity = entity;
+    }
 
-        public DefaultDAO(Class<T> entity) {
-            this.entity = entity;
-        }
-
-        /**
-         * Persiste un nuevo registro en la base de datos utilizando el
-         * EntityManager.
-         *
-         * @param registro El objeto que se desea almacenar. No debe ser nulo.
-         * @throws IllegalArgumentException si el objeto proporcionado es nulo.
-         * @throws IllegalStateException si ocurre un error durante la operación
-         * de persistencia.
-         */
-        @Override
-        public void crear(Object registro) throws IllegalArgumentException, IllegalStateException {
-            if (registro != null) {
-                try {
-                    getEntityManager().persist(registro);
-                } catch (ConstraintViolationException cve) {
-                    throw new IllegalStateException(registrarViolaciones(cve), cve);
-                } catch (Exception ex) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
-                    throw new IllegalStateException();
-                }
-            } else {
-                throw new IllegalArgumentException("El registro no puede ser nulo");
+    /**
+     * Persiste un nuevo registro en la base de datos utilizando el
+     * EntityManager.
+     *
+     * @param registro El objeto que se desea almacenar. No debe ser nulo.
+     * @throws IllegalArgumentException si el objeto proporcionado es nulo.
+     * @throws IllegalStateException si ocurre un error durante la operación de
+     * persistencia.
+     */
+    @Override
+    public void crear(Object registro) throws IllegalArgumentException, IllegalStateException {
+        if (registro != null) {
+            try {
+                getEntityManager().persist(registro);
+            } catch (ConstraintViolationException cve) {
+                throw new IllegalStateException(registrarViolaciones(cve), cve);
+            } catch (Exception ex) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
+                throw new IllegalStateException();
             }
-
+        } else {
+            throw new IllegalArgumentException("El registro no puede ser nulo");
         }
 
-        /**
-         * Actualiza un registro existente en la base de datos utilizando el
-         * EntityManager.
-         *
-         * @param nuevo El objeto con los nuevos datos a fusionar o actualizar.
-         * No debe ser nulo.
-         * @throws IllegalArgumentException si el objeto proporcionado es nulo.
-         * @throws IllegalStateException si ocurre un error durante la operación
-         * de merge.
-         */
-        @Override
-        public void actualizar(Object nuevo) throws IllegalArgumentException, IllegalStateException {
-            if (nuevo != null) {
-                try {
-                    getEntityManager().merge(nuevo);
-                } catch (ConstraintViolationException cve) {
-                    throw new IllegalStateException(registrarViolaciones(cve), cve);
-                } catch (Exception ex) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
-                    throw new IllegalStateException();
+    }
+
+    /**
+     * Actualiza un registro existente en la base de datos utilizando el
+     * EntityManager.
+     *
+     * @param nuevo El objeto con los nuevos datos a fusionar o actualizar. No
+     * debe ser nulo.
+     * @throws IllegalArgumentException si el objeto proporcionado es nulo.
+     * @throws IllegalStateException si ocurre un error durante la operación de
+     * merge.
+     */
+    @Override
+    public void actualizar(Object nuevo) throws IllegalArgumentException, IllegalStateException {
+        if (nuevo != null) {
+            try {
+                getEntityManager().merge(nuevo);
+            } catch (ConstraintViolationException cve) {
+                throw new IllegalStateException(registrarViolaciones(cve), cve);
+            } catch (Exception ex) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
+                throw new IllegalStateException();
             }
-        }
-
-        
-            else {
+        } else {
             throw new IllegalArgumentException("El objeto a actualizar no puede ser nulo");
         }
 
@@ -169,6 +164,38 @@ import java.util.logging.Logger;
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
             throw new IllegalStateException(ex);
         }
+    }
+
+    @Override
+    public List<T> findRangeByCriterio(String propiedad, Object valor, int first, int max) {
+        if (first < 0 || max < 0) {
+            throw new IllegalArgumentException("first debe ser >= 0 y max debe ser >= 0");
+        }
+        if (max == 0) {
+            return List.of();
+        }
+        try {
+            return getEntityManager().createQuery(
+                    "SELECT e FROM " + entity.getSimpleName() + " e WHERE e." + propiedad + " = :valor"
+                    + " ORDER BY e.id" + entity.getSimpleName(), entity)
+                    .setParameter("valor", valor)
+                    .setFirstResult(first)
+                    .setMaxResults(max)
+                    .getResultList();
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    @Override
+    public int contarByCriterio(String propiedad, Object valor) {
+        return getEntityManager().createQuery(
+                "SELECT COUNT(e) FROM " + entity.getSimpleName() + " e WHERE e." + propiedad + " = :valor",
+                Long.class)
+                .setParameter("valor", valor)
+                .getSingleResult()
+                .intValue();
     }
 
     /**

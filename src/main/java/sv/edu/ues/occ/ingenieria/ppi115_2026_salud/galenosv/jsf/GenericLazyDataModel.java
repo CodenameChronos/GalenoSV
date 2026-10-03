@@ -21,9 +21,13 @@ public class GenericLazyDataModel<T> extends LazyDataModel<T> {
         return modelHandler.contar();
     }
 
-    @Override
+    /*@Override
     public List<T> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
         return modelHandler.getDAO().findRange(first, pageSize);
+    }*/
+    @Override
+    public List<T> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+        return modelHandler.buscarRegistros(first, pageSize);
     }
 
     @Override
