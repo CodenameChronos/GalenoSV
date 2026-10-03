@@ -5,90 +5,196 @@
       xmlns:f="jakarta.faces.core"
       xmlns:p="primefaces"
       xmlns:g="jakarta.faces.composite/galeno">
+
     <h:head>
-        <title>#{msg['examenTipoExamen.titulo']} - Galeno-SV</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <title>
+            #{msg['examenTipoExamen.titulo']} - Galeno-SV
+        </title>
+
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"/>
+
     </h:head>
+
     <h:body>
+
         <g:layout>
+
             <f:facet name="workspace">
+
                 <h:form id="frmExamenTipoExamen">
 
                     <g:crud
                         titulo="#{msg['examenTipoExamen.titulo']}"
                         modelo="#{examenTipoExamenModel}"
-                        rowKey="#{r.idExamenTipoExamen}">
+                        rowKey="#{r.idExamen}">
 
-                        <p:column headerText="#{msg['campo.comun.codigo']}">
-                            <h:outputText value="#{r.idExamenTipoExamen}"/>
+                        <!-- TABLA PRINCIPAL -->
+
+                        <p:column
+                            headerText="#{msg['campo.comun.codigo']}">
+
+                            <h:outputText
+                                value="#{r.idExamen}"/>
+
                         </p:column>
 
-                        <p:column headerText="#{msg['campo.comun.fechaCreacion']}">
-                            <h:outputText value="#{r.fechaCreacion}">
-                                <f:convertDateTime pattern="dd/MM/yyyy"/>
-                            </h:outputText>
+                        <p:column
+                            headerText="#{msg['campo.comun.nombre']}">
+
+                            <h:outputText
+                                value="#{r.nombre}"/>
+
                         </p:column>
 
-                        <p:column headerText="#{msg['campo.comun.observaciones']}">
-                            <h:outputText value="#{r.observaciones}"/>
+                        <p:column
+                            headerText="#{msg['campo.comun.activo']}">
+
+                            <h:outputText
+                                value="#{r.activo ? msg['campo.comun.activo'] : msg['campo.comun.inactivo']}"/>
+
                         </p:column>
 
-                        <p:column headerText="#{msg['examen.titulo']}">
-                            <h:outputText value="#{r.idExamen.nombre}"/>
+                        <p:column
+                            headerText="#{msg['campo.comun.observaciones']}">
+
+                            <h:outputText
+                                value="#{r.observaciones}"/>
+
                         </p:column>
 
-                        <p:column headerText="#{msg['tipoExamen.titulo']}">
-                            <h:outputText value="#{r.idTipoExamen.nombre}"/>
-                        </p:column>
+
+                        <!-- FORMULARIO -->
 
                         <f:facet name="formulario">
 
-                            <p:panelGrid
-                                columns="4"
-                                layout="grid"
-                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
-                                contentStyleClass="align-items-baseline ui-fluid">
+                            <p:tabView id="tabsExamenTipoExamen">
 
-                                <p:outputLabel for="fechaCreacion" value="#{msg['campo.comun.fechaCreacion']}"/>
-                                <p:inputText disabled="true" id="fechaCreacion" value="#{examenTipoExamenModel.registroActual.fechaCreacion}">
-                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
-                                </p:inputText>
+                                <p:ajax
+                                    event="tabChange"
+                                    listener="#{examenTipoExamenArbolModel.alEntrarPestana}"
+                                    process="@this"
+                                    update="pnlTiposExamen"/>
 
-                                <p:outputLabel for="idExamen" value="#{msg['examen.titulo']}"/>
-                                <p:autoComplete id="idExamen" dropdown="true" 
-                                                value="#{examenTipoExamenModel.registroActual.idExamen}"
-                                                completeMethod="#{examenTipoExamenModel.completarExamen}"
-                                                converter="entityConverter"
-                                                var="examen"
-                                                itemLabel="#{examen.nombre}"
-                                                itemValue="#{examen}"
-                                                forceSelection="true"
-                                                scrollHeight="250"
-                                                minQueryLength="3"
-                                                required="true"/>
 
-                                <p:outputLabel
-                                    for="observaciones"
-                                    value="#{msg['campo.comun.observaciones']}"/>
+                                <!-- DATOS DEL EXAMEN -->
 
-                                <p:inputTextarea
-                                    id="observaciones"
-                                    value="#{examenTipoExamenModel.registroActual.observaciones}"/>
+                                <p:tab
+                                    title="#{msg['examen.titulo']}">
 
-                                <p:outputLabel for="idTipoExamen" value="#{msg['tipoExamen.titulo']}"/>
-                                <p:autoComplete id="idTipoExamen" dropdown="true" 
-                                                value="#{examenTipoExamenModel.registroActual.idTipoExamen}"
-                                                completeMethod="#{examenTipoExamenModel.completarTipoExamen}"
-                                                converter="entityConverter"
-                                                var="tipoExamen"
-                                                itemLabel="#{tipoExamen.nombre}"
-                                                itemValue="#{tipoExamen}"
-                                                forceSelection="true"
-                                                scrollHeight="250"
-                                                minQueryLength="3"
-                                                required="true"/>
+                                    <p:panelGrid
+                                        columns="2"
+                                        layout="grid"
+                                        columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                        contentStyleClass="align-items-baseline ui-fluid">
 
-                            </p:panelGrid>
+                                        <p:outputLabel
+                                            for="nombre"
+                                            value="#{msg['campo.comun.nombre']}"/>
+
+                                        <p:inputText
+                                            id="nombre"
+                                            value="#{examenTipoExamenModel.registroActual.nombre}"
+                                            required="true"/>
+
+
+                                        <p:outputLabel
+                                            for="activo"
+                                            value="#{msg['campo.comun.activo']}"/>
+
+                                        <p:toggleSwitch
+                                            id="activo"
+                                            value="#{examenTipoExamenModel.registroActual.activo}"/>
+
+
+                                        <p:outputLabel
+                                            for="observaciones"
+                                            value="#{msg['campo.comun.observaciones']}"/>
+
+                                        <p:inputTextarea
+                                            id="observaciones"
+                                            value="#{examenTipoExamenModel.registroActual.observaciones}"/>
+
+                                    </p:panelGrid>
+
+                                </p:tab>
+
+
+                                <!-- TIPOS DE EXAMEN -->
+
+                                <p:tab
+                                    title="#{msg['tipoExamen.titulo']}"
+                                    disabled="#{examenTipoExamenModel.estado == 'CREAR'}">
+
+                                    <h:panelGroup
+                                        id="pnlTiposExamen"
+                                        layout="block">
+
+                                        <p:fieldset
+                                            legend="#{msg['tipoExamen.titulo']}">
+
+                                            <div class="flex align-items-center flex-wrap gap-2 mb-3">
+
+                                                <p:autoComplete
+                                                    id="tipoExamenAgregar"
+                                                    value="#{examenTipoExamenArbolModel.tipoExamenAgregar}"
+                                                    completeMethod="#{examenTipoExamenArbolModel.completarTipoExamen}"
+                                                    var="tipo"
+                                                    itemLabel="#{tipo.nombre}"
+                                                    itemValue="#{tipo}"
+                                                    converter="entityConverter"
+                                                    forceSelection="true"
+                                                    minQueryLength="1"
+                                                    placeholder="#{msg['tipoExamen.titulo']}"/>
+
+
+                                                <p:commandButton
+                                                    value="#{msg['procedimiento.examenes.agregar']}"
+                                                    actionListener="#{examenTipoExamenArbolModel.agregarTipoExamen}"
+                                                    process="@this @([id$=pnlTiposExamen])"
+                                                    update="@([id$=pnlTiposExamen])"/>
+
+
+                                                <p:commandButton
+                                                    value="#{msg['procedimiento.examenes.quitar']}"
+                                                    actionListener="#{examenTipoExamenArbolModel.quitarTipoExamen}"
+                                                    process="@this @([id$=pnlTiposExamen])"
+                                                    update="@([id$=pnlTiposExamen])"/>
+
+                                            </div>
+
+
+                                            <p:dataTable
+                                                id="tblTiposExamen"
+                                                value="#{examenTipoExamenArbolModel.tiposExamenForm}"
+                                                var="tipo"
+                                                rowKey="#{tipo.idTipoExamen}"
+                                                selection="#{examenTipoExamenArbolModel.tipoExamenSeleccionado}"
+                                                emptyMessage="No hay tipos de examen agregados.">
+
+                                                <p:column
+                                                    selectionMode="single"
+                                                    style="width:3rem;text-align:center"/>
+
+                                                <p:column
+                                                    headerText="#{msg['campo.comun.nombre']}">
+
+                                                    <h:outputText
+                                                        value="#{tipo.nombre}"/>
+
+                                                </p:column>
+
+                                            </p:dataTable>
+
+                                        </p:fieldset>
+
+                                    </h:panelGroup>
+
+                                </p:tab>
+
+                            </p:tabView>
 
                         </f:facet>
 

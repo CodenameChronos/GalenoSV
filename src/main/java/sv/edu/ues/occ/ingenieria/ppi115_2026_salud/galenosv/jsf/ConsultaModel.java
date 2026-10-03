@@ -16,15 +16,18 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.PersonaRol;
 @Named
 @ViewScoped
 public class ConsultaModel extends ModelHandler<Consulta> {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Inject
     private ConsultaDAO coDAO;
-    
+
     @Inject
     private PersonaRolDAO prDAO;
-    
+
+    @Inject
+    private Sesion sesion;
+
     private GenericLazyDataModel<Consulta> lazyModel;
 
     public ConsultaModel() {
@@ -40,11 +43,17 @@ public class ConsultaModel extends ModelHandler<Consulta> {
     public GenericLazyDataModel<Consulta> getLazyModel() {
         return lazyModel;
     }
-    
+
     @Override
     public Consulta instanciarRegistro() {
-        return new Consulta();
-    }    
+        Consulta consulta = new Consulta();
+
+        if (sesion.getPersonaRol() != null) {
+            consulta.setIdPersonaRol(sesion.getPersonaRol());
+        }
+
+        return consulta;
+    }
 
     @Override
     public Consulta getRegistroById(String id) {
@@ -53,7 +62,7 @@ public class ConsultaModel extends ModelHandler<Consulta> {
             return (Consulta) coDAO.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING,
-                "ID inválido recibido para Consulta: " + id, ex);
+                    "ID inválido recibido para Consulta: " + id, ex);
             return null;
         }
     }
@@ -62,20 +71,19 @@ public class ConsultaModel extends ModelHandler<Consulta> {
     public Object getIdByRegistro(Consulta registro) {
         return registro != null ? registro.getIdConsulta() : null;
     }
-    
+
     /**
      * Método de búsqueda del p:autoComplete de examenes.
      *
-     * @param texto texto escrito por el usuario; si está vacío no se
-     * consulta la base de datos.
+     * @param texto texto escrito por el usuario; si está vacío no se consulta
+     * la base de datos.
      * @return hasta 30 examenes cuyo nombre contenga el texto.
      */
-    
     public List<PersonaRol> completarPersonaRol(String texto) {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
         return prDAO.buscarPorNombresApellidos(texto, 30);
     }
-    
+
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-       xmlns:h="jakarta.faces.html"
-       xmlns:f="jakarta.faces.core"
-       xmlns:p="primefaces"
-       xmlns:g="jakarta.faces.composite/galeno">
-    
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="primefaces"
+      xmlns:g="jakarta.faces.composite/galeno">
+
     <h:head>
         <title>#{msg['consulta.titulo']} - Galeno-SV</title>
     </h:head>
@@ -13,7 +13,7 @@
         <g:layout>
             <f:facet name="workspace">
                 <h:form id="frmConsulta">
-                    
+
                     <g:crud 
                         titulo="#{msg['consulta.titulo']}"
                         modelo="#{consultaModel}"
@@ -50,10 +50,10 @@
                         <f:facet name="formulario">
 
                             <p:panelGrid
-                                    columns="4"
-                                    layout="grid"
-                                    columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
-                                    contentStyleClass="align-items-baseline ui-fluid">
+                                columns="4"
+                                layout="grid"
+                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                contentStyleClass="align-items-baseline ui-fluid">
 
                                 <p:outputLabel for="fechaInicio" value="#{msg['campo.comun.fechaInicio']}" />
                                 <p:datePicker 
@@ -73,32 +73,27 @@
                                 <p:outputLabel for="observaciones" value="#{msg['campo.comun.observaciones']}" />
                                 <p:inputTextarea id="observaciones" value="#{consultaModel.registroActual.observaciones}" />
 
-                                <p:outputLabel for="persona" value="#{msg['consulta.persona']}" />
-                                <p:autoComplete id="persona" dropdown="true" 
-                                                    value="#{consultaModel.registroActual.idPersonaRol}"
-                                                    completeMethod="#{consultaModel.completarPersonaRol}"
-                                                    converter="entityConverter"
-                                                    var="personaRol"
-                                                    itemLabel="#{personaRol.nombreCompleto}"
-                                                    itemValue="#{personaRol}"
-                                                    forceSelection="true"
-                                                    scrollHeight="250"
-                                                    minQueryLength="3"
-                                                    required="true"/>
-                                
+                                <p:outputLabel
+                                    for="persona"
+                                    value="#{msg['consulta.persona']}" />
+
+                                <h:outputText
+                                    id="persona"
+                                    value="#{sesion.persona.nombres} #{sesion.persona.apellidos}" />
+
 
                             </p:panelGrid>
 
                         </f:facet>
 
                     </g:crud>
-                    
+
                 </h:form>
-                    
+
             </f:facet>
-            
+
         </g:layout>
-        
+
     </h:body>
-    
+
 </html>
