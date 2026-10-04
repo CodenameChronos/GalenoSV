@@ -82,55 +82,30 @@
                 <!-- Navegación -->
                 <div class="galeno-nav">
 
-                    <p:panelMenu stateful="false">
+                    <p:menu>
 
-                        <p:submenu label="#{msg['menu.consultas']}">
+                            <p:menuitem value="#{msg['sesion.titulo']}"
+                                        url="#{request.contextPath}/paginas/Sesion.jsf"/>
                             <p:menuitem value="#{msg['consulta.titulo']}"
                                         url="#{request.contextPath}/paginas/Consulta.jsf"/>
-                            <p:menuitem value="#{msg['consultaProcedimiento.titulo']}"
-                                        url="#{request.contextPath}/paginas/ConsultaProcedimiento.jsf"/>
-                            <p:menuitem value="#{msg['consultaProcedimientoPaso.titulo']}"
-                                        url="#{request.contextPath}/paginas/ConsultaProcedimientoPaso.jsf"/>
-                            
-                            
-                        </p:submenu>
-
-                        <p:submenu label="#{msg['menu.procedimientosExamenes']}">
                             <p:menuitem value="#{msg['procedimiento.titulo']}"
                                         url="#{request.contextPath}/paginas/Procedimiento.jsf"/>
-                            <p:menuitem value="#{msg['procedimientoPaso.titulo']}"
-                                        url="#{request.contextPath}/paginas/ProcedimientoPaso.jsf"/>
                             <p:menuitem value="#{msg['tipoExamen.titulo']}"
                                         url="#{request.contextPath}/paginas/TipoExamen.jsf"/>
                             <p:menuitem value="#{msg['examen.titulo']}"
-                                        url="#{request.contextPath}/paginas/Examen.jsf"/>
-                            <p:menuitem value="#{msg['examenTipoExamen.titulo']}"
                                         url="#{request.contextPath}/paginas/ExamenTipoExamen.jsf"/>
-                            <p:menuitem value="#{msg['procedimientoPasoExamen.titulo']}"
-                                    url="#{request.contextPath}/paginas/ProcedimientoPasoExamen.jsf"/>
-                            <p:menuitem value="#{msg['procedimientoPasoSecuencia.titulo']}"
-                                        url="#{request.contextPath}/paginas/ProcedimientoPasoSecuencia.jsf"/>
-                            
-                        </p:submenu>
-
-                        <p:submenu label="#{msg['menu.personasClinica']}">
                             <p:menuitem value="#{msg['clinica.titulo']}"
                                         url="#{request.contextPath}/paginas/Clinica.jsf"/>
                             <p:menuitem value="#{msg['persona.titulo']}"
                                         url="#{request.contextPath}/paginas/Persona.jsf"/>
                             <p:menuitem value="#{msg['rol.titulo']}"
                                     url="#{request.contextPath}/paginas/Rol.jsf"/>
-
-                        </p:submenu>
-
-                        <p:submenu label="#{msg['menu.documentosContactos']}">
                             <p:menuitem value="#{msg['tipoDocumento.titulo']}"
                                         url="#{request.contextPath}/paginas/TipoDocumento.jsf"/>
                             <p:menuitem value="#{msg['tipoMedioContacto.titulo']}"
                                         url="#{request.contextPath}/paginas/TipoMedioContacto.jsf"/>
-                        </p:submenu>
 
-                    </p:panelMenu>
+                    </p:menu>
 
                 </div>
 

@@ -6,96 +6,159 @@
       xmlns:p="primefaces"
       xmlns:g="jakarta.faces.composite/galeno">
 
-    <h:head>
-        <title>#{msg['sesion.titulo']} - Galeno-SV</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </h:head>
+<h:head>
+    <title>#{msg['sesion.titulo']} - Galeno-SV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</h:head>
 
-    <h:body>
-        <g:layout>
-            <f:facet name="workspace">
+<h:body>
+    <g:layout>
+        <f:facet name="workspace">
 
-                <h:form id="frmSesion">
+            <h:form id="frmSesion">
 
-                    <p:panel header="#{msg['sesion.titulo']}">
+                <p:messages showDetail="true" closable="true"/>
 
-                        <p:panelGrid
-                            columns="2"
+                <p:panel header="#{msg['sesion.titulo']}"
+                         rendered="#{empty sesion.persona}">
+
+                    <p:panelGrid
+                            columns="1"
                             layout="grid"
                             columnClasses="col-12 md:col-3, col-12 md:col-9"
                             contentStyleClass="align-items-baseline ui-fluid">
 
-                            <p:outputLabel
-                                for="personaRol"
-                                value="#{msg['sesion.personaRol']}"/>
+                        <p:outputLabel
+                                for="clinica"
+                                value="#{msg['clinica.titulo']}"/>
 
-                            <p:autoComplete
-                                id="personaRol"
-                                dropdown="true"
-                                value="#{sesionModel.personaRolSeleccionado}"
-                                completeMethod="#{sesionModel.completarPersonaRol}"
+                        <p:autoComplete
+                                id="clinica"
+                                dropdown="false"
+                                value="#{sesionModel.clinica}"
+                                completeMethod="#{sesionModel.completarClinica}"
                                 converter="entityConverter"
-                                var="personaRol"
-                                itemLabel="#{personaRol.idPersona.nombres} #{personaRol.idPersona.apellidos}"
-                                itemValue="#{personaRol}"
+                                var="cl"
+                                itemLabel="#{cl.nombre}"
+                                itemValue="#{cl}"
                                 forceSelection="true"
                                 scrollHeight="250"
-                                minQueryLength="3"
-                                required="true"/>
+                                minQueryLength="2"
+                                emptyMessage="#{msg['sesion.sinClinicas']}"
+                                required="true"
+                                requiredMessage="#{msg['sesion.error.clinica']}">
 
-                        </p:panelGrid>
+                            <p:ajax event="itemSelect"
+                                    listener="#{sesionModel.alCambiarClinica}"
+                                    update="rol persona"/>
+                            <p:ajax event="change"
+                                    listener="#{sesionModel.alCambiarClinica}"
+                                    update="rol persona"/>
+                        </p:autoComplete>
 
-                        <p:separator/>
+                        <p:outputLabel
+                                for="rol"
+                                value="#{msg['rol.titulo']}"/>
 
-                        <p:commandButton
+                        <p:autoComplete
+                                id="rol"
+                                dropdown="false"
+                                disabled="#{!sesionModel.rolHabilitado}"
+                                value="#{sesionModel.rol}"
+                                completeMethod="#{sesionModel.completarRol}"
+                                converter="entityConverter"
+                                var="rl"
+                                itemLabel="#{rl.nombre}"
+                                itemValue="#{rl}"
+                                forceSelection="true"
+                                scrollHeight="250"
+                                minQueryLength="1"
+                                emptyMessage="#{msg['sesion.sinRoles']}"
+                                required="true"
+                                requiredMessage="#{msg['sesion.error.rol']}">
+
+                            <p:ajax event="itemSelect"
+                                    listener="#{sesionModel.alCambiarRol}"
+                                    update="persona"/>
+                            <p:ajax event="change"
+                                    listener="#{sesionModel.alCambiarRol}"
+                                    update="persona"/>
+                        </p:autoComplete>
+
+                        <p:outputLabel
+                                for="persona"
+                                value="#{msg['persona.titulo']}"/>
+
+                        <p:autoComplete
+                                id="persona"
+                                dropdown="false"
+                                disabled="#{!sesionModel.personaHabilitada}"
+                                value="#{sesionModel.sesionPersonaRol}"
+                                completeMethod="#{sesionModel.completarPersonaRol}"
+                                converter="entityConverter"
+                                var="pr"
+                                itemLabel="#{pr.idPersona.nombres} #{pr.idPersona.apellidos}"
+                                itemValue="#{pr}"
+                                forceSelection="true"
+                                scrollHeight="250"
+                                minQueryLength="1"
+                                emptyMessage="#{msg['sesion.sin.personas']}"
+                                required="true"
+                                requiredMessage="#{msg['sesion.error.persona']}"/>
+
+                    </p:panelGrid>
+
+                    <p:separator/>
+
+                    <p:commandButton
                             value="#{msg['sesion.iniciar']}"
                             action="#{sesionModel.establecerSesion}"
                             update="@form"
                             icon="pi pi-sign-in"/>
 
-                    </p:panel>
+                </p:panel>
 
-                    <p:panel
+                <p:panel
                         header="#{msg['sesion.titulo']}"
                         rendered="#{not empty sesion.persona}">
 
-                        <p:panelGrid
+                    <p:panelGrid
                             columns="2"
                             layout="grid"
                             columnClasses="col-12 md:col-3, col-12 md:col-9"
                             contentStyleClass="align-items-baseline ui-fluid">
 
-                            <p:outputLabel value="#{msg['personaRol.persona']}"/>
+                        <p:outputLabel value="#{msg['personaRol.persona']}"/>
 
-                            <h:outputText
+                        <h:outputText
                                 value="#{sesion.persona.nombres} #{sesion.persona.apellidos}"/>
 
-                            <p:outputLabel value="#{msg['personaRol.rol']}"/>
+                        <p:outputLabel value="#{msg['personaRol.rol']}"/>
 
-                            <h:outputText
+                        <h:outputText
                                 value="#{sesion.rol.nombre}"/>
 
-                            <p:outputLabel value="#{msg['personaRol.clinica']}"/>
+                        <p:outputLabel value="#{msg['personaRol.clinica']}"/>
 
-                            <h:outputText
+                        <h:outputText
                                 value="#{sesion.clinica.nombre}"/>
 
-                        </p:panelGrid>
+                    </p:panelGrid>
 
-                        <p:separator/>
+                    <p:separator/>
 
-                        <p:commandButton
+                    <p:commandButton
                             value="#{msg['sesion.cerrar']}"
                             action="#{sesionModel.cerrarSesion}"
                             update="@form"
                             icon="pi pi-sign-out"/>
 
-                    </p:panel>
+                </p:panel>
 
-                </h:form>
+            </h:form>
 
-            </f:facet>
-        </g:layout>
-    </h:body>
+        </f:facet>
+    </g:layout>
+</h:body>
 
 </html>

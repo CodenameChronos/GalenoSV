@@ -29,6 +29,12 @@
             default="10"
             shortDescription="Filas por pagina del paginador. Por defecto 10."/>
 
+        <cc:attribute
+            name="mostrarBotones"
+            type="java.lang.Boolean"
+            default="true"
+            shortDescription="Si es false se ocultan Guardar, Eliminar y Cancelar (para pantallas cuya pestana activa trae sus propios botones). Por defecto true."/>
+
         <cc:facet
             name="formulario"
             required="true"
@@ -71,42 +77,49 @@
                     process="@this"
                     update="pnlCrear pnlData"/>
 
-                <!-- Columnas aportadas por la pantalla -->
                 <cc:insertChildren/>
 
             </p:dataTable>
 
         </h:panelGroup>
 
-        <!-- Edicion: el contenedor pnlCrear siempre existe para poder actualizarse por AJAX -->
         <h:panelGroup id="pnlCrear" layout="block">
 
             <h:panelGroup
                 layout="block"
                 rendered="#{cc.attrs.modelo.estado=='CREAR' or cc.attrs.modelo.estado=='MODIFICAR'}">
 
-                <!-- Campos aportados por la pantalla -->
                 <cc:renderFacet name="formulario" required="true"/>
 
-                <g:botonCrud
-                    value="#{msg['boton.guardar']}"
-                    styleClass="ui-button-raised ui-button-flat"
-                    actionListener="#{cc.attrs.modelo.guardarHandler}"
-                    update="pnlCrear pnlData"/>
+                <h:panelGroup id="botonesCrud" layout="block">
 
-                <g:botonCrud
-                    value="#{msg['boton.eliminar']}"
-                    rendered="#{cc.attrs.modelo.estado=='MODIFICAR'}"
-                    styleClass="ui-button-raised ui-button-danger"
-                    actionListener="#{cc.attrs.modelo.eliminarHandler}"
-                    update="pnlCrear pnlData"/>
+                    <h:panelGroup layout="block" rendered="#{cc.attrs.mostrarBotones}">
 
-                <g:botonCrud
-                    value="#{msg['boton.cancelar']}"
-                    styleClass="ui-button-raised ui-button-secondary ui-button-flat"
-                    actionListener="#{cc.attrs.modelo.cancelarHandler}"
-                    process="@this"
-                    update="pnlCrear pnlData"/>
+                        <g:botonCrud
+                            value="#{msg['boton.guardar']}"
+                            styleClass="ui-button-raised ui-button-flat"
+                            actionListener="#{cc.attrs.modelo.guardarHandler}"
+                            update="pnlCrear pnlData"/>
+
+                        <!-- process="@this": eliminar no debe depender de que el formulario valide -->
+                        <g:botonCrud
+                            value="#{msg['boton.eliminar']}"
+                            rendered="#{cc.attrs.modelo.estado=='MODIFICAR'}"
+                            styleClass="ui-button-raised ui-button-danger"
+                            actionListener="#{cc.attrs.modelo.eliminarHandler}"
+                            process="@this"
+                            update="pnlCrear pnlData"/>
+
+                        <g:botonCrud
+                            value="#{msg['boton.cancelar']}"
+                            styleClass="ui-button-raised ui-button-secondary ui-button-flat"
+                            actionListener="#{cc.attrs.modelo.cancelarHandler}"
+                            process="@this"
+                            update="pnlCrear pnlData"/>
+
+                    </h:panelGroup>
+
+                </h:panelGroup>
 
             </h:panelGroup>
 

@@ -28,11 +28,11 @@ import java.util.UUID;
 @Entity
 @Table(name = "consulta_procedimiento", schema = "public")
 @NamedQueries({
-    @NamedQuery(name = "ConsultaProcedimiento.findAll", query = "SELECT c FROM ConsultaProcedimiento c"),
-    @NamedQuery(name = "ConsultaProcedimiento.findByFechaInicio", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.fechaInicio = :fechaInicio"),
-    @NamedQuery(name = "ConsultaProcedimiento.findByFechaFin", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.fechaFin = :fechaFin"),
-    @NamedQuery(name = "ConsultaProcedimiento.findByObservaciones", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.observaciones = :observaciones"),
-    @NamedQuery(name = "ConsultaProcedimiento.findByNombreProcedimiento", query = "SELECT consp FROM ConsultaProcedimiento consp LEFT JOIN FETCH consp.idProcedimiento LEFT JOIN FETCH consp.idConsulta c LEFT JOIN FETCH c.idPersonaRol pr LEFT JOIN FETCH pr.idPersona WHERE UPPER(consp.idProcedimiento.nombre) LIKE UPPER(:texto)")
+        @NamedQuery(name = "ConsultaProcedimiento.findAll", query = "SELECT c FROM ConsultaProcedimiento c"),
+        @NamedQuery(name = "ConsultaProcedimiento.findByFechaInicio", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.fechaInicio = :fechaInicio"),
+        @NamedQuery(name = "ConsultaProcedimiento.findByFechaFin", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.fechaFin = :fechaFin"),
+        @NamedQuery(name = "ConsultaProcedimiento.findByObservaciones", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.observaciones = :observaciones"),
+        @NamedQuery(name = "ConsultaProcedimiento.findByNombreProcedimiento", query = "SELECT consp FROM ConsultaProcedimiento consp LEFT JOIN FETCH consp.idProcedimiento LEFT JOIN FETCH consp.idConsulta c LEFT JOIN FETCH c.idPersonaRol pr LEFT JOIN FETCH pr.idPersona WHERE UPPER(consp.idProcedimiento.nombre) LIKE UPPER(:texto)")
 })
 public class ConsultaProcedimiento implements Serializable {
 
@@ -45,6 +45,7 @@ public class ConsultaProcedimiento implements Serializable {
 
     @NotNull(message = "El identificador del procedimiento es obligatorio")
     @JoinColumn(name = "id_procedimiento", referencedColumnName = "id_procedimiento", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Procedimiento idProcedimiento;
 
     @NotNull(message = "La fecha de inicio del procedimiento es obligatoria")

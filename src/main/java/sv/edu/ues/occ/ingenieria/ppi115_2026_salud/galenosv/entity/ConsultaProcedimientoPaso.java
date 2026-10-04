@@ -16,8 +16,10 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -30,10 +32,14 @@ import java.util.UUID;
     @NamedQuery(name = "ConsultaProcedimientoPaso.findAll", query = "SELECT c FROM ConsultaProcedimientoPaso c"),
     @NamedQuery(name = "ConsultaProcedimientoPaso.findByFechaInicio", query = "SELECT c FROM ConsultaProcedimientoPaso c WHERE c.fechaInicio = :fechaInicio"),
     @NamedQuery(name = "ConsultaProcedimientoPaso.findByFechaFin", query = "SELECT c FROM ConsultaProcedimientoPaso c WHERE c.fechaFin = :fechaFin"),
-    @NamedQuery(name = "ConsultaProcedimientoPaso.findByEstado", query = "SELECT c FROM ConsultaProcedimientoPaso c WHERE c.estado = :estado")})
+    @NamedQuery(name = "ConsultaProcedimientoPaso.findByEstado", query = "SELECT c FROM ConsultaProcedimientoPaso c WHERE c.estado = :estado"),
+    @NamedQuery(name = "ConsultaProcedimientoPaso.listarPorConsultaProcedimiento", query = "SELECT cpp FROM ConsultaProcedimientoPaso cpp LEFT JOIN FETCH cpp.idProcedimientoPaso LEFT JOIN FETCH cpp.idPersonaRol pr LEFT JOIN FETCH pr.idPersona LEFT JOIN FETCH pr.idRol WHERE cpp.idConsultaProcedimiento.idConsultaProcedimiento = :idConsultaProcedimiento ORDER BY cpp.fechaInicio")})
 public class ConsultaProcedimientoPaso implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    /** Estado con el que nace todo paso. Los demás estados se definirán junto con el flujo de avance. */
+    public static final String ESTADO_CREADO = "CREADO";
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -51,14 +57,21 @@ public class ConsultaProcedimientoPaso implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaFin;
 
-    @NotNull(message = "El estado del paso es obligatorio")
-    @Column(name = "estado", nullable = false)
-    private Boolean estado = Boolean.TRUE;
+    @NotBlank(message = "El estado del paso es obligatorio")
+    @Size(max = 30, message = "El estado no debe exceder los 30 caracteres")
+    @Column(name = "estado", nullable = false, length = 30)
+    private String estado = ESTADO_CREADO;
 
     @NotNull(message = "El procedimiento asociado es obligatorio")
     @JoinColumn(name = "id_consulta_procedimiento", referencedColumnName = "id_consulta_procedimiento", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private ConsultaProcedimiento idConsultaProcedimiento;
+
+    /** Paso de la plantilla (ProcedimientoPaso) del que nace este paso de la consulta. */
+    @NotNull(message = "El paso del procedimiento es obligatorio")
+    @JoinColumn(name = "id_procedimiento_paso", referencedColumnName = "id_procedimiento_paso", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private ProcedimientoPaso idProcedimientoPaso;
 
     @NotNull(message = "La persona con rol asignado es obligatoria")
     @JoinColumn(name = "id_persona_rol", referencedColumnName = "id_persona_rol", nullable = false)
@@ -105,11 +118,11 @@ public class ConsultaProcedimientoPaso implements Serializable {
         this.fechaFin = fechaFin;
     }
 
-    public Boolean getEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(Boolean estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 
@@ -119,6 +132,14 @@ public class ConsultaProcedimientoPaso implements Serializable {
 
     public void setIdConsultaProcedimiento(ConsultaProcedimiento idConsultaProcedimiento) {
         this.idConsultaProcedimiento = idConsultaProcedimiento;
+    }
+
+    public ProcedimientoPaso getIdProcedimientoPaso() {
+        return idProcedimientoPaso;
+    }
+
+    public void setIdProcedimientoPaso(ProcedimientoPaso idProcedimientoPaso) {
+        this.idProcedimientoPaso = idProcedimientoPaso;
     }
 
     public PersonaRol getIdPersonaRol() {

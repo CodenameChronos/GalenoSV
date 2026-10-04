@@ -97,10 +97,42 @@ public abstract class DefaultDAO<T> implements DAOInterface<T> {
             EntityManager em = getEntityManager();
             Object managed = em.contains(eliminar) ? eliminar : em.merge(eliminar);
             em.remove(managed);
+            // flush fuerza el DELETE aquí mismo. Sin él, la base solo rechazaría el
+            // borrado al confirmar la transacción, DESPUÉS de salir de este método,
+            // y el error llegaría a la pantalla como una excepción sin explicación.
+            em.flush();
         } catch (Exception ex) {
+            if (esViolacionDeIntegridad(ex)) {
+                // El registro está referenciado por otros (llave foránea): no se borra.
+                throw new ReglaNegocioException(
+                        "No se puede eliminar el registro porque otros registros dependen de él.");
+            }
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
             throw new IllegalStateException("No se pudo eliminar el registro", ex);
         }
+    }
+
+    /**
+     * Indica si una excepción se debe a una violación de integridad de la base
+     * (por ejemplo, borrar un registro al que otra tabla apunta con una llave
+     * foránea). Recorre la cadena de causas buscando un SQLException cuyo
+     * SQLState sea de la clase 23 (restricciones de integridad; en PostgreSQL,
+     * 23503 es la violación de llave foránea).
+     *
+     * @param ex la excepción capturada al eliminar.
+     * @return {@code true} si alguna causa es una violación de integridad.
+     */
+    private static boolean esViolacionDeIntegridad(Throwable ex) {
+        int profundidad = 0; // tope por si la cadena de causas fuera circular
+        for (Throwable t = ex; t != null && profundidad < 15; t = t.getCause(), profundidad++) {
+            if (t instanceof java.sql.SQLException) {
+                String estado = ((java.sql.SQLException) t).getSQLState();
+                if (estado != null && estado.startsWith("23")) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

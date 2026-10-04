@@ -13,7 +13,7 @@
         <g:layout id="layout">
             <f:facet name="workspace">
                 <p:tabView id="tabsPersona" dynamic="true" cache="false">  
-                    <p:tab title='Persona'>  
+                    <p:tab title="#{msg['persona.titulo']}">
                         <h:form id="frmPersona">
                             <g:crud 
                                 titulo="#{msg['persona.titulo']}"
@@ -87,7 +87,7 @@
 
                     </p:tab>
 
-                    <p:tab title="Persona Rol" disabled="#{empty personaModel.registroActual.idPersona}">
+                    <p:tab title="#{msg['rol.titulo']}" disabled="#{empty personaModel.registroActual.idPersona}">
 
                         <h:form id="frmPersonaRol">
 

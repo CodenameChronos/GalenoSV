@@ -1,99 +1,311 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
       xmlns:p="primefaces"
       xmlns:g="jakarta.faces.composite/galeno">
+<h:head>
+    <title>#{msg['consulta.titulo']} - Galeno-SV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</h:head>
 
-    <h:head>
-        <title>#{msg['consulta.titulo']} - Galeno-SV</title>
-    </h:head>
-    <h:body>
-        <g:layout>
-            <f:facet name="workspace">
-                <h:form id="frmConsulta">
+<h:body>
 
-                    <g:crud 
-                        titulo="#{msg['consulta.titulo']}"
+    <g:layout>
+
+        <f:facet name="workspace">
+
+            <h:form id="frmConsulta">
+
+                <p:fieldset id="pnlFiltro" legend="#{msg['consulta.filtrar']}">
+
+                    <p:panelGrid columns="2" layout="grid"
+                                 columnClasses="col-12 md:col-3, col-12 md:col-9"
+                                 contentStyleClass="align-items-baseline ui-fluid">
+
+                        <p:outputLabel value="#{msg['clinica.titulo']}"/>
+                        <h:outputText value="#{empty sesion.clinica ? msg['consulta.sin.sesion'] : sesion.clinica.nombre}"/>
+
+                        <p:outputLabel for="fechaDesde" value="#{msg['consulta.fechaDesde']}"/>
+                        <p:datePicker id="fechaDesde" value="#{consultaModel.fechaDesde}"
+                                      pattern="dd/MM/yyyy HH:mm:ss" showTime="true" showSeconds="true"
+                                      required="true"/>
+
+                        <p:outputLabel for="fechaHasta" value="#{msg['consulta.fechaHasta']}"/>
+                        <p:datePicker id="fechaHasta" value="#{consultaModel.fechaHasta}"
+                                      pattern="dd/MM/yyyy HH:mm:ss" showTime="true" showSeconds="true"
+                                      required="true"/>
+                    </p:panelGrid>
+
+                    <p:commandButton value="#{msg['consulta.filtrar']}"
+                                     action="#{consultaModel.filtrar}"
+                                     process="@this @([id$=pnlFiltro])"
+                                     update="@form"/>
+                </p:fieldset>
+
+                <g:crud titulo="#{msg['consulta.titulo']}"
                         modelo="#{consultaModel}"
-                        rowKey="#{r.idConsulta}">
+                        rowKey="#{r.idConsulta}"
+                        mostrarBotones="#{consultaModel.mostrarBotonesConsulta}"
+                        >
 
-                        <p:column headerText="#{msg['campo.comun.codigo']}">
-                            <h:outputText value="#{r.idConsulta}"/>
-                        </p:column>
+                    <p:column headerText="#{msg['campo.comun.codigo']}">
+                        <h:outputText value="#{r.idConsulta}"/>
+                    </p:column>
 
-                        <p:column headerText="#{msg['campo.comun.fechaInicio']}">
-                            <h:outputText value="#{r.fechaInicio}">
-                                <f:convertDateTime pattern="dd/MM/yyyy"/>
-                            </h:outputText>
-                        </p:column>
+                    <p:column headerText="#{msg['consulta.paciente']}">
+                        <h:outputText value="#{r.idPersonaRol.idPersona.nombres} #{r.idPersonaRol.idPersona.apellidos}"/>
+                    </p:column>
 
-                        <p:column headerText="#{msg['campo.comun.fechaFin']}">
-                            <h:outputText value="#{r.fechaFin}">
-                                <f:convertDateTime pattern="dd/MM/yyyy"/>
-                            </h:outputText>
-                        </p:column>
+                    <p:column headerText="#{msg['consulta.informacion']}">
+                        <h:outputText value="#{consultaModel.informacionDe(r.idPersonaRol.idPersona)}"/>
+                    </p:column>
 
-                        <p:column headerText="#{msg['consulta.referenciaExterna']}">
-                            <h:outputText value="#{r.referenciaExterna}" />
-                        </p:column>
+                    <p:column headerText="#{msg['consulta.fecha.consulta']}">
+                        <h:outputText value="#{r.fechaInicio}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{consultaModel.zonaHoraria}"/>
+                        </h:outputText>
+                    </p:column>
 
-                        <p:column headerText="#{msg['campo.comun.observaciones']}">
-                            <h:outputText value="#{r.observaciones}" />
-                        </p:column>
+                    <p:column headerText="#{msg['consulta.fecha.alta']}">
+                        <h:outputText value="#{r.fechaFin}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{consultaModel.zonaHoraria}"/>
+                        </h:outputText>
+                    </p:column>
 
+                    <p:column headerText="#{msg['consulta.referencia']}">
+                        <h:outputText value="#{r.referenciaExterna}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msg['campo.comun.observaciones']}">
+                        <h:outputText value="#{r.observaciones}"/>
+                    </p:column>
+
+                    <f:facet name="formulario">
+
+                        <p:tabView id="tabsConsulta" activeIndex="#{consultaModel.tabIndex}">
+                            
+                            <p:ajax event="tabChange" listener="#{consultaModel.onTabChange}" update="@([id$=botonesCrud])"/>
+
+                            <p:tab title="#{msg['campo.comun.detalle']}">
+
+                                <p:panelGrid columns="2" layout="grid"
+                                             columnClasses="col-12 md:col-3, col-12 md:col-9"
+                                             contentStyleClass="align-items-baseline ui-fluid">
+
+                                    <p:outputLabel value="ID"/>
+                                    <p:inputText value="#{consultaModel.registroActual.idConsulta}"
+                                                 readonly="true" disabled="true"/>
+
+                                    <p:outputLabel value="#{msg['consulta.paciente']}"/>
+                                    <h:panelGroup layout="block" styleClass="flex align-items-center gap-2">
+                                        <p:inputText id="campoPaciente"
+                                                     value="#{consultaModel.nombrePaciente}"
+                                                     readonly="true" disabled="true"/>
+
+                                        <p:fieldset legend="#{msg['consulta.buscar.paciente']}">
+                                            <p:commandButton value="#{msg['consulta.buscar.por.nombre']}"
+                                                    disabled="#{!consultaModel.pacienteEditable}"
+                                                    actionListener="#{consultaModel.abrirBuscarPaciente}"
+                                                    process="@this"
+                                                    update="@([id$=frmDlgPaciente])"
+                                                    oncomplete="PF('dlgPaciente').show()"/>
+                                        </p:fieldset>
+                                    </h:panelGroup>
+
+                                    <p:outputLabel for="fechaConsulta" value="#{msg['consulta.fecha.consulta']}"/>
+                                    <p:datePicker id="fechaConsulta"
+                                                  value="#{consultaModel.registroActual.fechaInicio}"
+                                                  pattern="dd/MM/yyyy HH:mm:ss" showTime="true" showSeconds="true"
+                                                  maxdate="#{consultaModel.ahora}"/>
+
+                                    <p:outputLabel for="fechaAlta" value="#{msg['consulta.fecha.alta']}"/>
+                                    <p:datePicker id="fechaAlta"
+                                                  value="#{consultaModel.registroActual.fechaFin}"
+                                                  pattern="dd/MM/yyyy HH:mm:ss" showTime="true" showSeconds="true"
+                                                  maxdate="#{consultaModel.ahora}"/>
+
+                                    <p:outputLabel for="referenciaExterna" value="#{msg['consulta.referenciaExterna']}"/>
+                                    <p:inputTextarea id="referenciaExterna"
+                                                     value="#{consultaModel.registroActual.referenciaExterna}"
+                                                     rows="3"/>
+
+                                    <p:outputLabel for="indicaciones" value="#{msg['campo.comun.indicaciones']}"/>
+                                    <p:inputTextarea id="indicaciones"
+                                                     value="#{consultaModel.registroActual.observaciones}"
+                                                     rows="3"/>
+                                </p:panelGrid>
+
+                            </p:tab>
+
+                            <p:tab title="#{msg['procedimiento.titulo']}"
+                                   disabled="#{consultaModel.estado == 'CREAR'}">
+
+                                <g:crud titulo=""
+                                        modelo="#{consultaProcedimientoModel}"
+                                        rowKey="#{r.idConsultaProcedimiento}"
+                                        mostrarBotones="#{consultaModel.mostrarBotonesConsulta}">
+                                        >
+
+                                    <p:column headerText="ID">
+                                        <h:outputText value="#{r.idConsultaProcedimiento}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{msg['procedimiento.titulo']}">
+                                        <h:outputText value="#{r.idProcedimiento.nombre}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{msg['campo.comun.fechaInicio']}">
+                                        <h:outputText value="#{r.fechaInicio}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{consultaModel.zonaHoraria}"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="#{msg['campo.comun.fechaFin']}">
+                                        <h:outputText value="#{r.fechaFin}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{consultaModel.zonaHoraria}"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="#{msg['campo.comun.observaciones']}">
+                                        <h:outputText value="#{r.observaciones}"/>
+                                    </p:column>
+
+                                    <p:column headerText="#{msg['consulta.procedimiento.pasos']}">
+                                        <ul>
+                                            <ui:repeat value="#{consultaProcedimientoModel.pasosDe(r)}" var="ps">
+                                                <li>#{ps.idProcedimientoPaso.nombre}
+                                                    (#{ps.estado})
+                                                    - #{ps.idPersonaRol.idPersona.nombres} #{ps.idPersonaRol.idPersona.apellidos}
+                                                    (#{ps.idPersonaRol.idRol.nombre})</li>
+                                            </ui:repeat>
+                                        </ul>
+                                    </p:column>
+
+                                    <f:facet name="formulario">
+
+                                        <p:panelGrid columns="2" layout="grid"
+                                                     columnClasses="col-12 md:col-3, col-12 md:col-9"
+                                                     contentStyleClass="align-items-baseline ui-fluid">
+
+                                            <p:outputLabel value="#{msg['campo.comun.codigo']}"/>
+                                            <p:inputText value="#{consultaProcedimientoModel.registroActual.idConsultaProcedimiento}"
+                                                         readonly="true" disabled="true"/>
+
+                                            <p:outputLabel value="#{msg['procedimiento.titulo']}"/>
+                                            <h:panelGroup layout="block" styleClass="flex align-items-center gap-2">
+                                                <p:inputText id="campoProcedimiento"
+                                                             value="#{consultaProcedimientoModel.nombreProcedimiento}"
+                                                             readonly="true" disabled="true"/>
+
+                                                <p:commandButton value="#{msg['consulta.seleccionar']}"
+                                                        disabled="#{!consultaProcedimientoModel.procedimientoEditable}"
+                                                        actionListener="#{consultaProcedimientoModel.abrirBuscarProcedimiento}"
+                                                        process="@this"
+                                                        update="@([id$=frmDlgProcedimiento])"
+                                                        oncomplete="PF('dlgProcedimiento').show()"/>
+                                            </h:panelGroup>
+
+                                            <p:outputLabel for="cpFechaInicio" value="#{msg['campo.comun.fechaInicio']}"/>
+                                            <p:datePicker id="cpFechaInicio"
+                                                          value="#{consultaProcedimientoModel.registroActual.fechaInicio}"
+                                                          pattern="dd/MM/yyyy HH:mm:ss" showTime="true" showSeconds="true"
+                                                          maxdate="#{consultaProcedimientoModel.ahora}"/>
+
+                                            <p:outputLabel for="cpFechaFin" value="#{msg['campo.comun.fechaFin']}"/>
+                                            <p:datePicker id="cpFechaFin"
+                                                          value="#{consultaProcedimientoModel.registroActual.fechaFin}"
+                                                          pattern="dd/MM/yyyy HH:mm:ss" showTime="true" showSeconds="true"
+                                                          maxdate="#{consultaProcedimientoModel.ahora}"/>
+
+                                            <p:outputLabel for="cpIndicaciones" value="#{msg['campo.comun.indicaciones']}"/>
+                                            <p:inputTextarea id="cpIndicaciones"
+                                                             value="#{consultaProcedimientoModel.registroActual.observaciones}"
+                                                             rows="3"/>
+                                        </p:panelGrid>
+
+                                    </f:facet>
+
+                                </g:crud>
+
+                            </p:tab>
+
+                        </p:tabView>
+
+                    </f:facet>
+
+                </g:crud>
+
+            </h:form>
+
+            <p:dialog id="dlgPacienteBuscar" widgetVar="dlgPaciente" modal="true" resizable="false"
+                      header="#{msg['consulta.paciente']}">
+                <h:form id="frmDlgPaciente">
+
+                    <p:outputLabel for="pacienteBuscar" value="#{msg['consulta.buscar.por.nombre']}"/>
+                    <p:autoComplete id="pacienteBuscar"
+                            value="#{consultaModel.pacienteBusqueda}"
+                            completeMethod="#{consultaModel.completarPaciente}"
+                            var="pc"
+                            itemLabel="#{pc.idPersona.nombres} #{pc.idPersona.apellidos}"
+                            itemValue="#{pc}"
+                            converter="entityConverter"
+                            forceSelection="true"
+                            minQueryLength="2"
+                            scrollHeight="250"
+                            emptyMessage="#{msg['consulta.buscar.sin.resultados']}">
                         <p:column headerText="#{msg['consulta.persona']}">
-                            <h:outputText value="#{r.idPersonaRol.nombreCompleto}" />
+                            <h:outputText value="#{pc.idPersona.nombres} #{pc.idPersona.apellidos}"/>
                         </p:column>
+                        <p:column headerText="#{msg['consulta.fechaNacimiento']}">
+                            <h:outputText value="#{pc.idPersona.fechaNacimiento}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{consultaModel.zonaHoraria}"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msg['consulta.documentos']}">
+                            <h:outputText value="#{consultaModel.informacionDe(pc.idPersona)}"/>
+                        </p:column>
+                    </p:autoComplete>
 
-                        <f:facet name="formulario">
-
-                            <p:panelGrid
-                                columns="4"
-                                layout="grid"
-                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
-                                contentStyleClass="align-items-baseline ui-fluid">
-
-                                <p:outputLabel for="fechaInicio" value="#{msg['campo.comun.fechaInicio']}" />
-                                <p:datePicker 
-                                    id="fechaInicio" 
-                                    value="#{consultaModel.registroActual.fechaInicio}" showIcon="true" 
-                                    buttonTabindex="0" pattern="dd/MM/yyyy"  />
-
-                                <p:outputLabel for="fechaFin" value="#{msg['campo.comun.fechaFin']}" />
-                                <p:datePicker 
-                                    id="fechaFin" 
-                                    value="#{consultaModel.registroActual.fechaFin}" showIcon="true" 
-                                    buttonTabindex="0" pattern="dd/MM/yyyy"  />
-
-                                <p:outputLabel for="referenciaExterna" value="#{msg['consulta.referenciaExterna']}" />
-                                <p:inputText id="referenciaExterna"  value="#{consultaModel.registroActual.referenciaExterna}" />
-
-                                <p:outputLabel for="observaciones" value="#{msg['campo.comun.observaciones']}" />
-                                <p:inputTextarea id="observaciones" value="#{consultaModel.registroActual.observaciones}" />
-
-                                <p:outputLabel
-                                    for="persona"
-                                    value="#{msg['consulta.persona']}" />
-
-                                <h:outputText
-                                    id="persona"
-                                    value="#{sesion.persona.nombres} #{sesion.persona.apellidos}" />
-
-
-                            </p:panelGrid>
-
-                        </f:facet>
-
-                    </g:crud>
-
+                    <p:commandButton value="#{msg['consulta.seleccionar']}"
+                            actionListener="#{consultaModel.aceptarPaciente}"
+                            process="@form"
+                            update="@([id$=campoPaciente])"
+                            oncomplete="PF('dlgPaciente').hide()"/>
                 </h:form>
+            </p:dialog>
 
-            </f:facet>
+            <p:dialog id="dlgProcedimientoBuscar" widgetVar="dlgProcedimiento" modal="true" resizable="false"
+                      header="#{msg['procedimiento.titulo']}">
+                <h:form id="frmDlgProcedimiento">
 
-        </g:layout>
+                    <p:outputLabel for="procedimientoBuscar" value="#{msg['campo.comun.nombre']}"/>
+                    <p:autoComplete id="procedimientoBuscar"
+                            value="#{consultaProcedimientoModel.procedimientoBusqueda}"
+                            completeMethod="#{consultaProcedimientoModel.completarProcedimiento}"
+                            var="pr"
+                            itemLabel="#{pr.nombre}"
+                            itemValue="#{pr}"
+                            converter="entityConverter"
+                            forceSelection="true"
+                            minQueryLength="1"
+                            scrollHeight="250"
+                            emptyMessage="#{msg['consulta.buscar.sin.resultados']}"/>
 
-    </h:body>
+                    <p:commandButton value="#{msg['consulta.seleccionar']}"
+                            actionListener="#{consultaProcedimientoModel.aceptarProcedimiento}"
+                            process="@form"
+                            update="@([id$=campoProcedimiento])"
+                            oncomplete="PF('dlgProcedimiento').hide()"/>
+                </h:form>
+            </p:dialog>
+
+        </f:facet>
+
+    </g:layout>
+
+</h:body>
 
 </html>
