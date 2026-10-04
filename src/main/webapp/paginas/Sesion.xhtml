@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="primefaces"
+      xmlns:g="jakarta.faces.composite/galeno">
+
+    <h:head>
+        <title>#{msg['sesion.titulo']} - Galeno-SV</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+
+    <h:body>
+        <g:layout>
+            <f:facet name="workspace">
+
+                <h:form id="frmSesion">
+
+                    <p:panel header="#{msg['sesion.titulo']}">
+
+                        <p:panelGrid
+                            columns="2"
+                            layout="grid"
+                            columnClasses="col-12 md:col-3, col-12 md:col-9"
+                            contentStyleClass="align-items-baseline ui-fluid">
+
+                            <p:outputLabel
+                                for="personaRol"
+                                value="#{msg['sesion.personaRol']}"/>
+
+                            <p:autoComplete
+                                id="personaRol"
+                                dropdown="true"
+                                value="#{sesionModel.personaRolSeleccionado}"
+                                completeMethod="#{sesionModel.completarPersonaRol}"
+                                converter="entityConverter"
+                                var="personaRol"
+                                itemLabel="#{personaRol.idPersona.nombres} #{personaRol.idPersona.apellidos}"
+                                itemValue="#{personaRol}"
+                                forceSelection="true"
+                                scrollHeight="250"
+                                minQueryLength="3"
+                                required="true"/>
+
+                        </p:panelGrid>
+
+                        <p:separator/>
+
+                        <p:commandButton
+                            value="#{msg['sesion.iniciar']}"
+                            action="#{sesionModel.establecerSesion}"
+                            update="@form"
+                            icon="pi pi-sign-in"/>
+
+                    </p:panel>
+
+                    <p:panel
+                        header="#{msg['sesion.titulo']}"
+                        rendered="#{not empty sesion.persona}">
+
+                        <p:panelGrid
+                            columns="2"
+                            layout="grid"
+                            columnClasses="col-12 md:col-3, col-12 md:col-9"
+                            contentStyleClass="align-items-baseline ui-fluid">
+
+                            <p:outputLabel value="#{msg['personaRol.persona']}"/>
+
+                            <h:outputText
+                                value="#{sesion.persona.nombres} #{sesion.persona.apellidos}"/>
+
+                            <p:outputLabel value="#{msg['personaRol.rol']}"/>
+
+                            <h:outputText
+                                value="#{sesion.rol.nombre}"/>
+
+                            <p:outputLabel value="#{msg['personaRol.clinica']}"/>
+
+                            <h:outputText
+                                value="#{sesion.clinica.nombre}"/>
+
+                        </p:panelGrid>
+
+                        <p:separator/>
+
+                        <p:commandButton
+                            value="#{msg['sesion.cerrar']}"
+                            action="#{sesionModel.cerrarSesion}"
+                            update="@form"
+                            icon="pi pi-sign-out"/>
+
+                    </p:panel>
+
+                </h:form>
+
+            </f:facet>
+        </g:layout>
+    </h:body>
+
+</html>
