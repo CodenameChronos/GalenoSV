@@ -22,32 +22,32 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoMedioCont
 @Named
 @ViewScoped
 public class MedioContactoModel extends ModelHandler<MedioContacto> {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     @Inject
     private MedioContactoDAO mcDAO;
-    
+
     @Inject
     private PersonaDAO pDAO;
-    
+
     @Inject
     private TipoMedioContactoDAO tmcDAO;
-    
+
     private GenericLazyDataModel<MedioContacto> lazyModel;
 
     public MedioContactoModel() {
         super(MedioContacto.class);
         this.lazyModel = new GenericLazyDataModel<>(this);
     }
-    
+
     public GenericLazyDataModel<MedioContacto> getLazyModel() {
         return lazyModel;
     }
 
     @Override
     public DAOInterface<MedioContacto> getDAO() {
-    return mcDAO;
+        return mcDAO;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class MedioContactoModel extends ModelHandler<MedioContacto> {
             return (MedioContacto) mcDAO.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING,
-                "ID inválido recibido para MedioContacto: " + id, ex);
+                    "ID inválido recibido para MedioContacto: " + id, ex);
             return null;
         }
     }
@@ -71,18 +71,42 @@ public class MedioContactoModel extends ModelHandler<MedioContacto> {
     public Object getIdByRegistro(MedioContacto registro) {
         return registro != null ? registro.getIdMedioContacto() : null;
     }
-    
+
     public List<Persona> completarPersona(String texto) {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
         return pDAO.buscarPorNombre(texto, 30);
     }
-    
+
     public List<TipoMedioContacto> completarTipoMedioContacto(String texto) {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
         return tmcDAO.buscarPorNombre(texto, 30);
     }
+
+    private Persona personaFiltro;
+
+    public void filtrarPorPersona(Persona persona) {
+        this.personaFiltro = persona;
+        if (persona != null) {
+            setFiltro("idPersona.idPersona", persona.getIdPersona());
+        } else {
+            limpiarFiltro();
+        }
+    }
+
+    public Persona getPersonaFiltro() {
+        return personaFiltro;
+    }
+
+    @Override
+    public void nuevo() {
+        super.nuevo();
+        if (personaFiltro != null) {
+            registroActual.setIdPersona(personaFiltro);
+        }
+    }
+
 }

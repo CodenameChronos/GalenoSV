@@ -35,6 +35,26 @@ public abstract class ModelHandler<T> implements ModelHandlerInterface<T>, Seria
      */
     protected T registroActual;
 
+    protected String filtroPropiedad;
+    protected Object filtroValor;
+
+    public void setFiltro(String propiedad, Object valor) {
+        this.filtroPropiedad = propiedad;
+        this.filtroValor = valor;
+    }
+
+    public void limpiarFiltro() {
+        this.filtroPropiedad = null;
+        this.filtroValor = null;
+    }
+
+    public List<T> buscarRegistros(int first, int max) {
+        if (filtroPropiedad != null) {
+            return getDAO().findRangeByCriterio(filtroPropiedad, filtroValor, first, max);
+        }
+        return getDAO().findRange(first, max);
+    }
+
     /**
      * Estado actual en el que se encuentra el flujo o la interfaz del CRUD.
      */
@@ -174,9 +194,21 @@ public abstract class ModelHandler<T> implements ModelHandlerInterface<T>, Seria
      * @throws IllegalStateException si ocurre un error durante la operación de
      * conteo.
      */
+    /* @Override
+    public int contar() throws IllegalStateException {
+        try {
+            return getDAO().contar();
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            throw new IllegalStateException(ex);
+        }
+    }*/
     @Override
     public int contar() throws IllegalStateException {
         try {
+            if (filtroPropiedad != null) {
+                return getDAO().contarByCriterio(filtroPropiedad, filtroValor);
+            }
             return getDAO().contar();
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);

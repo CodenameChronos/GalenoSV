@@ -10,89 +10,370 @@
         <title>#{msg['persona.titulo']} - Galeno SV </title>
     </h:head>
     <h:body>
-        <g:layout>
+        <g:layout id="layout">
             <f:facet name="workspace">
-                <h:form id="frmPersona">
-                    <g:crud 
-                        titulo="#{msg['persona.titulo']}"
-                        modelo="#{personaModel}"
-                        rowKey="#{r.idPersona}">
+                <p:tabView id="tabsPersona" dynamic="true" cache="false">  
+                    <p:tab title='Persona'>  
+                        <h:form id="frmPersona">
+                            <g:crud 
+                                titulo="#{msg['persona.titulo']}"
+                                modelo="#{personaModel}"
+                                rowKey="#{r.idPersona}">
 
-                        <p:column headerText="#{msg['campo.comun.codigo']}">
-                            <h:outputText value="#{r.idPersona}"/>
-                        </p:column>
+                                <p:column headerText="#{msg['campo.comun.codigo']}">
+                                    <h:outputText value="#{r.idPersona}"/>
+                                </p:column>
 
-                        <p:column headerText="#{msg['campo.comun.nombre']}">
-                            <h:outputText value="#{r.nombres}"/>
-                        </p:column>
+                                <p:column headerText="#{msg['campo.comun.nombre']}">
+                                    <h:outputText value="#{r.nombres}"/>
+                                </p:column>
 
-                        <p:column headerText="#{msg['persona.apellidos']}">
-                            <h:outputText value="#{r.apellidos}"/>
-                        </p:column>
+                                <p:column headerText="#{msg['persona.apellidos']}">
+                                    <h:outputText value="#{r.apellidos}"/>
+                                </p:column>
 
-                        <p:column headerText="#{msg['persona.fechaNacimiento']}">
-                            <h:outputText value="#{r.fechaNacimiento}">
-                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                            </h:outputText> 
-                        </p:column>
+                                <p:column headerText="#{msg['persona.fechaNacimiento']}">
+                                    <h:outputText value="#{r.fechaNacimiento}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText> 
+                                </p:column>
 
-                        <p:column headerText="#{msg['campo.comun.fechaCreacion']}">
-                            <h:outputText value="#{r.fechaCreacion}">
-                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                            </h:outputText> 
-                        </p:column>
+                                <p:column headerText="#{msg['campo.comun.fechaCreacion']}">
+                                    <h:outputText value="#{r.fechaCreacion}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText> 
+                                </p:column>
 
-                        <f:facet name="formulario">
-                            <p:panelGrid
-                                columns="4"
-                                layout="grid"
-                                columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
-                                contentStyleClass="align-items-baseline ui-fluid">
+                                <f:facet name="formulario">
+                                    <p:panelGrid
+                                        columns="4"
+                                        layout="grid"
+                                        columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                        contentStyleClass="align-items-baseline ui-fluid">
 
 
-                                <p:outputLabel
-                                    for="Nombres"
-                                    value="#{msg['campo.comun.nombre']}"/>
+                                        <p:outputLabel
+                                            for="Nombres"
+                                            value="#{msg['campo.comun.nombre']}"/>
+                                        <p:inputText
+                                            id="Nombres"
+                                            value="#{personaModel.registroActual.nombres}"/>
 
-                                <p:inputText
-                                    id="Nombres"
-                                    value="#{personaModel.registroActual.nombres}"/>
+                                        <p:outputLabel
+                                            for="Apellidos"
+                                            value="#{msg['persona.apellidos']}"/>
+                                        <p:inputText
+                                            id="Apellidos"
+                                            value="#{personaModel.registroActual.apellidos}"/> 
 
-                                <p:outputLabel
-                                    for="Apellidos"
-                                    value="#{msg['persona.apellidos']}"/>
+                                        <p:outputLabel for="fechaNacimiento" 
+                                                       value="#{msg['persona.fechaNacimiento']}" />
+                                        <p:datePicker id="fechaNacimiento" value="#{personaModel.registroActual.fechaNacimiento}" 
+                                                      monthNavigator="true" yearNavigator="true" showWeek="true"  maxdate="#{autoDate.hoy}" pattern="dd/MM/yyyy" />
 
-                                <p:inputText
-                                    id="Apellidos"
-                                    value="#{personaModel.registroActual.apellidos}"/> 
+                                        <p:outputLabel for="fechaCreacion" value="#{msg['campo.comun.fechaCreacion']}"/>
+                                        <p:inputText disabled="true" id="fechaCreacion" value="#{personaModel.registroActual.fechaCreacion}">
+                                            <f:convertDateTime timeZone="America/El_Salvador" pattern="dd/MM/yyyy"/>
+                                        </p:inputText>
 
-                                <p:outputLabel
-                                    for="fechaNacimiento"
-                                    value="#{msg['persona.fechaNacimiento']}"/>
 
-                                <p:datePicker 
-                                    id="fechaNacimiento" 
-                                    value="#{personaModel.registroActual.fechaNacimiento}" showIcon="true" 
-                                    buttonTabindex="0" maxdate="#{autoDate.hoy}" pattern="dd/MM/yyyy"  />
+                                    </p:panelGrid>
 
-                                <p:outputLabel 
-                                    for="fechaCreacion"
-                                    value="#{msg['campo.comun.fechaCreacion']}"/>
+                                </f:facet>
 
-                                <h:outputText id="fechaCreacion" value="#{autoDate.time}"/>
+                            </g:crud>
 
-                            </p:panelGrid>
-                            
-                        </f:facet>
-                        
-                    </g:crud>
-                    
-                </h:form>
-                
+                        </h:form>
+
+                    </p:tab>
+
+                    <p:tab title="Persona Rol" disabled="#{empty personaModel.registroActual.idPersona}">
+
+                        <h:form id="frmPersonaRol">
+
+                            <g:crud
+                                titulo="#{msg['personaRol.titulo']}"
+                                modelo="#{personaRolModel}"
+                                rowKey="#{r.idPersonaRol}">
+
+                                <p:column headerText="#{msg['campo.comun.codigo']}">
+                                    <h:outputText value="#{r.idPersonaRol}"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg['personaRol.fechaCreacion']}">
+                                    <h:outputText value="#{r.fechaCreacion}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="#{msg['personaRol.persona']}">
+                                    <h:outputText value="#{r.idPersona.nombreCompleto}"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg['personaRol.rol']}">
+                                    <h:outputText value="#{r.idRol.nombre}"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg['personaRol.clinica']}">
+                                    <h:outputText value="#{r.idClinica.nombre}"/>
+                                </p:column>
+
+                                <f:facet name="formulario">
+
+                                    <p:panelGrid
+                                        columns="4"
+                                        layout="grid"
+                                        columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                        contentStyleClass="align-items-baseline ui-fluid">
+
+                                        <p:outputLabel
+                                            for="fechaCreacion"
+                                            value="#{msg['personaRol.fechaCreacion']}"/>
+
+                                        <p:inputText
+                                            disabled="true"
+                                            id="fechaCreacion"
+                                            value="#{personaRolModel.registroActual.fechaCreacion}">
+                                            <f:convertDateTime timeZone="America/El_Salvador" pattern="dd/MM/yyyy"/>
+                                        </p:inputText>
+
+                                        <p:outputLabel
+                                            for="idPersona"
+                                            value="#{msg['personaRol.persona']}"/>
+
+                                        <p:autoComplete
+                                            id="idPersona"
+                                            dropdown="true"
+                                            value="#{personaRolModel.registroActual.idPersona}"
+                                            completeMethod="#{personaRolModel.completarPersona}"
+                                            converter="entityConverter"
+                                            var="persona"
+                                            itemLabel="#{persona.nombreCompleto}"
+                                            itemValue="#{persona}"
+                                            forceSelection="true"
+                                            scrollHeight="250"
+                                            minQueryLength="3"
+                                            disabled="#{not empty personaRolModel.personaFiltro}"
+                                            required="true"/>
+
+                                        <p:outputLabel
+                                            for="idRol"
+                                            value="#{msg['personaRol.rol']}"/>
+
+                                        <p:autoComplete
+                                            id="idRol"
+                                            dropdown="true"
+                                            value="#{personaRolModel.registroActual.idRol}"
+                                            completeMethod="#{personaRolModel.completarRol}"
+                                            converter="entityConverter"
+                                            var="rol"
+                                            itemLabel="#{rol.nombre}"
+                                            itemValue="#{rol}"
+                                            forceSelection="true"
+                                            scrollHeight="250"
+                                            minQueryLength="3"
+                                            required="true"/>
+
+                                        <p:outputLabel
+                                            for="idClinica"
+                                            value="#{msg['personaRol.clinica']}"/>
+
+                                        <p:autoComplete
+                                            id="idClinica"
+                                            dropdown="true"
+                                            value="#{personaRolModel.registroActual.idClinica}"
+                                            completeMethod="#{personaRolModel.completarClinica}"
+                                            converter="entityConverter"
+                                            var="clinica"
+                                            itemLabel="#{clinica.nombre}"
+                                            itemValue="#{clinica}"
+                                            forceSelection="true"
+                                            scrollHeight="250"
+                                            minQueryLength="3"
+                                            required="true"/>
+
+                                    </p:panelGrid>
+
+                                </f:facet>
+
+                            </g:crud>
+
+                        </h:form>
+
+                    </p:tab>
+
+                    <p:tab title="Documento" disabled="#{empty personaModel.registroActual.idPersona}">
+
+                        <h:form id="frmDocumento">
+                            <g:crud titulo="#{msg['documento.titulo']}"
+                                    modelo="#{documentoModel}"
+                                    rowKey="#{r.idDocumento}">
+
+                                <p:column headerText="#{msg['campo.comun.codigo']}">
+                                    <h:outputText value="#{r.idDocumento}"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg['campo.comun.valor']}">
+                                    <h:outputText value="#{r.valor}"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg['documento.rutaFisica']}">
+                                    <h:outputText value="#{r.rutaFisica}"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg['persona.titulo']}">
+                                    <h:outputText value="#{r.idPersona.nombreCompleto}"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg['tipoDocumento.titulo']}">
+                                    <h:outputText value="#{r.idTipoDocumento.nombre}"/>
+                                </p:column>
+
+                                <f:facet name="formulario">
+
+                                    <p:panelGrid
+                                        columns="4"
+                                        layout="grid"
+                                        columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                        contentStyleClass="align-items-baseline ui-fluid">
+
+                                        <p:outputLabel for="valor" value="#{msg['campo.comun.valor']}"/>
+                                        <p:inputText id="valor" value="#{documentoModel.registroActual.valor}"/>
+
+                                        <p:outputLabel for="rutaFisica" value="#{msg['documento.rutaFisica']}"/>
+                                        <p:inputText id="rutaFisica" value="#{documentoModel.registroActual.rutaFisica}"/>
+
+                                        <p:outputLabel for="idPersona" value="#{msg['persona.titulo']}"/>
+                                        <p:autoComplete id="idPersona" dropdown="true" 
+                                                        value="#{documentoModel.registroActual.idPersona}"
+                                                        completeMethod="#{documentoModel.completarPersona}"
+                                                        converter="entityConverter"
+                                                        var="persona"
+                                                        itemLabel="#{persona.nombreCompleto}"
+                                                        itemValue="#{persona}"
+                                                        forceSelection="true"
+                                                        scrollHeight="250"
+                                                        minQueryLength="3"
+                                                        disabled="#{not empty documentoModel.personaFiltro}"
+                                                        required="true"/>
+
+                                        <p:outputLabel for="idTipoDocumento" value="#{msg['tipoDocumento.titulo']}"/>
+                                        <p:autoComplete id="idTipoDocumento" dropdown="true" 
+                                                        value="#{documentoModel.registroActual.idTipoDocumento}"
+                                                        completeMethod="#{documentoModel.completarTipoDocumento}"
+                                                        converter="entityConverter"
+                                                        var="tipoDocumento"
+                                                        itemLabel="#{tipoDocumento.nombre}"
+                                                        itemValue="#{tipoDocumento}"
+                                                        forceSelection="true"
+                                                        scrollHeight="250"
+                                                        minQueryLength="3"
+                                                        required="true"/>
+
+                                    </p:panelGrid>
+
+                                </f:facet>
+
+                            </g:crud>
+
+                        </h:form>
+
+                    </p:tab>
+
+                    <p:tab title="Medio de contacto" disabled="#{empty personaModel.registroActual.idPersona}">
+
+                        <h:form id="frmMedioContacto">
+                            <g:crud
+                                titulo="#{msg['medioContacto.titulo']}"
+                                modelo="#{medioContactoModel}"
+                                rowKey="#{r.idMedioContacto}">
+
+                                <p:column headerText="#{msg['campo.comun.codigo']}">
+                                    <h:outputText value="#{r.idMedioContacto}"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg['campo.comun.valor']}">
+                                    <h:outputText value="#{r.valor}"/>
+                                </p:column>
+
+                                <p:column headerText="#{msg['campo.comun.fechaCreacion']}">
+                                    <h:outputText value="#{r.fechaCreacion}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="#{msg['persona.titulo']}">
+                                    <h:outputText value="#{r.idPersona.nombreCompleto}"/>
+                                </p:column> 
+
+                                <p:column headerText="#{msg['tipoMedioContacto.titulo']}">
+                                    <h:outputText value="#{r.idTipoMedioContacto.nombre}"/>
+                                </p:column> 
+
+                                <f:facet name="formulario">
+                                    <p:panelGrid
+                                        columns="4"
+                                        layout="grid"
+                                        columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
+                                        contentStyleClass="align-items-baseline ui-fluid">
+
+                                        <p:outputLabel
+                                            for="valor"
+                                            value="#{msg['campo.comun.valor']}"/>
+
+                                        <p:inputText
+                                            id="valor"
+                                            value="#{medioContactoModel.registroActual.valor}"/>
+
+                                        <p:outputLabel for="fechaCreacion" value="#{msg['campo.comun.fechaCreacion']}"/>
+                                        <p:inputText disabled="true" id="fechaCreacion" value="#{medioContactoModel.registroActual.fechaCreacion}">
+                                            <f:convertDateTime timeZone="America/El_Salvador" pattern="dd/MM/yyyy"/>
+                                        </p:inputText>
+
+                                        <p:outputLabel for="idPersona" value="#{msg['persona.titulo']}"/>
+                                        <p:autoComplete id="idPersona" dropdown="true" 
+                                                        value="#{medioContactoModel.registroActual.idPersona}"
+                                                        completeMethod="#{medioContactoModel.completarPersona}"
+                                                        converter="entityConverter"
+                                                        var="persona"
+                                                        itemLabel="#{persona.nombreCompleto}"
+                                                        itemValue="#{persona}"
+                                                        forceSelection="true"
+                                                        scrollHeight="250"
+                                                        minQueryLength="3"
+                                                        disabled="#{not empty medioContactoModel.personaFiltro}"
+                                                        required="true"/>
+
+                                        <p:outputLabel for="idTipoMedioContacto" value="#{msg['tipoMedioContacto.titulo']}"/>
+                                        <p:autoComplete id="idTipoMedioContacto" dropdown="true" 
+                                                        value="#{medioContactoModel.registroActual.idTipoMedioContacto}"
+                                                        completeMethod="#{medioContactoModel.completarTipoMedioContacto}"
+                                                        converter="entityConverter"
+                                                        var="tipoMedioContacto"
+                                                        itemLabel="#{tipoMedioContacto.nombre}"
+                                                        itemValue="#{tipoMedioContacto}"
+                                                        forceSelection="true"
+                                                        scrollHeight="250"
+                                                        minQueryLength="3"
+                                                        required="true"/>
+
+
+                                    </p:panelGrid>
+
+                                </f:facet>
+
+                            </g:crud>
+
+                        </h:form>
+
+                    </p:tab>
+                </p:tabView>
+
+
             </f:facet>
-            
+
         </g:layout>
-        
+
     </h:body>
-    
+
 </html>
