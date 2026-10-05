@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.util.Mensajes;
+
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.SesionDAO;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Clinica;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.PersonaRol;
@@ -121,6 +123,7 @@ public class SesionModel implements Serializable {
             return;
         }
         sesion.establecerSesion(sesionPersonaRol);
+        Mensajes.exito("mensaje.exito");
     }
 
     public void cerrarSesion() {

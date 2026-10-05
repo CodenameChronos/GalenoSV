@@ -99,7 +99,7 @@
                             value="#{msg['boton.guardar']}"
                             styleClass="ui-button-raised ui-button-flat"
                             actionListener="#{cc.attrs.modelo.guardarHandler}"
-                            update="pnlCrear pnlData"/>
+                            update="pnlCrear pnlData :layout:messages"/>
 
                         <!-- process="@this": eliminar no debe depender de que el formulario valide -->
                         <g:botonCrud
@@ -108,7 +108,7 @@
                             styleClass="ui-button-raised ui-button-danger"
                             actionListener="#{cc.attrs.modelo.eliminarHandler}"
                             process="@this"
-                            update="pnlCrear pnlData"/>
+                            update="pnlCrear pnlData :layout:messages"/>
 
                         <g:botonCrud
                             value="#{msg['boton.cancelar']}"

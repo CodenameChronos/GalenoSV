@@ -10,7 +10,7 @@
         <title>#{msg['clinica.titulo']} - Galeno-SV</title>
     </h:head>
     <h:body>
-        <g:layout>
+        <g:layout id="layout">
             <f:facet name="workspace">
                 <h:form id="frmClinica">
                     <g:crud 
@@ -51,7 +51,8 @@
 
                                 <p:inputText
                                     id="Nombres"
-                                    value="#{clinicaModel.registroActual.nombre}"/>
+                                    value="#{clinicaModel.registroActual.nombre}"
+                                    required="true"/>
 
                                 <p:outputLabel
                                     for="activo"

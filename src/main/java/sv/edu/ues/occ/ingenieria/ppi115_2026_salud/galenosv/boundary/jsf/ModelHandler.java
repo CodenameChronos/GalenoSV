@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import org.primefaces.event.SelectEvent;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
 
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.util.Mensajes;
+
 public abstract class ModelHandler<T> implements ModelHandlerInterface<T>, Serializable {
 
     /**
@@ -147,10 +149,12 @@ public abstract class ModelHandler<T> implements ModelHandlerInterface<T>, Seria
                 getDAO().actualizar(registroActual);
             }
             this.estado = ESTADO_CRUD.NINGUNO;
+            Mensajes.exito("mensaje.exito");
+            
         } catch (Exception ex) {
             resetInputs("pnlCrear");
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
-            throw new IllegalStateException(ex);
+            Mensajes.error("mensaje.error");
         }
 
     }
@@ -172,6 +176,7 @@ public abstract class ModelHandler<T> implements ModelHandlerInterface<T>, Seria
         try {
             getDAO().eliminar(registroActual);
             estado = ESTADO_CRUD.NINGUNO;
+            Mensajes.exito("mensaje.exito");
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
             throw new IllegalStateException(ex);
