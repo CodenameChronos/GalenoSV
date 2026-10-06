@@ -1,20 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+/*
+ * Galeno-SV - estilos del layout principal.
+ * Paleta tomada de welcome.css (purpura, rosa, azul marino, hielo).
+ * Tipografia: Times New Roman (fuente del sistema, no requiere descarga).
+ */
 
 :root {
-    --galeno-primary: #0F6E6A;
-    --galeno-primary-dark: #0B504D;
-    --galeno-primary-tint: #E6F3F2;
-    --galeno-ink: #1B2B2A;
-    --galeno-surface: #FAFBFB;
-    --galeno-border: #D7E4E3;
-    --galeno-font: 'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif;
-    --galeno-radius: 8px;
+    /* Paleta base (welcome.css) */
+    --galeno-primary: #8B5CF6;          /* purple */
+    --galeno-primary-dark: #1E1B4B;     /* navy */
+    --galeno-primary-tint: #F5F3FF;     /* purple-light */
+    --galeno-accent: #EC4899;           /* pink */
+    --galeno-accent-light: #FDF2F8;     /* pink-light */
+    --galeno-ink: #1E293B;              /* oxford */
+    --galeno-muted: #64748B;            /* gray-medium */
+    --galeno-surface: #EEF2FF;          /* ice: fondo de la pagina */
+    --galeno-card: #FFFFFF;
+    --galeno-border: #FBCFE8;           /* pink-border: bordes de seccion */
+    --galeno-divider: #E2E8F0;          /* gray-light: lineas internas */
 
+    --galeno-font: 'Times New Roman', Times, 'Liberation Serif', serif;
+    --galeno-radius: 10px;
+    --galeno-shadow: 0 20px 45px -28px rgba(139, 92, 246, 0.45);
+
+    /* Variables que consumen los temas de PrimeFaces */
     --primary-color: var(--galeno-primary);
     --primary-color-text: #FFFFFF;
     --font-family: var(--galeno-font);
-    --border-radius: var(--galeno-radius);
-    --focus-ring: 0 0 0 2px var(--galeno-surface), 0 0 0 4px var(--galeno-primary);
+    --border-radius: 8px;
+    --focus-ring: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--galeno-primary);
 }
 
 /* Base */
@@ -24,33 +37,59 @@ html, body {
     font-family: var(--galeno-font);
 }
 
-h1, h2, h3, .ui-panel-title {
-    color: var(--galeno-ink);
-    font-weight: 600;
-    letter-spacing: -0.01em;
+/*
+ * Los temas de PrimeFaces fijan su propia fuente en los componentes;
+ * se refuerza aqui para que todo use Times New Roman. No se usa "*"
+ * para no romper las fuentes de iconos.
+ */
+body .ui-widget,
+body .ui-widget input,
+body .ui-widget select,
+body .ui-widget textarea,
+body .ui-widget button,
+body .ui-inputfield,
+body .ui-button,
+body .ui-menu .ui-menuitem-link,
+body .ui-selectonemenu-label,
+body .ui-selectonemenu-item,
+body .ui-datatable th,
+body .ui-datatable td,
+body .ui-growl-message {
+    font-family: var(--galeno-font);
 }
 
-/* Contenedor general de la pagina */
+h1, h2, h3, .ui-panel-title {
+    color: var(--galeno-primary-dark);
+    font-weight: 700;
+    letter-spacing: -0.005em;
+}
+
+/* Contenedor general de la pagina: cada seccion es una tarjeta separada */
 .galeno-page {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
     min-height: 100vh;
+    padding: 1rem 1.25rem;
 }
 
-/* Encabezado (g:layout) */
+/* ------------------------------------------------------------------ */
+/* Encabezado                                                          */
+/* ------------------------------------------------------------------ */
 .galeno-header {
     background: var(--galeno-primary-tint);
-    border-bottom: 1px solid var(--galeno-border);
-    padding: 1rem 1.25rem;
-    margin-bottom: 1rem;
+    border: 1px solid var(--galeno-border);
+    border-bottom: 3px solid var(--galeno-primary);
+    border-radius: var(--galeno-radius);
+    box-shadow: var(--galeno-shadow);
+    padding: 0.85rem 1.25rem;
 }
 
 /*
- * Tres zonas: logo (ancho propio, pegado a la izquierda), titulo (crece
- * para llenar el espacio central y centra su propio texto) y selector de
- * idioma (ancho propio, empujado al extremo derecho por margin-left:auto).
- * No depende de que tres columnas de igual ancho se repartan el espacio;
- * cada zona se ancla por su cuenta.
+ * Zonas: logo (izquierda), titulo (crece y centra su texto), datos de
+ * sesion y selector de idioma (anclados a la derecha porque el titulo
+ * absorbe el espacio libre). Si no hay sesion, el bloque no se renderiza
+ * y el selector sigue en el extremo derecho.
  */
 .galeno-header-row {
     display: flex;
@@ -64,7 +103,7 @@ h1, h2, h3, .ui-panel-title {
 }
 
 .galeno-brand img {
-    max-height: 48px;
+    max-height: 80px;
     width: auto;
     display: block;
 }
@@ -73,7 +112,7 @@ h1, h2, h3, .ui-panel-title {
     flex: 1 1 auto;
     margin: 0;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     color: var(--galeno-primary-dark);
     min-width: 160px;
 }
@@ -83,29 +122,112 @@ h1, h2, h3, .ui-panel-title {
     margin-left: auto;
 }
 
+/* Datos de la sesion actual (nombre, rol, clinica) */
+.galeno-session {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.35rem 0.9rem;
+    background: var(--galeno-card);
+    border: 1px solid var(--galeno-border);
+    border-left: 4px solid var(--galeno-accent);
+    border-radius: var(--galeno-radius);
+    font-size: 0.95rem;
+}
+
+.galeno-session-item {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    line-height: 1.2;
+}
+
+.galeno-session-item + .galeno-session-item {
+    padding-left: 0.75rem;
+    border-left: 1px solid var(--galeno-divider);
+}
+
+.galeno-session-label {
+    color: var(--galeno-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.galeno-session-value {
+    display: block;
+    max-width: 14rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--galeno-ink);
+    font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ */
+/* Sidebar + area de trabajo                                           */
+/* ------------------------------------------------------------------ */
 /*
  * Sidebar fijo (220px) + area de trabajo flexible. Se mantiene lado a lado
- * hasta 640px de ancho; por debajo de eso se apila, para pantallas
- * realmente pequenas (telefono), no en tablet o ventanas de escritorio
- * moderadas.
+ * hasta 640px de ancho; por debajo de eso se apila.
  */
 .galeno-shell {
     display: flex;
     align-items: flex-start;
-    gap: 1.5rem;
-    padding: 0 1.25rem;
+    gap: 1rem;
     flex: 1 1 auto;
+}
+
+/* Tarjetas con borde delimitador (navegacion y workspace) */
+.galeno-nav,
+.galeno-workspace {
+    background: var(--galeno-card);
+    border: 1px solid var(--galeno-border);
+    border-top: 4px solid var(--galeno-primary);
+    border-radius: var(--galeno-radius);
+    box-shadow: var(--galeno-shadow);
 }
 
 .galeno-nav {
     flex: 0 0 220px;
     width: 220px;
+    padding: 0.5rem;
 }
 
+/*
+ * Todo lo que se inserta en el facet "workspace" queda centrado.
+ * Se usan margenes automaticos en lugar de align-items:center para que,
+ * si un hijo es mas ancho que el contenedor, se desplace desde el borde
+ * izquierdo en vez de quedar recortado.
+ */
 .galeno-workspace {
     flex: 1 1 0%;
     min-width: 0; /* evita que una tabla ancha desborde el contenedor flex */
-    overflow-x: auto; /* si aun asi la tabla es mas ancha, se desplaza en vez de romper el layout */
+    min-height: 320px;
+    padding: 1.5rem;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.galeno-workspace > * {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+}
+
+.galeno-workspace table,
+.galeno-workspace .ui-panelgrid {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.galeno-workspace .ui-datatable {
+    width: 100%;
 }
 
 @media (max-width: 640px) {
@@ -121,6 +243,15 @@ h1, h2, h3, .ui-panel-title {
     .galeno-title {
         text-align: left;
     }
+
+    .galeno-session {
+        flex: 1 1 100%;
+        flex-wrap: wrap;
+    }
+
+    .galeno-session-value {
+        max-width: 10rem;
+    }
 }
 
 /* Navegacion lateral */
@@ -128,10 +259,11 @@ h1, h2, h3, .ui-panel-title {
     background: transparent;
     border: none;
     padding: 0;
+    width: 100%;
 }
 
 .galeno-nav .ui-menuitem-link {
-    border-radius: var(--galeno-radius);
+    border-radius: 8px;
     color: var(--galeno-ink);
     padding: 0.65rem 0.9rem;
     transition: background-color 0.15s ease, color 0.15s ease;
@@ -139,7 +271,7 @@ h1, h2, h3, .ui-panel-title {
 
 .galeno-nav .ui-menuitem-link:hover {
     background: var(--galeno-primary-tint);
-    color: var(--galeno-primary-dark);
+    color: var(--galeno-primary);
 }
 
 .galeno-nav .ui-menuitem-link:focus-visible {
@@ -147,31 +279,39 @@ h1, h2, h3, .ui-panel-title {
     outline: none;
 }
 
-/* Tablas */
+/* ------------------------------------------------------------------ */
+/* Tablas                                                              */
+/* ------------------------------------------------------------------ */
 .ui-datatable-tablewrapper table,
 .ui-datatable .ui-datatable-thead > tr > th {
-    border-color: var(--galeno-border);
+    border-color: var(--galeno-divider);
 }
 
 .ui-datatable .ui-datatable-thead > tr > th {
-    background: var(--galeno-primary-tint);
+    background: var(--galeno-surface);
     color: var(--galeno-primary-dark);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .ui-datatable .ui-datatable-data > tr:nth-child(even) {
-    background: #F4F8F8;
+    background: var(--galeno-primary-tint);
 }
 
 .ui-datatable .ui-datatable-data > tr:hover {
-    background: var(--galeno-primary-tint);
+    background: var(--galeno-accent-light);
     cursor: pointer;
 }
 
-/* Pie de pagina */
+/* ------------------------------------------------------------------ */
+/* Pie de pagina                                                       */
+/* ------------------------------------------------------------------ */
 .galeno-footer {
-    color: #5A6B6A;
-    font-size: 0.85rem;
+    background: var(--galeno-primary-dark);
+    border: 1px solid var(--galeno-primary-dark);
+    border-top: 3px solid var(--galeno-accent);
+    border-radius: var(--galeno-radius);
+    color: #CBD5E1;
+    font-size: 0.95rem;
     padding: 1rem 1.25rem;
     text-align: center;
 }

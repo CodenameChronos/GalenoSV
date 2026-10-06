@@ -42,6 +42,21 @@ public class Sesion implements Serializable {
         this.rol = rol;
     }
 
+    public String getNombrePersona() {
+        if (persona == null) {
+            return "";
+        }
+        return (persona.getNombres() + " " + persona.getApellidos()).trim();
+    }
+
+    public String getNombreRol() {
+        return rol == null ? "" : rol.getNombre();
+    }
+
+    public String getNombreClinica() {
+        return clinica == null ? "" : clinica.getNombre();
+    }
+
     public void establecerSesion(PersonaRol personaRol) {
         if (personaRol == null) {
             return;

@@ -32,12 +32,46 @@
                     <div class="galeno-brand">
                         <p:graphicImage
                             library="img"
-                            name="galeno-17-09-2026.svg"/>
+                            name="galeno-06-10-2026.svg"/>
                     </div>
 
                     <h1 class="galeno-title">
                         <h:outputText value="Galeno-SV"/>
                     </h1>
+
+                    <h:panelGroup
+                            layout="block"
+                            styleClass="galeno-session"
+                            rendered="#{sesion.persona ne null}">
+
+                        <span class="galeno-session-item">
+                            <span class="galeno-session-label">
+                                <h:outputText value="#{msg['sesion.actual.nombre']}"/>
+                            </span>
+                            <h:outputText
+                                    styleClass="galeno-session-value"
+                                    value="#{sesion.nombrePersona}"/>
+                        </span>
+
+                        <span class="galeno-session-item">
+                            <span class="galeno-session-label">
+                                <h:outputText value="#{msg['sesion.actual.rol']}"/>
+                            </span>
+                            <h:outputText
+                                    styleClass="galeno-session-value"
+                                    value="#{sesion.nombreRol}"/>
+                        </span>
+
+                        <span class="galeno-session-item">
+                            <span class="galeno-session-label">
+                                <h:outputText value="#{msg['sesion.actual.clinica']}"/>
+                            </span>
+                            <h:outputText
+                                    styleClass="galeno-session-value"
+                                    value="#{sesion.nombreClinica}"/>
+                        </span>
+
+                    </h:panelGroup>
 
                     <!-- Selector de idioma (i18n) -->
                     <div class="galeno-lang">
