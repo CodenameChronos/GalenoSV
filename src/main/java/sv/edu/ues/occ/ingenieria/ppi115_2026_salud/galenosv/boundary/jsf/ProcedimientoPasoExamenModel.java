@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ExamenDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoPasoDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoPasoExamenDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ExamenService;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoPasoService;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoPasoExamenService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Examen;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ProcedimientoPaso;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ProcedimientoPasoExamen;
@@ -23,13 +23,13 @@ public class ProcedimientoPasoExamenModel extends ModelHandler<ProcedimientoPaso
     private static final long serialVersionUID = 1L;
 
     @Inject
-    private ProcedimientoPasoExamenDAO ppeDAO;
+    private ProcedimientoPasoExamenService ppeService;
 
     @Inject
-    private ExamenDAO exDAO;
+    private ExamenService exService;
 
     @Inject
-    private ProcedimientoPasoDAO ppDAO;
+    private ProcedimientoPasoService ppService;
 
     private GenericLazyDataModel<ProcedimientoPasoExamen> lazyModel;
 
@@ -39,8 +39,8 @@ public class ProcedimientoPasoExamenModel extends ModelHandler<ProcedimientoPaso
     }
 
     @Override
-    public DAOInterface<ProcedimientoPasoExamen> getDAO() {
-        return ppeDAO;
+    public ParentServiceInterface<ProcedimientoPasoExamen> getDAO() {
+        return ppeService;
     }
 
     public GenericLazyDataModel<ProcedimientoPasoExamen> getLazyModel() {
@@ -56,7 +56,7 @@ public class ProcedimientoPasoExamenModel extends ModelHandler<ProcedimientoPaso
     public ProcedimientoPasoExamen getRegistroById(String id) {
         try {
             UUID uuid = UUID.fromString(id);
-            return (ProcedimientoPasoExamen) ppeDAO.buscar(uuid);
+            return (ProcedimientoPasoExamen) ppeService.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING,
                     "ID inválido recibido para ProcedimientoPasoExamen: " + id, ex);
@@ -73,13 +73,13 @@ public class ProcedimientoPasoExamenModel extends ModelHandler<ProcedimientoPaso
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
-        return exDAO.buscarPorNombre(texto, 30);
+        return exService.buscarPorNombre(texto, 30);
     }
 
     public List<ProcedimientoPaso> completarProcedimientoPaso(String texto) {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
-        return ppDAO.buscarPorNombre(texto, 30);
+        return ppService.buscarPorNombre(texto, 30);
     }
 }

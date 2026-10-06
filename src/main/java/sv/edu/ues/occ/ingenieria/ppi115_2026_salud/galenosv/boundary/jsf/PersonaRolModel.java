@@ -11,11 +11,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ClinicaDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaRolDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.RolDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.*;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
 
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Clinica;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Persona;
@@ -29,16 +26,16 @@ public class PersonaRolModel extends ModelHandler<PersonaRol> {
     private static final long serialVersionUID = 1L;
 
     @Inject
-    private PersonaRolDAO prDAO;
+    private PersonaRolService prService;
 
     @Inject
-    private PersonaDAO personaDAO;
+    private PersonaService personaService;
 
     @Inject
-    private RolDAO rolDAO;
+    private RolService rolService;
 
     @Inject
-    private ClinicaDAO clinicaDAO;
+    private ClinicaService clinicaService;
 
     private GenericLazyDataModel<PersonaRol> lazyModel;
 
@@ -55,26 +52,26 @@ public class PersonaRolModel extends ModelHandler<PersonaRol> {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
-        return personaDAO.buscarPorNombre(texto, 30);
+        return personaService.buscarPorNombre(texto, 30);
     }
 
     public List<Rol> completarRol(String texto) {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
-        return rolDAO.buscarPorNombre(texto, 30);
+        return rolService.buscarPorNombre(texto, 30);
     }
 
     public List<Clinica> completarClinica(String texto) {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
-        return clinicaDAO.buscarPorNombre(texto, 30);
+        return clinicaService.buscarPorNombre(texto, 30);
     }
 
     @Override
-    public DAOInterface<PersonaRol> getDAO() {
-        return prDAO;
+    public ParentServiceInterface<PersonaRol> getDAO() {
+        return prService;
     }
 
     @Override
@@ -86,7 +83,7 @@ public class PersonaRolModel extends ModelHandler<PersonaRol> {
     public PersonaRol getRegistroById(String id) {
         try {
             UUID uuid = UUID.fromString(id);
-            return (PersonaRol) prDAO.buscar(uuid);
+            return (PersonaRol) prService.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(
                     Level.WARNING,
@@ -136,7 +133,7 @@ public class PersonaRolModel extends ModelHandler<PersonaRol> {
 
         try {
             boolean duplicado = idPersona != null && idRol != null
-                    && prDAO.existeRolEnClinica(idPersona, idRol, idClinica, idExcluir);
+                    && prService.existeRolEnClinica(idPersona, idRol, idClinica, idExcluir);
 
             Logger.getLogger(getClass().getName()).log(Level.INFO,
                     "Validacion duplicado -> idPersona={0}, idRol={1}, idClinica={2}, idExcluir={3}, resultado={4}",

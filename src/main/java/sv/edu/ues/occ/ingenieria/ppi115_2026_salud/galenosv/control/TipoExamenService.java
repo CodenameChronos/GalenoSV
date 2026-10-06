@@ -5,21 +5,22 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Examen;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoExamen;
 
 /**
  *
  * @author kardia
  */
+
 @Stateless
 @LocalBean
-public class ExamenDAO extends DefaultDAO<Examen> {
+public class TipoExamenService extends ParentService<TipoExamen> {
 
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public ExamenDAO() {
-        super(Examen.class);
+    public TipoExamenService() {
+        super(TipoExamen.class);
     }
 
     @Override
@@ -28,7 +29,7 @@ public class ExamenDAO extends DefaultDAO<Examen> {
     }
 
     /**
-     * Busca exámenes activos cuyo nombre contenga el texto indicado. Se usa
+     * Busca tipos de exámenes activos cuyo nombre contenga el texto indicado. Se usa
      * como completeMethod de los p:autoComplete que seleccionan un Examen como
      * padre de otra entidad (por ejemplo, ExamenTipoExamen).
      *
@@ -36,12 +37,12 @@ public class ExamenDAO extends DefaultDAO<Examen> {
      * @param max máximo de sugerencias a devolver.
      * @return los exámenes activos que coinciden, ordenados por nombre.
      */
-    public List<Examen> buscarPorNombre(String texto, int max) {
+    public List<TipoExamen> buscarPorNombre(String texto, int max) {
         return getEntityManager()
-                .createNamedQuery("Examen.findActiveByNombre", Examen.class)
+                .createNamedQuery("TipoExamen.findActiveByNombre", TipoExamen.class)
                 .setParameter("nombre", "%" + texto.trim().toLowerCase() + "%")
                 .setMaxResults(max)
                 .getResultList();
     }
-
+    
 }

@@ -6,8 +6,8 @@ import jakarta.inject.Named;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Procedimiento;
 
 /**
@@ -21,7 +21,7 @@ public class ProcedimientoModel extends ModelHandler<Procedimiento> {
     private static final long serialVersionUID = 1L;
     
     @Inject
-    private ProcedimientoDAO prDAO;
+    private ProcedimientoService procService;
     
     private GenericLazyDataModel<Procedimiento> lazyModel;
 
@@ -35,8 +35,8 @@ public class ProcedimientoModel extends ModelHandler<Procedimiento> {
     }
     
     @Override
-    public DAOInterface<Procedimiento> getDAO() {
-        return prDAO;
+    public ParentServiceInterface<Procedimiento> getDAO() {
+        return procService;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ProcedimientoModel extends ModelHandler<Procedimiento> {
     public Procedimiento getRegistroById(String id) {
         try {
             UUID uuid = UUID.fromString(id);
-            return (Procedimiento) prDAO.buscar(uuid);
+            return (Procedimiento) procService.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING,
                 "ID inválido recibido para Procedimiento: " + id, ex);

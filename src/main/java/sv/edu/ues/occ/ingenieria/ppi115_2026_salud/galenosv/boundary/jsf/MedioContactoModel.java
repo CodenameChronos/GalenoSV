@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.MedioContactoDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.TipoMedioContactoDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.MedioContactoService;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaService;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.TipoMedioContactoService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.MedioContacto;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Persona;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoMedioContacto;
@@ -26,13 +26,13 @@ public class MedioContactoModel extends ModelHandler<MedioContacto> {
     private static final long serialVersionUID = 1L;
 
     @Inject
-    private MedioContactoDAO mcDAO;
+    private MedioContactoService mcService;
 
     @Inject
-    private PersonaDAO pDAO;
+    private PersonaService persService;
 
     @Inject
-    private TipoMedioContactoDAO tmcDAO;
+    private TipoMedioContactoService tmcService;
 
     private GenericLazyDataModel<MedioContacto> lazyModel;
 
@@ -46,8 +46,8 @@ public class MedioContactoModel extends ModelHandler<MedioContacto> {
     }
 
     @Override
-    public DAOInterface<MedioContacto> getDAO() {
-        return mcDAO;
+    public ParentServiceInterface<MedioContacto> getDAO() {
+        return mcService;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MedioContactoModel extends ModelHandler<MedioContacto> {
     public MedioContacto getRegistroById(String id) {
         try {
             UUID uuid = UUID.fromString(id);
-            return (MedioContacto) mcDAO.buscar(uuid);
+            return (MedioContacto) mcService.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING,
                     "ID inválido recibido para MedioContacto: " + id, ex);
@@ -76,14 +76,14 @@ public class MedioContactoModel extends ModelHandler<MedioContacto> {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
-        return pDAO.buscarPorNombre(texto, 30);
+        return persService.buscarPorNombre(texto, 30);
     }
 
     public List<TipoMedioContacto> completarTipoMedioContacto(String texto) {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
-        return tmcDAO.buscarPorNombre(texto, 30);
+        return tmcService.buscarPorNombre(texto, 30);
     }
 
     private Persona personaFiltro;

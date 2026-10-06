@@ -6,8 +6,8 @@ import jakarta.inject.Named;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.TipoMedioContactoDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.TipoMedioContactoService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoMedioContacto;
 
 @Named()
@@ -17,7 +17,7 @@ public class TipoMedioContactoModel extends ModelHandler<TipoMedioContacto> {
     private static final long serialVersionUID = 1L;
     
     @Inject
-    private TipoMedioContactoDAO tmcDAO;
+    private TipoMedioContactoService tmcService;
     
     private GenericLazyDataModel<TipoMedioContacto> lazyModel;
     
@@ -31,8 +31,8 @@ public class TipoMedioContactoModel extends ModelHandler<TipoMedioContacto> {
     }
 
     @Override
-    public DAOInterface<TipoMedioContacto> getDAO() {
-        return tmcDAO;
+    public ParentServiceInterface<TipoMedioContacto> getDAO() {
+        return tmcService;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class TipoMedioContactoModel extends ModelHandler<TipoMedioContacto> {
     public TipoMedioContacto getRegistroById(String id) {
         try {
             UUID uuid = UUID.fromString(id);
-            return (TipoMedioContacto) tmcDAO.buscar(uuid);
+            return (TipoMedioContacto) tmcService.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING,
                 "ID inválido recibido para Clinica: " + id, ex);

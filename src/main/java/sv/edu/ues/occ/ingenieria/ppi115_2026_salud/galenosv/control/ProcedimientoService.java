@@ -4,8 +4,8 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Rol;
 import java.util.List;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Procedimiento;
 
 /**
  *
@@ -13,13 +13,13 @@ import java.util.List;
  */
 @Stateless
 @LocalBean
-public class RolDAO extends DefaultDAO<Rol> {
+public class ProcedimientoService extends ParentService<Procedimiento> {
 
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public RolDAO() {
-        super(Rol.class);
+    public ProcedimientoService() {
+        super(Procedimiento.class);
     }
 
     @Override
@@ -27,19 +27,11 @@ public class RolDAO extends DefaultDAO<Rol> {
         return em;
     }
 
-    public List<Rol> buscarPorNombre(String texto, int max) {
+    public List<Procedimiento> buscarPorNombre(String texto, int max) {
         return getEntityManager()
-                .createNamedQuery("Rol.findActiveByNombre", Rol.class)
+                .createNamedQuery("Procedimiento.findActiveByNombre", Procedimiento.class)
                 .setParameter("nombre", "%" + texto.trim().toLowerCase() + "%")
                 .setMaxResults(max)
                 .getResultList();
     }
-
-    public List<Rol> findAllActive() {
-        return getEntityManager()
-                .createNamedQuery("Rol.findByActivo", Rol.class)
-                .setParameter("activo", Boolean.TRUE)
-                .getResultList();
-    }
-
 }

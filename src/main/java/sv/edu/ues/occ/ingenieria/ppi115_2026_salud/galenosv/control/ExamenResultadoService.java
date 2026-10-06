@@ -13,12 +13,12 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ExamenResulta
 
 @Stateless
 @LocalBean
-public class ExamenResultadoDAO extends DefaultDAO<ExamenResultado> {
+public class ExamenResultadoService extends ParentService<ExamenResultado> {
     
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public ExamenResultadoDAO() {
+    public ExamenResultadoService() {
         super(ExamenResultado.class);
     }
 

@@ -1,13 +1,12 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  *
  * @author kardia
  */
-public interface DAOInterface<T> {
+public interface ParentServiceInterface<T> {
 
     public void crear(Object registro) throws IllegalArgumentException, IllegalStateException;
 

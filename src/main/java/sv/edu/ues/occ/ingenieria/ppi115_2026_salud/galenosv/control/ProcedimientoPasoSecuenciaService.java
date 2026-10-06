@@ -16,12 +16,12 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Procedimiento
 
 @Stateless
 @LocalBean
-public class ProcedimientoPasoSecuenciaDAO extends DefaultDAO<ProcedimientoPasoSecuencia> {
+public class ProcedimientoPasoSecuenciaService extends ParentService<ProcedimientoPasoSecuencia> {
     
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public ProcedimientoPasoSecuenciaDAO() {
+    public ProcedimientoPasoSecuenciaService() {
         super(ProcedimientoPasoSecuencia.class);
     }
 

@@ -31,22 +31,22 @@ public class ProcedimientoArbolModel implements Serializable {
     private ProcedimientoModel procedimientoModel;
 
     @Inject
-    private ProcedimientoPasoDAO pasoDAO;
+    private ProcedimientoPasoService pasoDAO;
 
     @Inject
-    private ProcedimientoPasoSecuenciaDAO secuenciaDAO;
+    private ProcedimientoPasoSecuenciaService secuenciaService;
 
     @Inject
     private ProcedimientoPasoService service;
 
     @Inject
-    private ProcedimientoPasoExamenDAO examenPasoDAO;
+    private ProcedimientoPasoExamenService examenPasoService;
 
     @Inject
-    private ExamenDAO examenDAO;
+    private ExamenService examenService;
 
     @Inject
-    private RolDAO rolDAO;
+    private RolService rolService;
 
     private TreeNode<ProcedimientoPaso> raiz;
 
@@ -77,7 +77,7 @@ public class ProcedimientoArbolModel implements Serializable {
 
     public List<Rol> getRoles() {
         if (roles == null) {
-            roles = new ArrayList<>(rolDAO.findAllActive());
+            roles = new ArrayList<>(rolService.findAllActive());
         }
         return roles;
     }
@@ -190,7 +190,7 @@ public class ProcedimientoArbolModel implements Serializable {
         if (pasos.isEmpty()) {
             return;
         }
-        List<ProcedimientoPasoSecuencia> bordes = secuenciaDAO.listarPorProcedimiento(idProcedimiento);
+        List<ProcedimientoPasoSecuencia> bordes = secuenciaService.listarPorProcedimiento(idProcedimiento);
 
         Map<UUID, ProcedimientoPaso> pasoPorId = new HashMap<>();
         for (ProcedimientoPaso p : pasos) {
@@ -277,7 +277,7 @@ public class ProcedimientoArbolModel implements Serializable {
         rolForm = paso.getIdRol();
         indicaFinForm = Boolean.TRUE.equals(paso.getIndicaFin());
         examenesForm = edicion
-                ? new ArrayList<>(examenPasoDAO.listarExamenesDePaso(paso.getIdProcedimientoPaso()))
+                ? new ArrayList<>(examenPasoService.listarExamenesDePaso(paso.getIdProcedimientoPaso()))
                 : new ArrayList<>();
         examenAgregar = null;
         examenSeleccionado = null;
@@ -315,7 +315,7 @@ public class ProcedimientoArbolModel implements Serializable {
     }
 
     public List<Examen> completarExamen(String texto) {
-        List<Examen> encontrados = new ArrayList<>(examenDAO.buscarPorNombre(texto, 10));
+        List<Examen> encontrados = new ArrayList<>(examenService.buscarPorNombre(texto, 10));
         encontrados.removeAll(examenesForm);
         return encontrados;
     }

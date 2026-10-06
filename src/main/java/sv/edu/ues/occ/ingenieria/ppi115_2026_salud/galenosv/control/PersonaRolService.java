@@ -18,15 +18,14 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.PersonaRol;
  */
 @Stateless
 @LocalBean
-public class PersonaRolDAO extends DefaultDAO<PersonaRol> {
+public class PersonaRolService extends ParentService<PersonaRol> {
 
-    /** Nombre del rol que identifica a un paciente (se compara sin distinguir mayúsculas). */
     public static final String ROL_PACIENTE = "Paciente";
 
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public PersonaRolDAO() {
+    public PersonaRolService() {
         super(PersonaRol.class);
     }
 

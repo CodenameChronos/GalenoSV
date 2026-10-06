@@ -6,8 +6,8 @@ import jakarta.inject.Named;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.TipoDocumentoDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.TipoDocumentoService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoDocumento;
 
 @Named
@@ -17,7 +17,7 @@ public class TipoDocumentoModel extends ModelHandler<TipoDocumento> {
     private static final long serialVersionUID = 1L;
 
     @Inject
-    private TipoDocumentoDAO tdDAO;
+    private TipoDocumentoService tdService;
 
     private GenericLazyDataModel<TipoDocumento> lazyModel;
 
@@ -31,8 +31,8 @@ public class TipoDocumentoModel extends ModelHandler<TipoDocumento> {
     }
 
     @Override
-    public DAOInterface<TipoDocumento> getDAO() {
-        return tdDAO;
+    public ParentServiceInterface<TipoDocumento> getDAO() {
+        return tdService;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class TipoDocumentoModel extends ModelHandler<TipoDocumento> {
     public TipoDocumento getRegistroById(String id) {
         try {
             UUID uuid = UUID.fromString(id);
-            return (TipoDocumento) tdDAO.buscar(uuid);
+            return (TipoDocumento) tdService.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(
                     Level.WARNING,

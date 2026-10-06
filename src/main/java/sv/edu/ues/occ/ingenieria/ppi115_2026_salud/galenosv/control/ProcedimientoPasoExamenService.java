@@ -17,12 +17,12 @@ import java.util.UUID;
 
 @Stateless
 @LocalBean
-public class ProcedimientoPasoExamenDAO extends DefaultDAO<ProcedimientoPasoExamen> {
+public class ProcedimientoPasoExamenService extends ParentService<ProcedimientoPasoExamen> {
     
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public ProcedimientoPasoExamenDAO() {
+    public ProcedimientoPasoExamenService() {
         super(ProcedimientoPasoExamen.class);
     }
 

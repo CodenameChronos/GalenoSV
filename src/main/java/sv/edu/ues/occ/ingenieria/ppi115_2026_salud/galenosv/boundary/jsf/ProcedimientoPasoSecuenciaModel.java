@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoPasoDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoPasoSecuenciaDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoPasoService;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoPasoSecuenciaService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ProcedimientoPaso;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ProcedimientoPasoSecuencia;
 
@@ -24,10 +24,10 @@ public class ProcedimientoPasoSecuenciaModel extends ModelHandler<ProcedimientoP
     private static final long serialVersionUID = 1L;
     
     @Inject
-    private ProcedimientoPasoSecuenciaDAO ppsDAO;
+    private ProcedimientoPasoSecuenciaService ppsService;
     
     @Inject
-    private ProcedimientoPasoDAO ppDAO; 
+    private ProcedimientoPasoService ppDAO;
     
     
     private GenericLazyDataModel<ProcedimientoPasoSecuencia> lazyModel;
@@ -43,8 +43,8 @@ public class ProcedimientoPasoSecuenciaModel extends ModelHandler<ProcedimientoP
     
     
     @Override
-    public DAOInterface<ProcedimientoPasoSecuencia> getDAO() {
-        return ppsDAO;
+    public ParentServiceInterface<ProcedimientoPasoSecuencia> getDAO() {
+        return ppsService;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ProcedimientoPasoSecuenciaModel extends ModelHandler<ProcedimientoP
     public ProcedimientoPasoSecuencia getRegistroById(String id) {
         try {
             UUID uuid = UUID.fromString(id);
-            return (ProcedimientoPasoSecuencia) ppsDAO.buscar(uuid);
+            return (ProcedimientoPasoSecuencia) ppsService.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING,
                 "ID inválido recibido para Procedimiento Paso Secuencia: " + id, ex);

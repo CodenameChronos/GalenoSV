@@ -16,12 +16,12 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Consulta;
 
 @Stateless
 @LocalBean
-public class ConsultaDAO extends DefaultDAO<Consulta> {
+public class ConsultaService extends ParentService<Consulta> {
 
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public ConsultaDAO() {
+    public ConsultaService() {
         super(Consulta.class);
     }
 
@@ -30,16 +30,6 @@ public class ConsultaDAO extends DefaultDAO<Consulta> {
         return em;
     }
 
-    /**
-    * Busca consultas cuya persona asociada (via PersonaRol) coincide con el
-    * texto en nombres o apellidos. Trae PersonaRol y Persona con JOIN FETCH
-    * para que el autoComplete pueda mostrar el nombre completo sin disparar
-    * LazyInitializationException.
-    *
-    * @param texto fragmento de nombre o apellido escrito por el usuario.
-    * @param max maximo de sugerencias a devolver.
-    * @return las consultas que coinciden, mas recientes primero.
-    */
    public List<Consulta> buscarPorNombrePersona(String texto, int max) {
        return getEntityManager()
                .createNamedQuery("Consulta.findByNombre", Consulta.class)
@@ -64,16 +54,7 @@ public class ConsultaDAO extends DefaultDAO<Consulta> {
                 .setMaxResults(max)
                 .getResultList();
     }
- 
-    /**
-     * Cuenta las consultas de una clínica dentro de un rango de fechas (el
-     * total que necesita el paginador de la tabla).
-     *
-     * @param clinica clínica de la sesión.
-     * @param desde inicio del rango (inclusive).
-     * @param hasta fin del rango (inclusive).
-     * @return la cantidad de consultas que cumplen el filtro.
-     */
+
     public long contarPorClinicaYFechas(Clinica clinica, Date desde, Date hasta) {
         return getEntityManager().createQuery(
                         "SELECT COUNT(c) FROM Consulta c "

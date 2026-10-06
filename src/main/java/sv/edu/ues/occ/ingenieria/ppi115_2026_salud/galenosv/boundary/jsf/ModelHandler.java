@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.primefaces.event.SelectEvent;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
 
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.util.Mensajes;
 
@@ -65,10 +65,10 @@ public abstract class ModelHandler<T> implements ModelHandlerInterface<T>, Seria
     /**
      * Obtiene la interfaz de acceso a datos (DAO) correspondiente a la entidad.
      *
-     * @return La implementación de {@link DAOInterface} para las operaciones de
+     * @return La implementación de {@link ParentServiceInterface} para las operaciones de
      * persistencia.
      */
-    public abstract DAOInterface<T> getDAO();
+    public abstract ParentServiceInterface<T> getDAO();
 
     /**
      * Instancia un nuevo objeto de la entidad para ser utilizado como registro

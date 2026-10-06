@@ -9,17 +9,9 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Clinica;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.PersonaRol;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Rol;
 
-/**
- * Consultas de búsqueda que alimentan los tres autocompletar de la pantalla de
- * inicio de sesión (clínica, rol y persona).
- *
- * <p>Son solo lecturas, por eso no extiende de DefaultDAO. Si más adelante
- * prefieren seguir la convención de un DAO por entidad, cada método se puede
- * mover tal cual a ClinicaDAO, RolDAO y PersonaRolDAO.</p>
- */
 @Stateless
 @LocalBean
-public class SesionDAO {
+public class SesionService {
 
     @PersistenceContext(unitName = "Galeno-PU")
     private EntityManager em;
@@ -66,7 +58,7 @@ public class SesionDAO {
      * Busca las asignaciones (persona + rol + clínica) de las personas que
      * tienen ese rol en esa clínica y cuyo nombre completo contiene el texto.
      * Se devuelve el PersonaRol y no solo la Persona porque es justo lo que
-     * necesita {@code Sesion.establecerSesion}, y porque una misma persona
+     * necesita Sesion.establecerSesion, y porque una misma persona
      * puede tener varios roles o trabajar en varias clínicas.
      *
      * @param clinica la clínica elegida en el primer campo.

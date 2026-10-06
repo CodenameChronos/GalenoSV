@@ -4,8 +4,8 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Clinica;
 import java.util.List;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoMedioContacto;
 
 /**
  *
@@ -13,23 +13,23 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoMedioCont
  */
 @Stateless
 @LocalBean
-public class TipoMedioContactoDAO extends DefaultDAO<TipoMedioContacto> {
+public class ClinicaService extends ParentService<Clinica> {
 
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
-    
-    public TipoMedioContactoDAO() {
-        super(TipoMedioContacto.class);
+
+    public ClinicaService() {
+        super(Clinica.class);
     }
 
     @Override
     public EntityManager getEntityManager() {
         return em;
     }
-    
-    public List<TipoMedioContacto> buscarPorNombre(String texto, int max) {
+
+    public List<Clinica> buscarPorNombre(String texto, int max) {
         return getEntityManager()
-                .createNamedQuery("TipoMedioContacto.findActiveByNombre", TipoMedioContacto.class)
+                .createNamedQuery("Clinica.findActiveByNombre", Clinica.class)
                 .setParameter("nombre", "%" + texto.trim().toLowerCase() + "%")
                 .setMaxResults(max)
                 .getResultList();

@@ -6,8 +6,8 @@ import jakarta.inject.Named;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ClinicaDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ClinicaService;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Clinica;
 
 /**
@@ -21,7 +21,7 @@ public class ClinicaModel extends ModelHandler<Clinica> {
     private static final long serialVersionUID = 1L;
     
     @Inject
-    private ClinicaDAO clDAO;
+    private ClinicaService clService;
     
     private GenericLazyDataModel<Clinica> lazyModel;
     
@@ -35,8 +35,8 @@ public class ClinicaModel extends ModelHandler<Clinica> {
     }
 
     @Override
-    public DAOInterface<Clinica> getDAO() {
-        return clDAO;
+    public ParentServiceInterface<Clinica> getDAO() {
+        return clService;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ClinicaModel extends ModelHandler<Clinica> {
     public Clinica getRegistroById(String id) {
         try {
             UUID uuid = UUID.fromString(id);
-            return (Clinica) clDAO.buscar(uuid);
+            return (Clinica) clService.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING,
                 "ID inválido recibido para Clinica: " + id, ex);

@@ -11,13 +11,13 @@ import java.util.logging.Logger;
  *
  * @author kardia
  */
-public abstract class DefaultDAO<T> implements DAOInterface<T> {
+public abstract class ParentService<T> implements ParentServiceInterface<T> {
 
     public final Class entity;
 
     public abstract EntityManager getEntityManager();
 
-    public DefaultDAO(Class<T> entity) {
+    public ParentService(Class<T> entity) {
         this.entity = entity;
     }
 

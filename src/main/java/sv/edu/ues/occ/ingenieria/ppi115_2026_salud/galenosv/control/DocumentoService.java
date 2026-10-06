@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.MedioContacto;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Documento;
 
 /**
  *
@@ -18,13 +18,13 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.MedioContacto
 
 @Stateless
 @LocalBean
-public class MedioContactoDAO extends DefaultDAO<MedioContacto> {
+public class DocumentoService extends ParentService<Documento> {
     
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public MedioContactoDAO() {
-        super(MedioContacto.class);
+    public DocumentoService() {
+        super(Documento.class);
     }
 
     @Override
@@ -32,21 +32,21 @@ public class MedioContactoDAO extends DefaultDAO<MedioContacto> {
         return em;
     }
     
-    public List<MedioContacto> findByIdPersona(final UUID uuid, int first, int max) {
+    public List<Documento> findByIdExamen(final UUID uuid, int first, int max) {
         try {
-            TypedQuery<MedioContacto> tq = em.createNamedQuery("MedioContacto.findByIdMedioCOntacto", MedioContacto.class);
+            TypedQuery<Documento> tq = em.createNamedQuery("Documento.findByIdDocumento", Documento.class);
             return tq.getResultList();
         } catch (Exception ex) {
             return null;
         }
     }
     
-     public List<MedioContacto> buscarPorNombre(String nombre, int maxResultados) {
+    public List<Documento> buscarPorNombre(String nombre, int maxResultados) {
         return null;
     }
-     
-     @Override
-    public List<MedioContacto> findRange(int first, int max) {
+    
+    @Override
+    public List<Documento> findRange(int first, int max) {
         if (first < 0 || max < 0) {
             throw new IllegalArgumentException("first debe ser >= 0 y max debe ser >= 0");
         }
@@ -55,7 +55,7 @@ public class MedioContactoDAO extends DefaultDAO<MedioContacto> {
         }
         try {
             return getEntityManager()
-                    .createNamedQuery("MedioContacto.findRangePadresHijos", MedioContacto.class)
+                    .createNamedQuery("Documento.findRangePadresHijos", Documento.class)
                     .setFirstResult(first)
                     .setMaxResults(max)
                     .getResultList();
@@ -65,14 +65,14 @@ public class MedioContactoDAO extends DefaultDAO<MedioContacto> {
         }
     }
     
-     @Override
+    @Override
     public Object buscar(Object uuid) {
         if (uuid == null) {
             throw new IllegalArgumentException("Se requiere un UUID válido para realizar la búsqueda");
         }
         try {
-            List<MedioContacto> r = getEntityManager()
-                    .createNamedQuery("MedioContacto.buscarPadresHijos", MedioContacto.class)
+            List<Documento> r = getEntityManager()
+                    .createNamedQuery("Documento.buscarPadresHijos", Documento.class)
                     .setParameter("id", uuid)
                     .getResultList();
             return r.isEmpty() ? null : r.get(0);
@@ -81,6 +81,5 @@ public class MedioContactoDAO extends DefaultDAO<MedioContacto> {
             throw new IllegalStateException(ex);
         }
     }
-    
     
 }

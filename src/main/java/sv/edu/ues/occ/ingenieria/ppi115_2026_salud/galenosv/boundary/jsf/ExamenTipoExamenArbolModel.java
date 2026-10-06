@@ -8,9 +8,8 @@ import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ExamenTipoExamenDAO;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ExamenTipoExamenService;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.TipoExamenDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.TipoExamenService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Examen;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ExamenTipoExamen;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoExamen;
@@ -25,10 +24,10 @@ public class ExamenTipoExamenArbolModel implements Serializable {
     private ExamenTipoExamenModel examenModel;
 
     @Inject
-    private TipoExamenDAO tipoExamenDAO;
+    private TipoExamenService tipoExamenService;
 
     @Inject
-    private ExamenTipoExamenDAO examenTipoExamenDAO;
+    private ExamenTipoExamenService examenTipoExamenService;
 
     @Inject
     private ExamenTipoExamenService service;
@@ -90,7 +89,7 @@ public class ExamenTipoExamenArbolModel implements Serializable {
         }
 
         List<ExamenTipoExamen> relaciones =
-                examenTipoExamenDAO.findByIdExamen(
+                examenTipoExamenService.findByIdExamen(
                         examen.getIdExamen(), 0, Integer.MAX_VALUE);
 
         for (ExamenTipoExamen relacion : relaciones) {
@@ -104,7 +103,7 @@ public class ExamenTipoExamenArbolModel implements Serializable {
 
     public List<TipoExamen> completarTipoExamen(String texto) {
         List<TipoExamen> encontrados =
-                new ArrayList<>(tipoExamenDAO.buscarPorNombre(texto, 10));
+                new ArrayList<>(tipoExamenService.buscarPorNombre(texto, 10));
 
         encontrados.removeAll(tiposExamenForm);
 

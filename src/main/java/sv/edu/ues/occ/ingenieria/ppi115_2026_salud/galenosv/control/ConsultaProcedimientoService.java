@@ -2,12 +2,16 @@ package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control;
 
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
+import java.util.Date;
 import java.util.List;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Consulta;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ConsultaProcedimiento;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Procedimiento;
+import java.util.Random;
+import java.util.UUID;
+
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.*;
 
 /**
  *
@@ -16,12 +20,18 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Procedimiento
 
 @Stateless
 @LocalBean
-public class ConsultaProcedimientoDAO extends DefaultDAO<ConsultaProcedimiento> {
+public class ConsultaProcedimientoService extends ParentService<ConsultaProcedimiento> {
 
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
-    public ConsultaProcedimientoDAO() {
+    @Inject
+    private ProcedimientoPasoService procedimientoPasoService;
+
+    @Inject
+    private PersonaRolService personaRolService;
+
+    public ConsultaProcedimientoService() {
         super(ConsultaProcedimiento.class);
     }
 
@@ -29,17 +39,7 @@ public class ConsultaProcedimientoDAO extends DefaultDAO<ConsultaProcedimiento> 
     public EntityManager getEntityManager() {
         return em;
     }
-    
-    /**
-    * Busca consultas cuya persona asociada (via PersonaRol) coincide con el
-    * texto en nombres o apellidos. Trae PersonaRol y Persona con JOIN FETCH
-    * para que el autoComplete pueda mostrar el nombre completo sin disparar
-    * LazyInitializationException.
-    *
-    * @param texto fragmento de nombre o apellido escrito por el usuario.
-    * @param max maximo de sugerencias a devolver.
-    * @return las consultas que coinciden, mas recientes primero.
-    */
+
    public List<ConsultaProcedimiento> buscarPorNombreProcedimiento(String texto, int max) {
        return getEntityManager()
                .createNamedQuery("ConsultaProcedimiento.findByNombreProcedimiento", ConsultaProcedimiento.class)
@@ -48,18 +48,6 @@ public class ConsultaProcedimientoDAO extends DefaultDAO<ConsultaProcedimiento> 
                .getResultList();
    }
 
-    /**
-     * Lista una página de los procedimientos aplicados a una consulta, con el
-     * Procedimiento precargado para mostrar su nombre ("Tipo") en la tabla.
-     * Los pasos NO se traen aquí: paginar junto a una colección con JOIN FETCH
-     * recorta filas y no páginas; se piden aparte con
-     * ConsultaProcedimientoPasoDAO.listarPorConsultaProcedimiento.
-     *
-     * @param consulta la consulta dueña de los procedimientos.
-     * @param first posición del primer registro de la página.
-     * @param max tamaño de la página.
-     * @return los procedimientos de la consulta, los más recientes primero.
-     */
     public List<ConsultaProcedimiento> listarPorConsulta(Consulta consulta, int first, int max) {
         return getEntityManager().createQuery(
                         "SELECT cp FROM ConsultaProcedimiento cp "
@@ -73,12 +61,6 @@ public class ConsultaProcedimientoDAO extends DefaultDAO<ConsultaProcedimiento> 
                 .getResultList();
     }
 
-    /**
-     * Cuenta los procedimientos aplicados a una consulta.
-     *
-     * @param consulta la consulta dueña de los procedimientos.
-     * @return la cantidad de procedimientos.
-     */
     public long contarPorConsulta(Consulta consulta) {
         return getEntityManager().createQuery(
                         "SELECT COUNT(cp) FROM ConsultaProcedimiento cp WHERE cp.idConsulta = :consulta",
@@ -87,14 +69,6 @@ public class ConsultaProcedimientoDAO extends DefaultDAO<ConsultaProcedimiento> 
                 .getSingleResult();
     }
 
-    /**
-     * Busca procedimientos ACTIVOS del catálogo cuyo nombre contenga el texto;
-     * alimenta el selector "Seleccionar Procedimiento".
-     *
-     * @param texto fragmento de nombre escrito por el usuario.
-     * @param max máximo de sugerencias a devolver.
-     * @return los procedimientos activos que coinciden, ordenados por nombre.
-     */
     public List<Procedimiento> buscarProcedimientosActivos(String texto, int max) {
         return getEntityManager().createQuery(
                         "SELECT p FROM Procedimiento p "
@@ -105,4 +79,42 @@ public class ConsultaProcedimientoDAO extends DefaultDAO<ConsultaProcedimiento> 
                 .setMaxResults(max)
                 .getResultList();
     }
+
+    public void crearConPasoInicial(ConsultaProcedimiento nuevo, Clinica clinica) {
+        if (clinica == null) {
+            throw new ReglaNegocioException("Debe iniciar sesión para agregar procedimientos.");
+        }
+        if (nuevo.getIdConsulta() == null || nuevo.getIdConsulta().getIdConsulta() == null) {
+            throw new ReglaNegocioException("Guarde la consulta antes de agregarle procedimientos.");
+        }
+        if (nuevo.getIdProcedimiento() == null) {
+            throw new ReglaNegocioException("Seleccione el procedimiento a aplicar.");
+        }
+
+        UUID idProcedimiento = nuevo.getIdProcedimiento().getIdProcedimiento();
+
+        ProcedimientoPaso pasoInicial = procedimientoPasoService.obtenerPasoInicial(idProcedimiento);
+        if (pasoInicial == null) {
+            throw new ReglaNegocioException(
+                    "El procedimiento elegido todavía no tiene un paso inicial definido.");
+        }
+
+        List<PersonaRol> candidatos =
+                personaRolService.listarPersonalExcluyendoRol(clinica, PersonaRolService.ROL_PACIENTE);
+        if (candidatos.isEmpty()) {
+            throw new ReglaNegocioException(
+                    "No hay personal disponible en esta clínica para asignar el primer paso.");
+        }
+        PersonaRol responsable = candidatos.get(new Random().nextInt(candidatos.size()));
+
+        em.persist(nuevo);
+
+        ConsultaProcedimientoPaso primerPaso = new ConsultaProcedimientoPaso();
+        primerPaso.setIdConsultaProcedimiento(nuevo);
+        primerPaso.setIdProcedimientoPaso(pasoInicial);
+        primerPaso.setIdPersonaRol(responsable);
+        primerPaso.setFechaInicio(new Date());
+        em.persist(primerPaso);
+    }
+
 }

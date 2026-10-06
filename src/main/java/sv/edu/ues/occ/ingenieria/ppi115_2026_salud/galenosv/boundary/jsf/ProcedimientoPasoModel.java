@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoPasoDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.RolDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoService;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ProcedimientoPasoService;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.RolService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Procedimiento;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ProcedimientoPaso;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Rol;
@@ -22,13 +22,13 @@ public class ProcedimientoPasoModel extends ModelHandler<ProcedimientoPaso> {
     private static final long serialVersionUID = 1L;
 
     @Inject
-    private ProcedimientoPasoDAO ppDAO;
+    private ProcedimientoPasoService ppService;
 
     @Inject
-    private ProcedimientoDAO prDAO;
+    private ProcedimientoService procService;
 
     @Inject
-    private RolDAO rolDAO;
+    private RolService rolService;
 
     private GenericLazyDataModel<ProcedimientoPaso> lazyModel;
 
@@ -45,19 +45,19 @@ public class ProcedimientoPasoModel extends ModelHandler<ProcedimientoPaso> {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
-        return prDAO.buscarPorNombre(texto, 30);
+        return procService.buscarPorNombre(texto, 30);
     }
 
     public List<Rol> completarRol(String texto) {
         if (texto == null || texto.isBlank()) {
             return List.of();
         }
-        return rolDAO.buscarPorNombre(texto, 30);
+        return rolService.buscarPorNombre(texto, 30);
     }
 
     @Override
-    public DAOInterface<ProcedimientoPaso> getDAO() {
-        return ppDAO;
+    public ParentServiceInterface<ProcedimientoPaso> getDAO() {
+        return ppService;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ProcedimientoPasoModel extends ModelHandler<ProcedimientoPaso> {
     public ProcedimientoPaso getRegistroById(String id) {
         try {
             UUID uuid = UUID.fromString(id);
-            return (ProcedimientoPaso) ppDAO.buscar(uuid);
+            return (ProcedimientoPaso) ppService.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(
                     Level.WARNING,

@@ -24,9 +24,9 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.boundary.jsf.ESTADO_
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.boundary.jsf.GenericLazyDataModel;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.boundary.jsf.ModelHandler;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.boundary.jsf.Sesion;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ConsultaDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaRolDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ConsultaService;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaRolService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Consulta;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Documento;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Persona;
@@ -39,10 +39,10 @@ public class ConsultaModel extends ModelHandler<Consulta> {
     private static final long serialVersionUID = 1L;
 
     @Inject
-    private ConsultaDAO consultaDAO;
+    private ConsultaService consultaService;
 
     @Inject
-    private PersonaRolDAO personaRolDAO;
+    private PersonaRolService personaRolService;
 
     @Inject
     private Sesion sesion;
@@ -70,8 +70,8 @@ public class ConsultaModel extends ModelHandler<Consulta> {
     }
 
     @Override
-    public DAOInterface<Consulta> getDAO() {
-        return consultaDAO;
+    public ParentServiceInterface<Consulta> getDAO() {
+        return consultaService;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ConsultaModel extends ModelHandler<Consulta> {
     @Override
     public Consulta getRegistroById(String id) {
         try {
-            return (Consulta) consultaDAO.buscar(UUID.fromString(id));
+            return (Consulta) consultaService.buscar(UUID.fromString(id));
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING,
                     "ID inválido recibido para Consulta: " + id, ex);
@@ -108,7 +108,7 @@ public class ConsultaModel extends ModelHandler<Consulta> {
             return List.of();
         }
         List<Consulta> pagina
-                = consultaDAO.buscarPorClinicaYFechas(sesion.getClinica(), fechaDesde, fechaHasta, first, max);
+                = consultaService.buscarPorClinicaYFechas(sesion.getClinica(), fechaDesde, fechaHasta, first, max);
         cargarDocumentos(pagina.stream().map(Consulta::getIdPersonaRol).toList());
         return pagina;
     }
@@ -118,7 +118,7 @@ public class ConsultaModel extends ModelHandler<Consulta> {
         if (!filtroCompleto()) {
             return 0;
         }
-        return (int) consultaDAO.contarPorClinicaYFechas(sesion.getClinica(), fechaDesde, fechaHasta);
+        return (int) consultaService.contarPorClinicaYFechas(sesion.getClinica(), fechaDesde, fechaHasta);
     }
 
     public void filtrar() {
@@ -156,7 +156,7 @@ public class ConsultaModel extends ModelHandler<Consulta> {
         if (sesion.getClinica() == null || texto == null || texto.isBlank()) {
             return List.of();
         }
-        List<PersonaRol> pacientes = personaRolDAO.buscarPacientes(sesion.getClinica(), texto, 15);
+        List<PersonaRol> pacientes = personaRolService.buscarPacientes(sesion.getClinica(), texto, 15);
         cargarDocumentos(pacientes);
         return pacientes;
     }
@@ -204,7 +204,7 @@ public class ConsultaModel extends ModelHandler<Consulta> {
         for (Persona persona : personas) {
             nuevos.put(persona.getIdPersona(), "");
         }
-        for (Documento d : personaRolDAO.listarDocumentosDePersonas(personas)) {
+        for (Documento d : personaRolService.listarDocumentosDePersonas(personas)) {
             String documento = d.getIdTipoDocumento().getNombre() + ": " + d.getValor();
             nuevos.merge(d.getIdPersona().getIdPersona(), documento, (previo, actual) -> previo + ", " + actual);
         }

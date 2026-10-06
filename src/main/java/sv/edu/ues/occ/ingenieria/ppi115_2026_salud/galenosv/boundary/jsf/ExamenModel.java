@@ -6,8 +6,8 @@ import jakarta.inject.Named;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ExamenDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ExamenService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Examen;
 
 @Named
@@ -17,7 +17,7 @@ public class ExamenModel extends ModelHandler<Examen> {
     private static final long serialVersionUID = 1L;
 
     @Inject
-    private ExamenDAO examenDAO;
+    private ExamenService examenService;
 
     private GenericLazyDataModel<Examen> lazyModel;
 
@@ -31,8 +31,8 @@ public class ExamenModel extends ModelHandler<Examen> {
     }
 
     @Override
-    public DAOInterface<Examen> getDAO() {
-        return examenDAO;
+    public ParentServiceInterface<Examen> getDAO() {
+        return examenService;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ExamenModel extends ModelHandler<Examen> {
     public Examen getRegistroById(String id) {
         try {
             UUID uuid = UUID.fromString(id);
-            return (Examen) examenDAO.buscar(uuid);
+            return (Examen) examenService.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(
                 Level.WARNING,

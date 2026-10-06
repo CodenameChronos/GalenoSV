@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ConsultaProcedimientoDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ConsultaProcedimientoPasoDAO;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaRolDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ConsultaProcedimientoService;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ConsultaProcedimientoPasoService;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaRolService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ConsultaProcedimiento;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.ConsultaProcedimientoPaso;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.PersonaRol;
@@ -26,18 +26,16 @@ public class ConsultaProcedimientoPasoModel extends ModelHandler<ConsultaProcedi
     private static final long serialVersionUID = 1L;
     
     @Inject
-    private ConsultaProcedimientoPasoDAO coppDAO;
+    private ConsultaProcedimientoPasoService coppService;
     
     @Inject
-    private ConsultaProcedimientoDAO conspDAO;
+    private ConsultaProcedimientoService conspService;
     
     @Inject
-    private PersonaRolDAO prDAO;
+    private PersonaRolService prService;
     
     private GenericLazyDataModel<ConsultaProcedimientoPaso> lazyModel;
 
-    // Estado de las pestañas de selección de entidades foráneas
-    /** Sin criterio de búsqueda se cargan todos los registros. */
     private static final int MAX_REGISTROS = Integer.MAX_VALUE;
 
     private String filtroConsultaProcedimiento;
@@ -52,8 +50,8 @@ public class ConsultaProcedimientoPasoModel extends ModelHandler<ConsultaProcedi
     }
 
     @Override
-    public DAOInterface<ConsultaProcedimientoPaso> getDAO() {
-        return coppDAO;
+    public ParentServiceInterface<ConsultaProcedimientoPaso> getDAO() {
+        return coppService;
     }
 
     public GenericLazyDataModel<ConsultaProcedimientoPaso> getLazyModel() {
@@ -69,7 +67,7 @@ public class ConsultaProcedimientoPasoModel extends ModelHandler<ConsultaProcedi
     public ConsultaProcedimientoPaso getRegistroById(String id) {
         try {
             UUID uuid = UUID.fromString(id);
-            return (ConsultaProcedimientoPaso) coppDAO.buscar(uuid);
+            return (ConsultaProcedimientoPaso) coppService.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING,
                 "ID inválido recibido para ConsultaProcedimientoPaso: " + id, ex);
@@ -81,25 +79,13 @@ public class ConsultaProcedimientoPasoModel extends ModelHandler<ConsultaProcedi
     public Object getIdByRegistro(ConsultaProcedimientoPaso registro) {
         return registro != null ? registro.getIdConsultaProcedimientoPaso() : null;
     }
-    
-    /**
-     * Busca según el filtro de la pestaña; si el filtro está vacío devuelve
-     * todos los registros.
-     */
+
     public void buscarConsultaProcedimiento() {
         String texto = filtroConsultaProcedimiento == null ? "" : filtroConsultaProcedimiento.trim();
-        resultadosConsultaProcedimiento = conspDAO.buscarPorNombreProcedimiento(texto, MAX_REGISTROS);
+        resultadosConsultaProcedimiento = conspService.buscarPorNombreProcedimiento(texto, MAX_REGISTROS);
     }
 
 
-    /**
-     * Etiqueta para la pestaña de selección y la columna de ConsultaProcedimiento:
-     * nombre del procedimiento más el nombre de la persona de la consulta a
-     * la que pertenece, para distinguir entre instancias del mismo
-     * procedimiento en consultas distintas.
-     * @param consp
-     * @return 
-     */
     public String etiquetaConsultaProcedimiento(ConsultaProcedimiento consp) {
         if (consp == null || consp.getIdProcedimiento() == null) {
             return "";
@@ -114,23 +100,11 @@ public class ConsultaProcedimientoPasoModel extends ModelHandler<ConsultaProcedi
         return nombreProcedimiento + " — " + nombrePersona;
     }
 
-    /**
-     * Busca según el filtro de la pestaña; si el filtro está vacío devuelve
-     * todos los registros.
-     */
     public void buscarPersonaRol() {
         String texto = filtroPersonaRol == null ? "" : filtroPersonaRol.trim();
-        resultadosPersonaRol = prDAO.buscarPorNombresApellidos(texto, MAX_REGISTROS);
+        resultadosPersonaRol = prService.buscarPorNombresApellidos(texto, MAX_REGISTROS);
     }
 
-
-    /**
-     * Etiqueta para la pestaña de selección y la columna de PersonaRol: nombre
-     * completo de la persona más su rol, para diferenciar cuando la misma
-     * persona tiene más de un rol asignado.
-     * @param pr
-     * @return 
-     */
     public String etiquetaPersonaRol(PersonaRol pr) {
         if (pr == null || pr.getIdPersona() == null) {
             return "";

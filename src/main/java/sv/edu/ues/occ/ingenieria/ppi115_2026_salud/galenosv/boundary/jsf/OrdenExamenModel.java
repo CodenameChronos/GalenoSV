@@ -3,8 +3,8 @@ package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.boundary.jsf;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.OrdenExamenDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.OrdenExamenService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.OrdenExamen;
 
 /**
@@ -18,15 +18,15 @@ public class OrdenExamenModel extends ModelHandler<OrdenExamen> {
     private static final long serialVersionUID = 1L;
     
     @Inject
-    private OrdenExamenDAO oeDAO;
+    private OrdenExamenService oeService;
 
     public OrdenExamenModel() {
         super(OrdenExamen.class);
     }
 
     @Override
-    public DAOInterface<OrdenExamen> getDAO() {
-        return oeDAO;
+    public ParentServiceInterface<OrdenExamen> getDAO() {
+        return oeService;
     }
 
     @Override

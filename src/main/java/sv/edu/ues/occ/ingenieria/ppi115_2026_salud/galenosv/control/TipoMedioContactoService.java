@@ -5,7 +5,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Procedimiento;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoMedioContacto;
 
 /**
  *
@@ -13,23 +13,23 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Procedimiento
  */
 @Stateless
 @LocalBean
-public class ProcedimientoDAO extends DefaultDAO<Procedimiento> {
+public class TipoMedioContactoService extends ParentService<TipoMedioContacto> {
 
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
-
-    public ProcedimientoDAO() {
-        super(Procedimiento.class);
+    
+    public TipoMedioContactoService() {
+        super(TipoMedioContacto.class);
     }
 
     @Override
     public EntityManager getEntityManager() {
         return em;
     }
-
-    public List<Procedimiento> buscarPorNombre(String texto, int max) {
+    
+    public List<TipoMedioContacto> buscarPorNombre(String texto, int max) {
         return getEntityManager()
-                .createNamedQuery("Procedimiento.findActiveByNombre", Procedimiento.class)
+                .createNamedQuery("TipoMedioContacto.findActiveByNombre", TipoMedioContacto.class)
                 .setParameter("nombre", "%" + texto.trim().toLowerCase() + "%")
                 .setMaxResults(max)
                 .getResultList();

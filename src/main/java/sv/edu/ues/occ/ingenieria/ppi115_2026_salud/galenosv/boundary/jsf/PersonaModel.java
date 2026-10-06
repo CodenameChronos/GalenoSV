@@ -3,16 +3,14 @@ package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.boundary.jsf;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
+
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.DAOInterface;
-import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaDAO;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ParentServiceInterface;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Persona;
 
 /**
@@ -26,7 +24,7 @@ public class PersonaModel extends ModelHandler<Persona> {
     private static final long serialVersionUID = 1L;
     
     @Inject
-    private PersonaDAO pDAO;
+    private PersonaService persService;
     
     @Inject
     private DocumentoModel documentoModel;
@@ -50,8 +48,8 @@ public class PersonaModel extends ModelHandler<Persona> {
     }
 
     @Override
-    public DAOInterface<Persona> getDAO() {
-        return pDAO;
+    public ParentServiceInterface<Persona> getDAO() {
+        return persService;
     }
 
     @Override
@@ -65,7 +63,7 @@ public class PersonaModel extends ModelHandler<Persona> {
     public Persona getRegistroById(String id) {
         try {
             UUID uuid = UUID.fromString(id);
-            return (Persona) pDAO.buscar(uuid);
+            return (Persona) persService.buscar(uuid);
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(getClass().getName()).log(Level.WARNING,
                 "ID inválido recibido para Persona: " + id, ex);
