@@ -172,6 +172,7 @@
                                             forceSelection="true"
                                             scrollHeight="250"
                                             minQueryLength="3"
+                                            disabled="#{personaRolModel.estado=='MODIFICAR'}"
                                             required="true"/>
 
                                         <p:outputLabel
@@ -190,6 +191,7 @@
                                             forceSelection="true"
                                             scrollHeight="250"
                                             minQueryLength="3"
+                                            disabled="#{personaRolModel.estado=='MODIFICAR'}"
                                             required="true"/>
 
                                     </p:panelGrid>
@@ -268,7 +270,9 @@
                                                         forceSelection="true"
                                                         scrollHeight="250"
                                                         minQueryLength="3"
-                                                        required="true"/>
+                                                        required="true"
+                                                        disabled="#{documentoModel.estado=='MODIFICAR'}"
+                                        />
 
                                     </p:panelGrid>
 
@@ -355,7 +359,9 @@
                                                         forceSelection="true"
                                                         scrollHeight="250"
                                                         minQueryLength="3"
-                                                        required="true"/>
+                                                        required="true"
+                                                        disabled="#{medioContactoModel.estado=='MODIFICAR'}"
+                                        />
 
 
                                     </p:panelGrid>

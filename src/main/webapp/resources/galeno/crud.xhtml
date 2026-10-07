@@ -97,10 +97,17 @@
 
                         <g:botonCrud
                             value="#{msg['boton.guardar']}"
-                            rendered="#{cc.attrs.modelo.estado=='CREAR'}"
                             styleClass="ui-button-raised ui-button-flat"
                             actionListener="#{cc.attrs.modelo.guardarHandler}"
                             update="pnlCrear pnlData :layout:messages"/>
+
+                        <g:botonCrud
+                                value="#{msg['boton.eliminar']}"
+                                rendered="#{cc.attrs.modelo.estado=='MODIFICAR'}"
+                                styleClass="ui-button-raised ui-button-danger"
+                                actionListener="#{cc.attrs.modelo.eliminarHandler}"
+                                process="@this"
+                                update="pnlCrear pnlData :layout:messages"/>
 
                         <g:botonCrud
                             value="#{msg['boton.cancelar']}"

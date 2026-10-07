@@ -123,15 +123,6 @@
                                                         process="@this"
                                                         update="@([id$=pnlArbol])"/>
 
-                                                <p:commandButton
-                                                        icon="pi pi-trash"
-                                                        rendered="#{procedimientoArbolModel.puedeEliminar(nodo)}"
-                                                        title="#{msg['boton.eliminar']}"
-                                                        actionListener="#{procedimientoArbolModel.eliminarPaso(nodo)}"
-                                                        onclick="if (!confirm('#{msg['procedimiento.arbol.confirmarEliminar']}')) return false;"
-                                                        process="@this"
-                                                        update="@([id$=pnlArbol])"/>
-
                                             </p:column>
 
                                         </p:treeTable>
