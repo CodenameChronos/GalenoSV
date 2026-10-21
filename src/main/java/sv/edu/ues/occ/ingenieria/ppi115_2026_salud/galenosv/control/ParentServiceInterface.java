@@ -16,6 +16,8 @@ public interface ParentServiceInterface<T> {
 
     public Object buscar(Object uuid) throws IllegalArgumentException, IllegalStateException;
 
+    public List<T> listarTodos();
+
     public List<T> findRange(int first, int max) throws IllegalArgumentException, IllegalStateException;
     
     public List<T> findRangeByCriterio(String propiedad, Object valor, int first, int max)

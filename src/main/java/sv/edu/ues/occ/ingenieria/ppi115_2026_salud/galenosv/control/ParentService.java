@@ -163,6 +163,17 @@ public abstract class ParentService<T> implements ParentServiceInterface<T> {
 
     }
 
+    @Override
+    public List<T> listarTodos () {
+        try {
+            return getEntityManager().createNamedQuery(entity + ".findAll")
+                    .getResultList();
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage());
+            throw new RuntimeException(ex);
+        }
+    }
+
     /**
      * Obtiene un rango paginado de registros de la entidad utilizando el
      * EntityManager.
