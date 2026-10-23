@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 @Entity
 @Table(name = "rol", schema = "public")
@@ -96,6 +97,7 @@ public class Rol implements Serializable {
         this.observaciones = (observaciones != null && !observaciones.isBlank()) ? observaciones.trim() : null;
     }
 
+    @JsonbTransient
     public List<PersonaRol> getPersonaRolList() {
         return personaRolList;
     }
@@ -104,6 +106,7 @@ public class Rol implements Serializable {
         this.personaRolList = personaRolList;
     }
 
+    @JsonbTransient
     public List<ProcedimientoPaso> getProcedimientoPasoList() {
         return procedimientoPasoList;
     }

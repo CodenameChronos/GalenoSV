@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 @Entity
 @Table(name = "clinica", schema = "public")
@@ -61,7 +62,7 @@ public class Clinica implements Serializable {
 
     @OneToMany(mappedBy = "idClinica", fetch = FetchType.LAZY)
     private List<PersonaRol> personaRolList;
-
+ 
     public Clinica() {
     }
 
@@ -115,8 +116,9 @@ public class Clinica implements Serializable {
         this.comentarios = (comentarios != null && !comentarios.isBlank()) ? comentarios.trim() : null;
     }
 
+    @JsonbTransient
     public List<PersonaRol> getPersonaRolList() {
-        return personaRolList;
+        return null;
     }
 
     public void setPersonaRolList(List<PersonaRol> personaRolList) {
