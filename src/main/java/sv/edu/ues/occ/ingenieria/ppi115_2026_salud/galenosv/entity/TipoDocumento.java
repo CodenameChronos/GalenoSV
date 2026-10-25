@@ -126,6 +126,7 @@ public class TipoDocumento implements Serializable {
         this.activo = activo;
     }
 
+    @JsonbTransient
     public List<Documento> getDocumentoList() {
         return documentoList;
     }
