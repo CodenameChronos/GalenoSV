@@ -33,7 +33,27 @@ import java.util.UUID;
     @NamedQuery(name = "Consulta.findByFechaFin", query = "SELECT c FROM Consulta c WHERE c.fechaFin = :fechaFin"),
     @NamedQuery(name = "Consulta.findByReferenciaExterna", query = "SELECT c FROM Consulta c WHERE c.referenciaExterna = :referenciaExterna"),
     @NamedQuery(name = "Consulta.findByObservaciones", query = "SELECT c FROM Consulta c WHERE c.observaciones = :observaciones"),
-    @NamedQuery(name = "Consulta.findByNombre", query = "SELECT c FROM Consulta c LEFT JOIN FETCH c.idPersonaRol pr LEFT JOIN FETCH pr.idPersona per WHERE UPPER(CONCAT(per.nombres, ' ', per.apellidos)) LIKE UPPER(:texto) ORDER BY c.fechaInicio DESC")
+    @NamedQuery(name = "Consulta.findByNombre", query = "SELECT c "
+            + "                                         FROM Consulta c "
+            + "                                         LEFT JOIN FETCH c.idPersonaRol pr "
+            + "                                         LEFT JOIN FETCH pr.idPersona per "
+            + "                                         WHERE UPPER(CONCAT(per.nombres, ' ', per.apellidos)) "
+            + "                                             LIKE UPPER(:texto) ORDER BY c.fechaInicio DESC"),
+
+    @NamedQuery(name = "Consulta.buscarPorClinicaYFechas", query = "SELECT c "
+            + "                                                     FROM Consulta c "
+            + "                                                     JOIN FETCH c.idPersonaRol pr "
+            + "                                                     JOIN FETCH pr.idPersona "
+            + "                                                     WHERE pr.idClinica = :clinica "
+            + "                                                     AND c.fechaInicio >= :desde "
+            + "                                                     AND c.fechaInicio <= :hasta "
+            + "                                                     ORDER BY c.fechaInicio DESC"),
+
+    @NamedQuery(name = "Consulta.contarPorClinicaYFechas", query = "SELECT COUNT(c) "
+            + "                                                     FROM Consulta c "
+            + "                                                     WHERE c.idPersonaRol.idClinica = :clinica "
+            + "                                                     AND c.fechaInicio >= :desde "
+            + "                                                     AND c.fechaInicio <= :hasta")
 })
 public class Consulta implements Serializable {
 

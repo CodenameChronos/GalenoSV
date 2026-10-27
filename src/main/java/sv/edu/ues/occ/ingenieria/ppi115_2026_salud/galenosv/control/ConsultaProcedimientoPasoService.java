@@ -24,9 +24,9 @@ public class ConsultaProcedimientoPasoService extends ParentService<ConsultaProc
     }
 
     protected String joinFetchClause() {
-        return "LEFT JOIN FETCH e.idConsultaProcedimiento cp "
-                + "LEFT JOIN FETCH cp.idProcedimiento "
-                + "LEFT JOIN FETCH cp.idConsulta c "
+        return "LEFT JOIN FETCH e.idConsultaProcedimiento consp "
+                + "LEFT JOIN FETCH consp.idProcedimiento "
+                + "LEFT JOIN FETCH consp.idConsulta c "
                 + "LEFT JOIN FETCH c.idPersonaRol prc "
                 + "LEFT JOIN FETCH prc.idPersona "
                 + "LEFT JOIN FETCH e.idPersonaRol pr "
@@ -38,25 +38,27 @@ public class ConsultaProcedimientoPasoService extends ParentService<ConsultaProc
     public List<ConsultaProcedimientoPaso> buscarPorConsultaProcedimiento(
             ConsultaProcedimiento consp, String texto, int max) {
         String patron = (texto == null || texto.isBlank()) ? null : "%" + texto.trim().toLowerCase() + "%";
-        return em.createQuery(
-                "SELECT cpp FROM ConsultaProcedimientoPaso cpp "
-                + "LEFT JOIN FETCH cpp.idPersonaRol pr "
-                + "LEFT JOIN FETCH pr.idPersona "
-                + "LEFT JOIN FETCH cpp.idProcedimientoPaso "
-                + "WHERE cpp.idConsultaProcedimiento = :consultaProcedimiento "
-                + "AND (:patron IS NULL OR LOWER(pr.idPersona.nombres) LIKE :patron OR LOWER(pr.idPersona.apellidos) LIKE :patron) "
-                + "ORDER BY cpp.fechaInicio")
+        return em.createNamedQuery("ConsultaProcedimientoPaso.buscarPorConsultaProcedimiento", ConsultaProcedimientoPaso.class)
                 .setParameter("consultaProcedimiento", consp)
                 .setParameter("patron", patron)
                 .setMaxResults(max)
                 .getResultList();
     }
 
-    public List<ConsultaProcedimientoPaso> listarPorConsultaProcedimiento(UUID idConsultaProcedimiento) {
+    public List<ConsultaProcedimientoPaso> listarPorConsultaProcedimiento(UUID idConsultaProcedimiento, int first, int max) {
         return em.createNamedQuery("ConsultaProcedimientoPaso.listarPorConsultaProcedimiento",
                         ConsultaProcedimientoPaso.class)
                 .setParameter("idConsultaProcedimiento", idConsultaProcedimiento)
+                .setFirstResult(first)
+                .setMaxResults(max)
                 .getResultList();
+    }
+    
+    public int contarPorConsultaProcedimiento(UUID idConsp) {
+        return em.createNamedQuery("ConsultaProcedimintoPaso.contarPorConsultaProcedimiento", Long.class)
+                .setParameter("idConsp", idConsp)
+                .getSingleResult()
+                .intValue();
     }
 
 }

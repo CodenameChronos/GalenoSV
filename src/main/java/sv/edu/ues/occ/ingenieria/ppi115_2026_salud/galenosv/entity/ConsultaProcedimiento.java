@@ -32,7 +32,20 @@ import java.util.UUID;
         @NamedQuery(name = "ConsultaProcedimiento.findByFechaInicio", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.fechaInicio = :fechaInicio"),
         @NamedQuery(name = "ConsultaProcedimiento.findByFechaFin", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.fechaFin = :fechaFin"),
         @NamedQuery(name = "ConsultaProcedimiento.findByObservaciones", query = "SELECT c FROM ConsultaProcedimiento c WHERE c.observaciones = :observaciones"),
-        @NamedQuery(name = "ConsultaProcedimiento.findByNombreProcedimiento", query = "SELECT consp FROM ConsultaProcedimiento consp LEFT JOIN FETCH consp.idProcedimiento LEFT JOIN FETCH consp.idConsulta c LEFT JOIN FETCH c.idPersonaRol pr LEFT JOIN FETCH pr.idPersona WHERE UPPER(consp.idProcedimiento.nombre) LIKE UPPER(:texto)")
+        @NamedQuery(name = "ConsultaProcedimiento.findByNombreProcedimiento", query = "SELECT consp "
+                + "                                                                     FROM ConsultaProcedimiento consp "
+                + "                                                                     LEFT JOIN FETCH consp.idProcedimiento "
+                + "                                                                     LEFT JOIN FETCH consp.idConsulta c "
+                + "                                                                     LEFT JOIN FETCH c.idPersonaRol pr "
+                + "                                                                     LEFT JOIN FETCH pr.idPersona "
+                + "                                                                     WHERE UPPER(consp.idProcedimiento.nombre) "
+                + "                                                                         LIKE UPPER(:texto)"),
+        @NamedQuery(name = "ConsultaProcedimiento.listarPorConsulta", query = "SELECT consp "
+                + "                                                             FROM ConsultaProcedimiento consp "
+                + "                                                             JOIN FETCH consp.idProcedimiento "
+                + "                                                             WHERE consp.idConsulta = :consulta "
+                + "                                                             ORDER BY cp.fechaInicio DESC"),
+        @NamedQuery(name = "ConsultaProcedimiento.contarPorConsulta", query = "SELECT COUNT(consp) FROM ConsultaProcedimiento cp WHERE cp.idConsulta = :consulta")
 })
 public class ConsultaProcedimiento implements Serializable {
 

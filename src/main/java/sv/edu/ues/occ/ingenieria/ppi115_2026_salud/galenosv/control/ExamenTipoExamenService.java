@@ -58,10 +58,8 @@ public class ExamenTipoExamenService extends ParentService<ExamenTipoExamen> {
         }
 
         return getEntityManager()
-                .createQuery(
-                        "SELECT COUNT(e) "
-                        + "FROM ExamenTipoExamen e "
-                        + "WHERE e.idExamen.idExamen = :idExamen",
+                .createNamedQuery(
+                        "ExamenTipoExamen.countByIdExamen",
                         Long.class)
                 .setParameter("idExamen", uuid)
                 .getSingleResult()

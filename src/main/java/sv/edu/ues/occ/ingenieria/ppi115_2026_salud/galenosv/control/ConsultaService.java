@@ -40,12 +40,8 @@ public class ConsultaService extends ParentService<Consulta> {
    
    public List<Consulta> buscarPorClinicaYFechas(Clinica clinica, Date desde, Date hasta,
                                                   int first, int max) {
-        return getEntityManager().createQuery(
-                        "SELECT c FROM Consulta c "
-                                + "JOIN FETCH c.idPersonaRol pr JOIN FETCH pr.idPersona "
-                                + "WHERE pr.idClinica = :clinica "
-                                + "AND c.fechaInicio >= :desde AND c.fechaInicio <= :hasta "
-                                + "ORDER BY c.fechaInicio DESC",
+        return getEntityManager().createNamedQuery(
+                        "Consulta.buscarPorClinicaYFechas",
                         Consulta.class)
                 .setParameter("clinica", clinica)
                 .setParameter("desde", desde)
@@ -56,10 +52,8 @@ public class ConsultaService extends ParentService<Consulta> {
     }
 
     public long contarPorClinicaYFechas(Clinica clinica, Date desde, Date hasta) {
-        return getEntityManager().createQuery(
-                        "SELECT COUNT(c) FROM Consulta c "
-                                + "WHERE c.idPersonaRol.idClinica = :clinica "
-                                + "AND c.fechaInicio >= :desde AND c.fechaInicio <= :hasta",
+        return getEntityManager().createNamedQuery(
+                        "Consulta.contarPorClinicaYFechas",
                         Long.class)
                 .setParameter("clinica", clinica)
                 .setParameter("desde", desde)

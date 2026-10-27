@@ -29,6 +29,7 @@ import java.util.UUID;
     @NamedQuery(name = "ExamenTipoExamen.findByObservaciones", query = "SELECT e FROM ExamenTipoExamen e WHERE e.observaciones = :observaciones"),
     @NamedQuery(name = "ExamenTipoExamen.findByIdExamen", query = "SELECT e FROM ExamenTipoExamen e WHERE e.idExamen.idExamen = :idExamen"),
     @NamedQuery(name = "ExamenTipoExamen.countByIdTipoExamen", query = "SELECT COUNT(e) FROM ExamenTipoExamen e WHERE e.idTipoExamen.idTipoExamen = :idTipoExamen"),
+    @NamedQuery(name = "ExamenTipoExamen.countByIdExamen", query = "SELECT COUNT(e) FROM ExamenTipoExamen e WHERE e.idExamen.idExamen = :idExamen"),
     @NamedQuery(name = "ExamenTipoExamen.findRangePadresHijos", query = "SELECT et FROM ExamenTipoExamen et LEFT JOIN FETCH et.idExamen LEFT JOIN FETCH et.idTipoExamen ORDER BY et.fechaCreacion DESC, et.idExamenTipoExamen"),
     @NamedQuery(name = "ExamenTipoExamen.buscarPadresHijos", query = "SELECT et FROM ExamenTipoExamen et LEFT JOIN FETCH et.idExamen LEFT JOIN FETCH et.idTipoExamen WHERE et.idExamenTipoExamen = :id")
     })

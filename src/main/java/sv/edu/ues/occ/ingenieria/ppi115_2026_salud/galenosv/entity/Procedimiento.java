@@ -25,12 +25,7 @@ import java.util.UUID;
     @NamedQuery(name = "Procedimiento.findByNombre", query = "SELECT p FROM Procedimiento p WHERE p.nombre = :nombre"),
     @NamedQuery(name = "Procedimiento.findByActivo", query = "SELECT p FROM Procedimiento p WHERE p.activo = :activo"),
     @NamedQuery(name = "Procedimiento.findByObservaciones", query = "SELECT p FROM Procedimiento p WHERE p.observaciones = :observaciones"),
-    @NamedQuery(
-            name = "Procedimiento.findActiveByNombre",
-            query = "SELECT p FROM Procedimiento p "
-            + "WHERE UPPER(p.nombre) LIKE UPPER(:nombre) "
-            + "AND p.activo = true "
-            + "ORDER BY p.nombre"
+    @NamedQuery(name = "Procedimiento.findActiveByNombre", query = "SELECT p FROM Procedimiento p WHERE UPPER(p.nombre) LIKE UPPER(:nombre) AND p.activo = true ORDER BY p.nombre"
     )})
 public class Procedimiento implements Serializable {
 

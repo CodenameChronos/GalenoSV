@@ -99,7 +99,7 @@ public class ConsultaProcedimientoModel extends ModelHandler<ConsultaProcedimien
         if (consulta == null) {
             return List.of();
         }
-        List<ConsultaProcedimiento> pagina = conspService.listarPorConsulta(consulta, first, max);
+        List<ConsultaProcedimiento> pagina = conspService.listarPorConsulta(consulta.getIdConsulta(), first, max);
         cargarPasos(pagina);
         return pagina;
     }
@@ -107,13 +107,13 @@ public class ConsultaProcedimientoModel extends ModelHandler<ConsultaProcedimien
     @Override
     public int contar() {
         Consulta consulta = consultaActual();
-        return consulta == null ? 0 : (int) conspService.contarPorConsulta(consulta);
+        return consulta == null ? 0 : (int) conspService.contarPorConsulta(consulta.getIdConsulta());
     }
 
     private void cargarPasos(List<ConsultaProcedimiento> pagina) {
-        for (ConsultaProcedimiento cp : pagina) {
-            pasosPorConsp.put(cp.getIdConsultaProcedimiento(),
-                    pasoService.listarPorConsultaProcedimiento(cp.getIdConsultaProcedimiento()));
+        for (ConsultaProcedimiento consp : pagina) {
+            pasosPorConsp.put(consp.getIdConsultaProcedimiento(),
+                    pasoService.listarPorConsultaProcedimiento(consp.getIdConsultaProcedimiento(), 0, pasoService.contarPorConsultaProcedimiento(consp.getIdConsultaProcedimiento())));
         }
     }
 

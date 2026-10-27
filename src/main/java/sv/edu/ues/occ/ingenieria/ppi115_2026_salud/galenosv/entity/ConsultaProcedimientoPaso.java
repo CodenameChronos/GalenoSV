@@ -33,7 +33,30 @@ import java.util.UUID;
     @NamedQuery(name = "ConsultaProcedimientoPaso.findByFechaInicio", query = "SELECT c FROM ConsultaProcedimientoPaso c WHERE c.fechaInicio = :fechaInicio"),
     @NamedQuery(name = "ConsultaProcedimientoPaso.findByFechaFin", query = "SELECT c FROM ConsultaProcedimientoPaso c WHERE c.fechaFin = :fechaFin"),
     @NamedQuery(name = "ConsultaProcedimientoPaso.findByEstado", query = "SELECT c FROM ConsultaProcedimientoPaso c WHERE c.estado = :estado"),
-    @NamedQuery(name = "ConsultaProcedimientoPaso.listarPorConsultaProcedimiento", query = "SELECT cpp FROM ConsultaProcedimientoPaso cpp LEFT JOIN FETCH cpp.idProcedimientoPaso LEFT JOIN FETCH cpp.idPersonaRol pr LEFT JOIN FETCH pr.idPersona LEFT JOIN FETCH pr.idRol WHERE cpp.idConsultaProcedimiento.idConsultaProcedimiento = :idConsultaProcedimiento ORDER BY cpp.fechaInicio")})
+    @NamedQuery(name = "ConsultaProcedimientoPaso.buscarPorConsultaProcedimiento", query = "SELECT cpp "
+            + "                                                                             FROM ConsultaProcedimientoPaso conspp "
+            + "                                                                             LEFT JOIN FETCH conspp.idPersonaRol pr "
+            + "                                                                             LEFT JOIN FETCH pr.idPersona "
+            + "                                                                             LEFT JOIN FETCH conspp.idProcedimientoPaso "
+            + "                                                                             WHERE conspp.idConsultaProcedimiento = :consultaProcedimiento "
+            + "                                                                             AND (:patron IS NULL OR LOWER(pr.idPersona.nombres) "
+            + "                                                                                 LIKE :patron OR LOWER(pr.idPersona.apellidos) LIKE :patron) "
+            + "                                                                             ORDER BY cpp.fechaInicio"),
+    @NamedQuery(name = "ConsultaProcedimientoPaso.listarPorConsultaProcedimiento", query = "SELECT cpp "
+            + "                                                                             FROM ConsultaProcedimientoPaso cpp "
+            + "                                                                             LEFT JOIN FETCH cpp.idProcedimientoPaso "
+            + "                                                                             LEFT JOIN FETCH cpp.idPersonaRol pr "
+            + "                                                                             LEFT JOIN FETCH pr.idPersona "
+            + "                                                                             LEFT JOIN FETCH pr.idRol "
+            + "                                                                             WHERE cpp.idConsultaProcedimiento.idConsultaProcedimiento = :idConsultaProcedimiento "
+            + "                                                                             ORDER BY cpp.fechaInicio"),
+    
+    
+    @NamedQuery(name = "ConsultaProcedimientoPaso.contarPorConsultaProcedimiento", query = "SELECT count(conspp) "
+            + "                                                                             FROM ConsultaProcedimientoPaso conspp "
+            + "                                                                             LEFT JOIN FETCH ConsultaProcedimiento consp "
+            + "                                                                             WHERE consp.idConsultaProcedimiento = :idConsp")
+})
 public class ConsultaProcedimientoPaso implements Serializable {
 
     private static final long serialVersionUID = 1L;

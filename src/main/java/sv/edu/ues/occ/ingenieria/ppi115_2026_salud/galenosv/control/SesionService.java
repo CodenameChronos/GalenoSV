@@ -24,12 +24,10 @@ public class SesionService {
      * @return las clínicas que coinciden, ordenadas por nombre.
      */
     public List<Clinica> buscarClinicas(String texto, int max) {
-        return em.createQuery(
-                        "SELECT c FROM Clinica c "
-                                + "WHERE LOWER(c.nombre) LIKE :texto "
-                                + "ORDER BY c.nombre",
+        return em.createNamedQuery(
+                        "Clinica.findByNombreLike",
                         Clinica.class)
-                .setParameter("texto", patron(texto))
+                .setParameter("nombre", patron(texto))
                 .setMaxResults(max)
                 .getResultList();
     }
@@ -44,12 +42,10 @@ public class SesionService {
      * @return los roles que coinciden, ordenados por nombre.
      */
     public List<Rol> buscarRoles(String texto, int max) {
-        return em.createQuery(
-                        "SELECT r FROM Rol r "
-                                + "WHERE LOWER(r.nombre) LIKE :texto "
-                                + "ORDER BY r.nombre",
+        return em.createNamedQuery(
+                        "Rol.findByNombreLike",
                         Rol.class)
-                .setParameter("texto", patron(texto))
+                .setParameter("nombre", patron(texto))
                 .setMaxResults(max)
                 .getResultList();
     }
@@ -68,14 +64,8 @@ public class SesionService {
      * @return las asignaciones que coinciden (vacía si nadie tiene ese rol allí).
      */
     public List<PersonaRol> buscarPersonaRol(Clinica clinica, Rol rol, String texto, int max) {
-        return em.createQuery(
-                        "SELECT pr FROM PersonaRol pr "
-                                + "JOIN FETCH pr.idPersona p "
-                                + "JOIN FETCH pr.idClinica "
-                                + "JOIN FETCH pr.idRol "
-                                + "WHERE pr.idClinica = :clinica AND pr.idRol = :rol "
-                                + "AND LOWER(CONCAT(p.nombres, ' ', p.apellidos)) LIKE :texto "
-                                + "ORDER BY p.apellidos, p.nombres",
+        return em.createNamedQuery(
+                        "PersonaRol.findByNombreApellidosClinica",
                         PersonaRol.class)
                 .setParameter("clinica", clinica)
                 .setParameter("rol", rol)

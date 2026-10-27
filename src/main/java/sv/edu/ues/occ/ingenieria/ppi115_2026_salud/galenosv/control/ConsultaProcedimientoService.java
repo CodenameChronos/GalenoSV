@@ -48,12 +48,9 @@ public class ConsultaProcedimientoService extends ParentService<ConsultaProcedim
                .getResultList();
    }
 
-    public List<ConsultaProcedimiento> listarPorConsulta(Consulta consulta, int first, int max) {
-        return getEntityManager().createQuery(
-                        "SELECT cp FROM ConsultaProcedimiento cp "
-                                + "JOIN FETCH cp.idProcedimiento "
-                                + "WHERE cp.idConsulta = :consulta "
-                                + "ORDER BY cp.fechaInicio DESC",
+    public List<ConsultaProcedimiento> listarPorConsulta(UUID consulta, int first, int max) {
+        return getEntityManager().createNamedQuery(
+                        "ConsultaProcedimiento.listarPorConsulta",
                         ConsultaProcedimiento.class)
                 .setParameter("consulta", consulta)
                 .setFirstResult(first)
@@ -61,21 +58,19 @@ public class ConsultaProcedimientoService extends ParentService<ConsultaProcedim
                 .getResultList();
     }
 
-    public long contarPorConsulta(Consulta consulta) {
-        return getEntityManager().createQuery(
-                        "SELECT COUNT(cp) FROM ConsultaProcedimiento cp WHERE cp.idConsulta = :consulta",
+    public long contarPorConsulta(UUID consulta) {
+        return getEntityManager().createNamedQuery(
+                        "ConsultaProcedimiento.contarPorConsulta",
                         Long.class)
                 .setParameter("consulta", consulta)
                 .getSingleResult();
     }
 
     public List<Procedimiento> buscarProcedimientosActivos(String texto, int max) {
-        return getEntityManager().createQuery(
-                        "SELECT p FROM Procedimiento p "
-                                + "WHERE p.activo = true AND LOWER(p.nombre) LIKE :texto "
-                                + "ORDER BY p.nombre",
+        return getEntityManager().createNamedQuery(
+                "Procedimiento.findActiveByNombre",
                         Procedimiento.class)
-                .setParameter("texto", "%" + texto.trim().toLowerCase() + "%")
+                .setParameter("nombre", "%" + texto.trim().toLowerCase() + "%")
                 .setMaxResults(max)
                 .getResultList();
     }
