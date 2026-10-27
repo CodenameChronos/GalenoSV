@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 @Entity
 @Table(name = "procedimiento", schema = "public")
@@ -91,6 +92,7 @@ public class Procedimiento implements Serializable {
         this.observaciones = (observaciones != null && !observaciones.isBlank()) ? observaciones.trim() : null;
     }
 
+    @JsonbTransient
     public List<ProcedimientoPaso> getProcedimientoPasoList() {
         return procedimientoPasoList;
     }

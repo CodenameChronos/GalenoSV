@@ -46,7 +46,7 @@ public class CorsFilter implements ContainerResponseFilter{
     }
     
     String crearListaHeaders(List<String> headers, String defaultHeaders) {
-        if ( headers.isEmpty() || headers.isEmpty()) {
+        if ( headers == null || headers.isEmpty()) {
             return defaultHeaders;
         }
         StringBuilder sb = new StringBuilder();

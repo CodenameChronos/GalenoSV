@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 @Entity
 @Table(name = "consulta_procedimiento_paso", schema = "public")
@@ -33,7 +34,7 @@ import java.util.UUID;
     @NamedQuery(name = "ConsultaProcedimientoPaso.findByFechaInicio", query = "SELECT c FROM ConsultaProcedimientoPaso c WHERE c.fechaInicio = :fechaInicio"),
     @NamedQuery(name = "ConsultaProcedimientoPaso.findByFechaFin", query = "SELECT c FROM ConsultaProcedimientoPaso c WHERE c.fechaFin = :fechaFin"),
     @NamedQuery(name = "ConsultaProcedimientoPaso.findByEstado", query = "SELECT c FROM ConsultaProcedimientoPaso c WHERE c.estado = :estado"),
-    @NamedQuery(name = "ConsultaProcedimientoPaso.buscarPorConsultaProcedimiento", query = "SELECT cpp "
+    @NamedQuery(name = "ConsultaProcedimientoPaso.buscarPorConsultaProcedimiento", query = "SELECT conspp "
             + "                                                                             FROM ConsultaProcedimientoPaso conspp "
             + "                                                                             LEFT JOIN FETCH conspp.idPersonaRol pr "
             + "                                                                             LEFT JOIN FETCH pr.idPersona "
@@ -41,7 +42,7 @@ import java.util.UUID;
             + "                                                                             WHERE conspp.idConsultaProcedimiento = :consultaProcedimiento "
             + "                                                                             AND (:patron IS NULL OR LOWER(pr.idPersona.nombres) "
             + "                                                                                 LIKE :patron OR LOWER(pr.idPersona.apellidos) LIKE :patron) "
-            + "                                                                             ORDER BY cpp.fechaInicio"),
+            + "                                                                             ORDER BY conspp.fechaInicio"),
     @NamedQuery(name = "ConsultaProcedimientoPaso.listarPorConsultaProcedimiento", query = "SELECT cpp "
             + "                                                                             FROM ConsultaProcedimientoPaso cpp "
             + "                                                                             LEFT JOIN FETCH cpp.idProcedimientoPaso "
@@ -149,6 +150,7 @@ public class ConsultaProcedimientoPaso implements Serializable {
         this.estado = estado;
     }
 
+    @JsonbTransient
     public ConsultaProcedimiento getIdConsultaProcedimiento() {
         return idConsultaProcedimiento;
     }

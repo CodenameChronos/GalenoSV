@@ -44,8 +44,8 @@ import java.util.UUID;
                 + "                                                             FROM ConsultaProcedimiento consp "
                 + "                                                             JOIN FETCH consp.idProcedimiento "
                 + "                                                             WHERE consp.idConsulta = :consulta "
-                + "                                                             ORDER BY cp.fechaInicio DESC"),
-        @NamedQuery(name = "ConsultaProcedimiento.contarPorConsulta", query = "SELECT COUNT(consp) FROM ConsultaProcedimiento cp WHERE cp.idConsulta = :consulta")
+                + "                                                             ORDER BY consp.fechaInicio DESC"),
+        @NamedQuery(name = "ConsultaProcedimiento.contarPorConsulta", query = "SELECT COUNT(cp) FROM ConsultaProcedimiento cp WHERE cp.idConsulta = :consulta")
 })
 public class ConsultaProcedimiento implements Serializable {
 
@@ -145,6 +145,7 @@ public class ConsultaProcedimiento implements Serializable {
         this.consultaProcedimientoPasoList = consultaProcedimientoPasoList;
     }
 
+    @JsonbTransient
     public Consulta getIdConsulta() {
         return idConsulta;
     }

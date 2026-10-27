@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 @Entity
 @Table(name = "tipo_medio_contacto", schema = "public")
@@ -120,6 +121,7 @@ public class TipoMedioContacto implements Serializable {
         this.activo = activo;
     }
 
+    @JsonbTransient
     public List<MedioContacto> getMedioContactoList() {
         return medioContactoList;
     }

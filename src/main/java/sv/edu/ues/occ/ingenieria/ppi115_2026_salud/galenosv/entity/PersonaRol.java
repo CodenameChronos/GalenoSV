@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 @Entity
 @Table(name = "persona_rol", schema = "public")
@@ -118,6 +119,7 @@ public class PersonaRol implements Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 
+    @JsonbTransient
     public List<ConsultaProcedimientoPaso> getConsultaProcedimientoPasoList() {
         return consultaProcedimientoPasoList;
     }
@@ -150,6 +152,7 @@ public class PersonaRol implements Serializable {
         this.idRol = idRol;
     }
 
+    @JsonbTransient
     public List<Consulta> getConsultaList() {
         return consultaList;
     }

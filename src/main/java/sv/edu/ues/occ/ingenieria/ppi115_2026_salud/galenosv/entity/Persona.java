@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import jakarta.json.bind.annotation.JsonbTransient;
 
 @Entity
 @Table(name = "persona", schema = "public")
@@ -137,6 +138,7 @@ public String getNombreCompleto() {
         this.fechaCreacion = fechaCreacion;
     }
 
+    @JsonbTransient
     public List<MedioContacto> getMedioContactoList() {
         return medioContactoList;
     }
@@ -145,6 +147,7 @@ public String getNombreCompleto() {
         this.medioContactoList = medioContactoList;
     }
 
+    @JsonbTransient
     public List<Documento> getDocumentoList() {
         return documentoList;
     }
@@ -153,6 +156,7 @@ public String getNombreCompleto() {
         this.documentoList = documentoList;
     }
 
+    @JsonbTransient
     public List<PersonaRol> getPersonaRolList() {
         return personaRolList;
     }
