@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -49,9 +50,11 @@ public class Examen implements Serializable {
     @Column(name = "observaciones", length = 1000)
     private String observaciones;
 
+    @JsonbTransient
     @OneToMany(mappedBy = "idExamen", fetch = FetchType.LAZY)
     private List<ExamenTipoExamen> examenTipoExamenList;
 
+    @JsonbTransient
     @OneToMany(mappedBy = "idExamen", fetch = FetchType.LAZY)
     private List<ProcedimientoPasoExamen> procedimientoPasoExamenList;
 
