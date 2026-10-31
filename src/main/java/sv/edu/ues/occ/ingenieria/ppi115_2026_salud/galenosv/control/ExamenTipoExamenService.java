@@ -200,5 +200,15 @@ public class ExamenTipoExamenService extends ParentService<ExamenTipoExamen> {
                 .setParameter("idExamen", idExamen)
                 .executeUpdate();
     }
-
+    
+    public boolean existeRelacion(UUID idExamen, UUID idTipoExamen) {
+    return em.createQuery(
+                    "SELECT COUNT(e) FROM ExamenTipoExamen e "
+                            + "WHERE e.idExamen.idExamen = :idExamen "
+                            + "AND e.idTipoExamen.idTipoExamen = :idTipoExamen",
+                    Long.class)
+            .setParameter("idExamen", idExamen)
+            .setParameter("idTipoExamen", idTipoExamen)
+            .getSingleResult() > 0;
+}
 }
