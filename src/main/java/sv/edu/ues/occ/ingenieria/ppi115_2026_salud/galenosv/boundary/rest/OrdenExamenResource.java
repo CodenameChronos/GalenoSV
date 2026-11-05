@@ -156,7 +156,7 @@ public class OrdenExamenResource implements Serializable {
     @GET
     public Response findByRange(
             @PathParam("idConsultaProcedimientoPaso") UUID idConsultaProcedimientoPaso,
-            @QueryParam("primero")
+            @QueryParam("first")
             @DefaultValue("0") int first,
             @QueryParam("max")
             @Max(50)

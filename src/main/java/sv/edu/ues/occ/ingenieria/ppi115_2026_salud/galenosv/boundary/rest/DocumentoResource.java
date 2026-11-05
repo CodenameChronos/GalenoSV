@@ -120,7 +120,7 @@ public class DocumentoResource implements Serializable {
             // Asigna el valor del parametro idPersona definido
             // en el Path propio de la clase
             @PathParam("idPersona") UUID idPersona,
-            @QueryParam("primero")
+            @QueryParam("first")
             @DefaultValue("0") int first,
             @QueryParam("max")
             @Max(50)
