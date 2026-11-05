@@ -16,6 +16,13 @@ public class SesionService {
     @PersistenceContext(unitName = "Galeno-PU")
     private EntityManager em;
 
+
+    /** Convierte lo escrito en un patrón LIKE "contiene", en minúsculas. */
+    private String patron(String texto) {
+        return "%" + texto.trim().toLowerCase() + "%";
+    }
+
+
     /**
      * Busca clínicas cuyo nombre contenga el texto (sin distinguir mayúsculas).
      *
@@ -72,11 +79,6 @@ public class SesionService {
                 .setParameter("texto", patron(texto))
                 .setMaxResults(max)
                 .getResultList();
-    }
-
-    /** Convierte lo escrito en un patrón LIKE "contiene", en minúsculas. */
-    private String patron(String texto) {
-        return "%" + texto.trim().toLowerCase() + "%";
     }
 
 }

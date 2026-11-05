@@ -51,21 +51,6 @@ public class ExamenTipoExamenService extends ParentService<ExamenTipoExamen> {
                 .getResultList();
     }
 
-    public int contarPorIdExamen(final UUID uuid) {
-
-        if (uuid == null) {
-            return 0;
-        }
-
-        return getEntityManager()
-                .createNamedQuery(
-                        "ExamenTipoExamen.countByIdExamen",
-                        Long.class)
-                .setParameter("idExamen", uuid)
-                .getSingleResult()
-                .intValue();
-    }
-
     @Override
     public List<ExamenTipoExamen> findRange(int first, int max) {
 
@@ -184,19 +169,6 @@ public class ExamenTipoExamenService extends ParentService<ExamenTipoExamen> {
                 em.persist(nuevaRelacion);
             }
         }
-    }
-
-    public void eliminarTipos(UUID idExamen) {
-
-        if (idExamen == null) {
-            return;
-        }
-
-        em.createQuery(
-                        "DELETE FROM ExamenTipoExamen e "
-                                + "WHERE e.idExamen.idExamen = :idExamen")
-                .setParameter("idExamen", idExamen)
-                .executeUpdate();
     }
 
 }

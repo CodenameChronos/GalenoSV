@@ -24,14 +24,14 @@ public class ClinicaModel extends ModelHandler<Clinica> {
     private ClinicaService clService;
     
     private GenericLazyDataModel<Clinica> lazyModel;
+
+    public GenericLazyDataModel<Clinica> getLazyModel() {
+        return lazyModel;
+    }
     
     public ClinicaModel() {
         super(Clinica.class);
         this.lazyModel = new GenericLazyDataModel<>(this);
-    }
-    
-    public GenericLazyDataModel<Clinica> getLazyModel() {
-        return lazyModel;
     }
 
     @Override
