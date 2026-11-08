@@ -43,9 +43,9 @@ import java.util.UUID;
         @NamedQuery(name = "ConsultaProcedimiento.listarPorConsulta", query = "SELECT consp "
                 + "                                                             FROM ConsultaProcedimiento consp "
                 + "                                                             JOIN FETCH consp.idProcedimiento "
-                + "                                                             WHERE consp.idConsulta = :consulta "
+                + "                                                             WHERE consp.idConsulta.idConsulta = :consulta "
                 + "                                                             ORDER BY consp.fechaInicio DESC"),
-        @NamedQuery(name = "ConsultaProcedimiento.contarPorConsulta", query = "SELECT COUNT(cp) FROM ConsultaProcedimiento cp WHERE cp.idConsulta = :consulta")
+        @NamedQuery(name = "ConsultaProcedimiento.contarPorConsulta", query = "SELECT COUNT(cp) FROM ConsultaProcedimiento cp WHERE cp.idConsulta.idConsulta = :consulta")
 })
 public class ConsultaProcedimiento implements Serializable {
 

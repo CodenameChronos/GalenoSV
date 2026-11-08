@@ -48,17 +48,17 @@
                                         columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
                                         contentStyleClass="align-items-baseline ui-fluid">
 
+                                    <p:outputLabel for="activo" value="#{msg['campo.comun.activo']}"/>
+                                    <p:toggleSwitch
+                                            id="activo"
+                                            value="#{procedimientoModel.registroActual.activo}"/>
+                                    
                                     <p:outputLabel for="nombre" value="#{msg['campo.comun.nombre']}"/>
                                     <p:inputText
                                             id="nombre"
                                             value="#{procedimientoModel.registroActual.nombre}"
                                             required="true"
                                             requiredMessage="#{msg['procedimiento.error.nombre']}"/>
-
-                                    <p:outputLabel for="activo" value="#{msg['campo.comun.activo']}"/>
-                                    <p:toggleSwitch
-                                            id="activo"
-                                            value="#{procedimientoModel.registroActual.activo}"/>
 
                                     <p:outputLabel for="observaciones" value="#{msg['campo.comun.observaciones']}"/>
                                     <p:inputTextarea
@@ -158,27 +158,24 @@
                                                     required="true"
                                                     requiredMessage="#{msg['procedimiento.arbol.error.nombre']}"/>
 
-                                            <p:outputLabel for="rolPaso" value="#{msg['rol.titulo']}"/>
-                                            <p:selectOneMenu
-                                                    id="rolPaso"
-                                                    value="#{procedimientoArbolModel.rolForm}"
-                                                    disabled="#{procedimientoArbolModel.modoEdicion}"
-                                                    converter="entityConverter"
-                                                    required="true"
-                                                    requiredMessage="#{msg['procedimiento.arbol.error.rol']}">
+                                            <p:outputLabel
+                                            for="idRol"
+                                            value="#{msg['procedimientoPaso.rol']}"/>
 
-                                                <f:selectItem
-                                                        itemLabel="#{msg['procedimiento.estado.seleccione']}"
-                                                        itemValue="#{null}"
-                                                        noSelectionOption="true"/>
-
-                                                <f:selectItems
-                                                        value="#{procedimientoArbolModel.roles}"
-                                                        var="rl"
-                                                        itemLabel="#{rl.nombre}"
-                                                        itemValue="#{rl}"/>
-
-                                            </p:selectOneMenu>
+                                            <p:autoComplete
+                                                id="idRol"
+                                                dropdown="true"
+                                                value="#{procedimientoArbolModel.rolForm}"
+                                                completeMethod="#{procedimientoArbolModel.completarRol}"
+                                                converter="entityConverter"
+                                                var="rol"
+                                                itemLabel="#{rol.nombre}"
+                                                itemValue="#{rol}"
+                                                forceSelection="true"
+                                                scrollHeight="250"
+                                                minQueryLength="3"
+                                                disabled="#{procedimientoArbolModel.modoEdicion}"
+                                                required="true"/>
 
                                             <p:outputLabel value="#{msg['procedimiento.arbol.dependeDe']}"/>
                                             <p:inputText

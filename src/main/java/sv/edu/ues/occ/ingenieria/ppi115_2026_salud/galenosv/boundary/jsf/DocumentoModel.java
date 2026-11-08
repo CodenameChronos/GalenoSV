@@ -109,5 +109,9 @@ public class DocumentoModel extends ModelHandler<Documento> {
             registroActual.setIdPersona(personaFiltro);
         }
     }
+    
+    public void alCambiarTipoDocumento () {
+        this.registroActual.setValor(null);
+    }
 
 }

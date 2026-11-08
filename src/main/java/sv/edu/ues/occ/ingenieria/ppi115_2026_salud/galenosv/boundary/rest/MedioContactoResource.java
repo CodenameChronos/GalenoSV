@@ -134,7 +134,7 @@ public class MedioContactoResource implements Serializable {
     @GET
     public Response findByRange(
             @PathParam("idPersona") UUID idPersona,
-            @QueryParam("primero") @DefaultValue("0") int first,
+            @QueryParam("first") @DefaultValue("0") int first,
             @QueryParam("max") @DefaultValue("50") @Max(50) int max) {
 
         if (first < 0 || max <= 0 || max > 50) {

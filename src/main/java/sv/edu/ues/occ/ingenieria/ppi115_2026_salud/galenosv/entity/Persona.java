@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -40,7 +41,8 @@ import jakarta.json.bind.annotation.JsonbTransient;
 public class Persona implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
+    
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_persona")
@@ -67,13 +69,16 @@ public class Persona implements Serializable {
     @Column(name = "fecha_creacion", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion = new Date();
-
+    
+    @JsonbTransient
     @OneToMany(mappedBy = "idPersona", fetch = FetchType.LAZY)
     private List<MedioContacto> medioContactoList;
-
+    
+    @JsonbTransient
     @OneToMany(mappedBy = "idPersona", fetch = FetchType.LAZY)
     private List<Documento> documentoList;
-
+    
+    @JsonbTransient
     @OneToMany(mappedBy = "idPersona", fetch = FetchType.LAZY)
     private List<PersonaRol> personaRolList;
     

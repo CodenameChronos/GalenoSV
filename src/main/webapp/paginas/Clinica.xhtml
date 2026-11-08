@@ -40,19 +40,10 @@
 
                         <f:facet name="formulario">
                             <p:panelGrid
-                                columns="4"
+                                columns="2"
                                 layout="grid"
                                 columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
                                 contentStyleClass="align-items-baseline ui-fluid">
-
-                                <p:outputLabel
-                                    for="Nombres"
-                                    value="#{msg['campo.comun.nombre']}"/>
-
-                                <p:inputText
-                                    id="Nombres"
-                                    value="#{clinicaModel.registroActual.nombre}"
-                                    required="true"/>
 
                                 <p:outputLabel
                                     for="activo"
@@ -61,6 +52,15 @@
                                 <p:toggleSwitch
                                     id="activo"
                                     value="#{clinicaModel.registroActual.activo}"/>
+                                
+                                <p:outputLabel
+                                    for="Nombres"
+                                    value="#{msg['campo.comun.nombre']}"/>
+
+                                <p:inputText
+                                    id="Nombres"
+                                    value="#{clinicaModel.registroActual.nombre}"
+                                    required="true"/>
 
                                 <p:outputLabel
                                     for="tipo"

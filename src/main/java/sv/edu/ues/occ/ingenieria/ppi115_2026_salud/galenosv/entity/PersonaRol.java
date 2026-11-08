@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -79,7 +80,8 @@ public class PersonaRol implements Serializable {
     @JoinColumn(name = "id_rol", referencedColumnName = "id_rol", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Rol idRol;
-
+    
+    @JsonbTransient
     @OneToMany(mappedBy = "idPersonaRol", fetch = FetchType.LAZY)
     private List<Consulta> consultaList;
     

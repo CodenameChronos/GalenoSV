@@ -63,7 +63,8 @@ public class ConsultaProcedimientoService extends ParentService<ConsultaProcedim
                         "ConsultaProcedimiento.contarPorConsulta",
                         Long.class)
                 .setParameter("consulta", consulta)
-                .getSingleResult();
+                .getSingleResult()
+                .intValue();
     }
 
     public List<Procedimiento> buscarProcedimientosActivos(String texto, int max) {

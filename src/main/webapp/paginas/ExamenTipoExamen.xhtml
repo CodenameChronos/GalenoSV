@@ -91,6 +91,14 @@
                                         contentStyleClass="align-items-baseline ui-fluid">
 
                                         <p:outputLabel
+                                            for="activo"
+                                            value="#{msg['campo.comun.activo']}"/>
+
+                                        <p:toggleSwitch
+                                            id="activo"
+                                            value="#{examenTipoExamenModel.registroActual.activo}"/>
+                                        
+                                        <p:outputLabel
                                             for="nombre"
                                             value="#{msg['campo.comun.nombre']}"/>
 
@@ -98,16 +106,6 @@
                                             id="nombre"
                                             value="#{examenTipoExamenModel.registroActual.nombre}"
                                             required="true"/>
-
-
-                                        <p:outputLabel
-                                            for="activo"
-                                            value="#{msg['campo.comun.activo']}"/>
-
-                                        <p:toggleSwitch
-                                            id="activo"
-                                            value="#{examenTipoExamenModel.registroActual.activo}"/>
-
 
                                         <p:outputLabel
                                             for="observaciones"

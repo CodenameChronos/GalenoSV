@@ -69,7 +69,6 @@ public class ProcedimientoArbolModel implements Serializable {
     private Examen examenAgregar;
     private Examen examenSeleccionado;
 
-
     public TreeNode<ProcedimientoPaso> getRaiz() {
         sincronizarConRegistroActual();
         return raiz;
@@ -234,7 +233,7 @@ public class ProcedimientoArbolModel implements Serializable {
     }
 
     private void construirHijosRecursivo(TreeNode<ProcedimientoPaso> nodoPadre, UUID idPadre,
-                                         Map<UUID, List<ProcedimientoPaso>> hijosPorPadre) {
+            Map<UUID, List<ProcedimientoPaso>> hijosPorPadre) {
         List<ProcedimientoPaso> hijos = hijosPorPadre.get(idPadre);
         if (hijos == null) {
             return;
@@ -320,7 +319,16 @@ public class ProcedimientoArbolModel implements Serializable {
         return encontrados;
     }
 
-    /** Agrega a la lista el examen elegido en el autocompletar. */
+    public List<Rol> completarRol(String texto) {
+        if (texto == null || texto.isBlank()) {
+            return List.of();
+        }
+        return rolService.buscarPorNombre(texto, 30);
+    }
+
+    /**
+     * Agrega a la lista el examen elegido en el autocompletar.
+     */
     public void agregarExamen() {
         if (examenAgregar == null) {
             agregarMensaje(FacesMessage.SEVERITY_WARN, "procedimiento.arbol.examen.seleccione");
@@ -334,7 +342,9 @@ public class ProcedimientoArbolModel implements Serializable {
         examenAgregar = null;
     }
 
-    /** Quita de la lista el examen seleccionado en la tabla. */
+    /**
+     * Quita de la lista el examen seleccionado en la tabla.
+     */
     public void quitarExamen() {
         if (examenSeleccionado == null) {
             agregarMensaje(FacesMessage.SEVERITY_WARN, "procedimiento.arbol.examen.seleccioneQuitar");
@@ -343,7 +353,6 @@ public class ProcedimientoArbolModel implements Serializable {
         examenesForm.remove(examenSeleccionado);
         examenSeleccionado = null;
     }
-
 
     public void eliminarPaso(ProcedimientoPaso paso) {
         try {

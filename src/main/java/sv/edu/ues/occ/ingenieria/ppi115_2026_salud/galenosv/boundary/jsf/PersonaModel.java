@@ -54,8 +54,6 @@ public class PersonaModel extends ModelHandler<Persona> {
 
     @Override
     public Persona instanciarRegistro() {;
-        //Persona nuevoRegistro = new Persona();
-        //nuevoRegistro.setFechaCreaacion(Date.from(LocalDateTime.now(atZone(ZoneId.systemDefault()).toIntstant)));
         return new Persona();
     }
 

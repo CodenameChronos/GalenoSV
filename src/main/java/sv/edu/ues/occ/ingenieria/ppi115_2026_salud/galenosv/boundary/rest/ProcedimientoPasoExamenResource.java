@@ -142,7 +142,7 @@ public class ProcedimientoPasoExamenResource implements Serializable {
             // Asigna el valor del parametro idExamen definido
             // en el Path propio de la clase
             @PathParam("idExamen") UUID idExamen,
-            @QueryParam("primero")
+            @QueryParam("first")
             @DefaultValue("0") int first,
             @QueryParam("max")
             @Max(50)

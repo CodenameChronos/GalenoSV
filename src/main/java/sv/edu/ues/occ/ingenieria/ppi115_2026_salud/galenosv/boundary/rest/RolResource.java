@@ -92,7 +92,7 @@ public class RolResource implements Serializable {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response findByRange(
-            @QueryParam("primero")
+            @QueryParam("first")
             @DefaultValue("0") int first,
             @QueryParam("max")
             @Max(50)

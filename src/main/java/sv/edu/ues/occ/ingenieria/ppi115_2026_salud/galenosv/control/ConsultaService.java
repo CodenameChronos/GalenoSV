@@ -29,14 +29,6 @@ public class ConsultaService extends ParentService<Consulta> {
     public EntityManager getEntityManager() {
         return em;
     }
-
-   public List<Consulta> buscarPorNombrePersona(String texto, int max) {
-       return getEntityManager()
-               .createNamedQuery("Consulta.findByNombre", Consulta.class)
-               .setParameter("texto", "%" + texto.trim().toLowerCase() + "%")
-               .setMaxResults(max)
-               .getResultList();
-   }
    
    public List<Consulta> buscarPorClinicaYFechas(Clinica clinica, Date desde, Date hasta,
                                                   int first, int max) {
@@ -60,6 +52,5 @@ public class ConsultaService extends ParentService<Consulta> {
                 .setParameter("hasta", hasta)
                 .getSingleResult();
     }
-
     
 }

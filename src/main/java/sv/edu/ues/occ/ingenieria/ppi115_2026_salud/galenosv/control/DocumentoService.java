@@ -32,19 +32,6 @@ public class DocumentoService extends ParentService<Documento> {
         return em;
     }
     
-    public List<Documento> findByIdExamen(final UUID uuid, int first, int max) {
-        try {
-            TypedQuery<Documento> tq = em.createNamedQuery("Documento.findByIdDocumento", Documento.class);
-            return tq.getResultList();
-        } catch (Exception ex) {
-            return null;
-        }
-    }
-    
-    public List<Documento> buscarPorNombre(String nombre, int maxResultados) {
-        return null;
-    }
-    
     @Override
     public List<Documento> findRange(int first, int max) {
         if (first < 0 || max < 0) {

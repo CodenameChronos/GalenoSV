@@ -45,18 +45,10 @@
                         <f:facet name="formulario">
 
                             <p:panelGrid
-                                columns="4"
+                                columns="2"
                                 layout="grid"
                                 columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
                                 contentStyleClass="align-items-baseline ui-fluid">
-
-                                <p:outputLabel
-                                    for="nombre"
-                                    value="#{msg['campo.comun.nombre']}"/>
-
-                                <p:inputText
-                                    id="nombre"
-                                    value="#{tipoExamenModel.registroActual.nombre}"/>
 
                                 <p:outputLabel
                                     for="activo"
@@ -65,6 +57,14 @@
                                 <p:toggleSwitch
                                     id="activo"
                                     value="#{tipoExamenModel.registroActual.activo}"/>
+                                
+                                <p:outputLabel
+                                    for="nombre"
+                                    value="#{msg['campo.comun.nombre']}"/>
+
+                                <p:inputText
+                                    id="nombre"
+                                    value="#{tipoExamenModel.registroActual.nombre}"/>
 
                                 <p:outputLabel
                                     for="observaciones"

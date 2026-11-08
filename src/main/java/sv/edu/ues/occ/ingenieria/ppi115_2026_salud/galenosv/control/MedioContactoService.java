@@ -32,21 +32,12 @@ public class MedioContactoService extends ParentService<MedioContacto> {
         return em;
     }
     
-    public List<MedioContacto> findByIdPersona(final UUID uuid, int first, int max) {
-        try {
-            TypedQuery<MedioContacto> tq = em.createNamedQuery("MedioContacto.findByIdMedioCOntacto", MedioContacto.class);
-            return tq.getResultList();
-        } catch (Exception ex) {
-            return null;
-        }
-    }
-    
      public List<MedioContacto> buscarPorNombre(String nombre, int maxResultados) {
         return null;
     }
      
      @Override
-    public List<MedioContacto> findRange(int first, int max) {
+     public List<MedioContacto> findRange(int first, int max) {
         if (first < 0 || max < 0) {
             throw new IllegalArgumentException("first debe ser >= 0 y max debe ser >= 0");
         }
@@ -63,10 +54,10 @@ public class MedioContactoService extends ParentService<MedioContacto> {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
             throw new IllegalStateException(ex);
         }
-    }
+     }
     
      @Override
-    public Object buscar(Object uuid) {
+     public Object buscar(Object uuid) {
         if (uuid == null) {
             throw new IllegalArgumentException("Se requiere un UUID válido para realizar la búsqueda");
         }
@@ -80,7 +71,6 @@ public class MedioContactoService extends ParentService<MedioContacto> {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
             throw new IllegalStateException(ex);
         }
-    }
-    
+     }
     
 }

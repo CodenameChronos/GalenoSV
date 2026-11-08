@@ -166,7 +166,7 @@ public class ConsultaProcedimientoResource implements Serializable {
     @GET
     public Response findByRange(
             @PathParam("idConsulta") UUID idConsulta,
-            @QueryParam("primero")
+            @QueryParam("first")
             @DefaultValue("0") int first,
             @QueryParam("max")
             @Max(50)

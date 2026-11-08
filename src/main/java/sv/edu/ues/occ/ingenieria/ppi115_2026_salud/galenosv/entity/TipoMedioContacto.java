@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -50,6 +51,7 @@ public class TipoMedioContacto implements Serializable {
     @Column(name = "indicaciones", length = 2000)
     private String indicaciones;
 
+    @JsonbTransient
     @Size(max = 500, message = "La expresión regular no debe exceder los 500 caracteres")
     @Column(name = "expresion_regular", length = 500)
     private String expresionRegular;
@@ -58,6 +60,7 @@ public class TipoMedioContacto implements Serializable {
     @Column(name = "activo", nullable = false)
     private Boolean activo = true;
 
+    @JsonbTransient
     @OneToMany(mappedBy = "idTipoMedioContacto", fetch = FetchType.LAZY)
     private List<MedioContacto> medioContactoList;
 

@@ -23,28 +23,6 @@ public class ConsultaProcedimientoPasoService extends ParentService<ConsultaProc
         return em;
     }
 
-    protected String joinFetchClause() {
-        return "LEFT JOIN FETCH e.idConsultaProcedimiento consp "
-                + "LEFT JOIN FETCH consp.idProcedimiento "
-                + "LEFT JOIN FETCH consp.idConsulta c "
-                + "LEFT JOIN FETCH c.idPersonaRol prc "
-                + "LEFT JOIN FETCH prc.idPersona "
-                + "LEFT JOIN FETCH e.idPersonaRol pr "
-                + "LEFT JOIN FETCH pr.idPersona "
-                + "LEFT JOIN FETCH pr.idRol "
-                + "LEFT JOIN FETCH e.idProcedimientoPaso";
-    }
-
-    public List<ConsultaProcedimientoPaso> buscarPorConsultaProcedimiento(
-            ConsultaProcedimiento consp, String texto, int max) {
-        String patron = (texto == null || texto.isBlank()) ? null : "%" + texto.trim().toLowerCase() + "%";
-        return em.createNamedQuery("ConsultaProcedimientoPaso.buscarPorConsultaProcedimiento", ConsultaProcedimientoPaso.class)
-                .setParameter("consultaProcedimiento", consp)
-                .setParameter("patron", patron)
-                .setMaxResults(max)
-                .getResultList();
-    }
-
     public List<ConsultaProcedimientoPaso> listarPorConsultaProcedimiento(UUID idConsultaProcedimiento, int first, int max) {
         return em.createNamedQuery("ConsultaProcedimientoPaso.listarPorConsultaProcedimiento",
                         ConsultaProcedimientoPaso.class)

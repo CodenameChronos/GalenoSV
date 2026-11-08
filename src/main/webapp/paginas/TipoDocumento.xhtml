@@ -46,11 +46,20 @@
                         <f:facet name="formulario">
 
                             <p:panelGrid
-                                columns="4"
+                                columns="2"
                                 layout="grid"
                                 columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
                                 contentStyleClass="align-items-baseline ui-fluid">
 
+                                
+                                <p:outputLabel
+                                    for="activo"
+                                    value="#{msg['campo.comun.activo']}"/>
+
+                                <p:toggleSwitch
+                                    id="activo"
+                                    value="#{tipoDocumentoModel.registroActual.activo}"/>
+                                
                                 <p:outputLabel
                                     for="nombre"
                                     value="#{msg['campo.comun.nombre']}"/>
@@ -60,13 +69,13 @@
                                     value="#{tipoDocumentoModel.registroActual.nombre}"/>
 
                                 <p:outputLabel
-                                    for="activo"
-                                    value="#{msg['campo.comun.activo']}"/>
+                                    for="expresionRegular"
+                                    value="#{msg['campo.comun.expresionRegular']}"/>
 
-                                <p:toggleSwitch
-                                    id="activo"
-                                    value="#{tipoDocumentoModel.registroActual.activo}"/>
-
+                                <p:inputText
+                                    id="expresionRegular"
+                                    value="#{tipoDocumentoModel.registroActual.expresionRegular}"/>
+                                
                                 <p:outputLabel
                                     for="indicaciones"
                                     value="#{msg['campo.comun.indicaciones']}"/>
@@ -74,14 +83,6 @@
                                 <p:inputTextarea
                                     id="indicaciones"
                                     value="#{tipoDocumentoModel.registroActual.indicaciones}"/>
-
-                                <p:outputLabel
-                                    for="expresionRegular"
-                                    value="#{msg['campo.comun.expresionRegular']}"/>
-
-                                <p:inputText
-                                    id="expresionRegular"
-                                    value="#{tipoDocumentoModel.registroActual.expresionRegular}"/>
 
                             </p:panelGrid>
 
