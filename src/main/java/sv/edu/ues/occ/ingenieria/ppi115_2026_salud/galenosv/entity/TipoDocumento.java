@@ -50,6 +50,7 @@ public class TipoDocumento implements Serializable {
     @Column(name = "indicaciones", length = 2000)
     private String indicaciones;
 
+    @JsonbTransient
     @Size(max = 500, message = "La expresión regular no debe exceder los 500 caracteres")
     @Column(name = "expresion_regular", length = 500)
     private String expresionRegular;
@@ -58,6 +59,7 @@ public class TipoDocumento implements Serializable {
     @Column(name = "activo", nullable = false)
     private Boolean activo = true;
 
+    @JsonbTransient
     @OneToMany(mappedBy = "idTipoDocumento", fetch = FetchType.LAZY)
     private List<Documento> documentoList;
 

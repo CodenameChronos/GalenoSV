@@ -170,5 +170,32 @@ public class ExamenTipoExamenService extends ParentService<ExamenTipoExamen> {
             }
         }
     }
+    
+    public void eliminarTipos(UUID idExamen) {
 
+        if (idExamen == null) {
+            return;
+        }
+
+        em.createQuery(
+                        "DELETE FROM ExamenTipoExamen e "
+                                + "WHERE e.idExamen.idExamen = :idExamen")
+                .setParameter("idExamen", idExamen)
+                .executeUpdate();
+    }
+    
+    public boolean existeRelacion(UUID idExamen, UUID idTipoExamen) {
+    return em.createQuery(
+                    "SELECT COUNT(e) FROM ExamenTipoExamen e "
+                            + "WHERE e.idExamen.idExamen = :idExamen "
+                            + "AND e.idTipoExamen.idTipoExamen = :idTipoExamen",
+                    Long.class)
+            .setParameter("idExamen", idExamen)
+            .setParameter("idTipoExamen", idTipoExamen)
+            .getSingleResult() > 0;
+}
+
+    public Object contarPorIdExamen(UUID idExamen) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
