@@ -158,27 +158,24 @@
                                                     required="true"
                                                     requiredMessage="#{msg['procedimiento.arbol.error.nombre']}"/>
 
-                                            <p:outputLabel for="rolPaso" value="#{msg['rol.titulo']}"/>
-                                            <p:selectOneMenu
-                                                    id="rolPaso"
-                                                    value="#{procedimientoArbolModel.rolForm}"
-                                                    disabled="#{procedimientoArbolModel.modoEdicion}"
-                                                    converter="entityConverter"
-                                                    required="true"
-                                                    requiredMessage="#{msg['procedimiento.arbol.error.rol']}">
+                                            <p:outputLabel
+                                            for="idRol"
+                                            value="#{msg['procedimientoPaso.rol']}"/>
 
-                                                <f:selectItem
-                                                        itemLabel="#{msg['procedimiento.estado.seleccione']}"
-                                                        itemValue="#{null}"
-                                                        noSelectionOption="true"/>
-
-                                                <f:selectItems
-                                                        value="#{procedimientoArbolModel.roles}"
-                                                        var="rl"
-                                                        itemLabel="#{rl.nombre}"
-                                                        itemValue="#{rl}"/>
-
-                                            </p:selectOneMenu>
+                                            <p:autoComplete
+                                                id="idRol"
+                                                dropdown="true"
+                                                value="#{procedimientoArbolModel.rolForm}"
+                                                completeMethod="#{procedimientoArbolModel.completarRol}"
+                                                converter="entityConverter"
+                                                var="rol"
+                                                itemLabel="#{rol.nombre}"
+                                                itemValue="#{rol}"
+                                                forceSelection="true"
+                                                scrollHeight="250"
+                                                minQueryLength="3"
+                                                disabled="#{procedimientoArbolModel.modoEdicion}"
+                                                required="true"/>
 
                                             <p:outputLabel value="#{msg['procedimiento.arbol.dependeDe']}"/>
                                             <p:inputText
