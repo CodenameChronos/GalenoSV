@@ -21,6 +21,7 @@
     --galeno-font: 'Times New Roman', Times, 'Liberation Serif', serif;
     --galeno-radius: 10px;
     --galeno-shadow: 0 20px 45px -28px rgba(139, 92, 246, 0.45);
+    --galeno-outline-width: 3px;
 
     /* Variables que consumen los temas de PrimeFaces */
     --primary-color: var(--galeno-primary);
@@ -78,8 +79,7 @@ h1, h2, h3, .ui-panel-title {
 /* ------------------------------------------------------------------ */
 .galeno-header {
     background: var(--galeno-primary-tint);
-    border: 1px solid var(--galeno-border);
-    border-bottom: 3px solid var(--galeno-primary);
+    border: var(--galeno-outline-width) solid var(--galeno-primary);
     border-radius: var(--galeno-radius);
     box-shadow: var(--galeno-shadow);
     padding: 0.85rem 1.25rem;
@@ -130,8 +130,7 @@ h1, h2, h3, .ui-panel-title {
     gap: 0.75rem;
     padding: 0.35rem 0.9rem;
     background: var(--galeno-card);
-    border: 1px solid var(--galeno-border);
-    border-left: 4px solid var(--galeno-accent);
+    border: 2px solid var(--galeno-accent);
     border-radius: var(--galeno-radius);
     font-size: 0.95rem;
 }
@@ -185,8 +184,7 @@ h1, h2, h3, .ui-panel-title {
 .galeno-nav,
 .galeno-workspace {
     background: var(--galeno-card);
-    border: 1px solid var(--galeno-border);
-    border-top: 4px solid var(--galeno-primary);
+    border: var(--galeno-outline-width) solid var(--galeno-primary);
     border-radius: var(--galeno-radius);
     box-shadow: var(--galeno-shadow);
 }
@@ -307,8 +305,7 @@ h1, h2, h3, .ui-panel-title {
 /* ------------------------------------------------------------------ */
 .galeno-footer {
     background: var(--galeno-primary-dark);
-    border: 1px solid var(--galeno-primary-dark);
-    border-top: 3px solid var(--galeno-accent);
+    border: var(--galeno-outline-width) solid var(--galeno-accent);
     border-radius: var(--galeno-radius);
     color: #CBD5E1;
     font-size: 0.95rem;
