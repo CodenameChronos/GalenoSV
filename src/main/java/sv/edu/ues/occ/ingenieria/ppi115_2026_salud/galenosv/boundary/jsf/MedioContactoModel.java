@@ -108,5 +108,9 @@ public class MedioContactoModel extends ModelHandler<MedioContacto> {
             registroActual.setIdPersona(personaFiltro);
         }
     }
+    
+    public void alCambiarTipoMedioContacto () {
+        this.registroActual.setValor(null);
+    }
 
 }

@@ -265,11 +265,22 @@
                                                         scrollHeight="250"
                                                         minQueryLength="3"
                                                         required="true"
-                                                        disabled="#{documentoModel.estado=='MODIFICAR'}"
-                                        />
+                                                        disabled="#{documentoModel.estado=='MODIFICAR'}">
+                                                        
+                                                        <p:ajax event="itemSelect"
+                                                                listener="#{documentoModel.alCambiarTipoDocumento}"
+                                                                update="valor"/>
+                                                        <p:ajax event="change"
+                                                                listener="#{documentoModel.alCambiarTipoDocumento}"
+                                                                update="valor"/>
+                                                        
+                                        </p:autoComplete>
                                         
                                         <p:outputLabel for="valor" value="#{msg['campo.comun.valor']}"/>
-                                        <p:inputText id="valor" value="#{documentoModel.registroActual.valor}"/>
+                                        <p:inputText id="valor" 
+                                                     value="#{documentoModel.registroActual.valor}"
+                                                     disabled="#{documentoModel.registroActual.idTipoDocumento == null}"
+                                                     />
 
                                         <p:outputLabel for="rutaFisica" value="#{msg['documento.rutaFisica']}"/>
                                         <p:inputText id="rutaFisica" value="#{documentoModel.registroActual.rutaFisica}"/>
@@ -352,16 +363,26 @@
                                                         scrollHeight="250"
                                                         minQueryLength="3"
                                                         required="true"
-                                                        disabled="#{medioContactoModel.estado=='MODIFICAR'}"
-                                        />
+                                                        disabled="#{medioContactoModel.estado=='MODIFICAR'}">
+                                                        
+                                                        <p:ajax event="itemSelect"
+                                                                listener="#{medioContactoModel.alCambiarTipoMedioContacto}"
+                                                                update="valorMC"/>
+                                                        <p:ajax event="change"
+                                                                listener="#{medioContactoModel.alCambiarTipoMedioContacto}"
+                                                                update="valorMC"/>
+                                                        
+                                        </p:autoComplete>
                                         
                                         <p:outputLabel
-                                            for="valor"
+                                            for="valorMC"
                                             value="#{msg['campo.comun.valor']}"/>
 
                                         <p:inputText
-                                            id="valor"
-                                            value="#{medioContactoModel.registroActual.valor}"/>
+                                            id="valorMC"
+                                            value="#{medioContactoModel.registroActual.valor}"
+                                            disabled="#{medioContactoModel.registroActual.idTipoMedioContacto == null}"
+                                            />
 
                                     </p:panelGrid>
 
