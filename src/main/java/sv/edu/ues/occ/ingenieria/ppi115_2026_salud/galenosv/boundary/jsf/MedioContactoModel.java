@@ -14,6 +14,12 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.TipoMedioCon
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.MedioContacto;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Persona;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoMedioContacto;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.validator.ValidatorException;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  *
@@ -108,9 +114,49 @@ public class MedioContactoModel extends ModelHandler<MedioContacto> {
             registroActual.setIdPersona(personaFiltro);
         }
     }
-    
-    public void alCambiarTipoMedioContacto () {
+
+    public void alCambiarTipoMedioContacto() {
         this.registroActual.setValor(null);
     }
 
+    public void validarValor(FacesContext context, UIComponent component, Object value) {
+        if (value == null || value.toString().isBlank()) {
+            return; // @NotBlank se encarga de los valores vacíos
+        }
+
+        TipoMedioContacto tipo = registroActual.getIdTipoMedioContacto();
+
+        if (tipo == null) {
+            return;
+        }
+
+        String patron = tipo.getExpresionRegular();
+
+        if (patron == null || patron.isBlank()) {
+            return;
+        }
+
+        try {
+            boolean valido = Pattern.matches(patron, value.toString().trim());
+
+            if (!valido) {
+                throw new ValidatorException(
+                        new FacesMessage(
+                                FacesMessage.SEVERITY_ERROR,
+                                "El valor no cumple con el formato esperado para el tipo de medio de contacto",
+                                null
+                        )
+                );
+            }
+
+        } catch (PatternSyntaxException e) {
+            throw new ValidatorException(
+                    new FacesMessage(
+                            FacesMessage.SEVERITY_ERROR,
+                            "El patrón de validación del tipo de medio de contacto no es válido",
+                            null
+                    )
+            );
+        }
+    }
 }

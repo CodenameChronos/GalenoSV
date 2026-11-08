@@ -51,7 +51,7 @@
                                 columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
                                 contentStyleClass="align-items-baseline ui-fluid">
 
-                                
+
                                 <p:outputLabel
                                     for="activo"
                                     value="#{msg['campo.comun.activo']}"/>
@@ -59,7 +59,7 @@
                                 <p:toggleSwitch
                                     id="activo"
                                     value="#{tipoDocumentoModel.registroActual.activo}"/>
-                                
+
                                 <p:outputLabel
                                     for="nombre"
                                     value="#{msg['campo.comun.nombre']}"/>
@@ -74,8 +74,9 @@
 
                                 <p:inputText
                                     id="expresionRegular"
-                                    value="#{tipoDocumentoModel.registroActual.expresionRegular}"/>
-                                
+                                    value="#{tipoDocumentoModel.registroActual.expresionRegular}"
+                                    validator="#{tipoDocumentoModel.validarExpresionRegular}"/>
+
                                 <p:outputLabel
                                     for="indicaciones"
                                     value="#{msg['campo.comun.indicaciones']}"/>
@@ -89,7 +90,7 @@
                         </f:facet>
 
                     </g:crud>
-                    
+
                 </h:form>
 
             </f:facet>
@@ -97,5 +98,5 @@
         </g:layout>
 
     </h:body>
-    
+
 </html>

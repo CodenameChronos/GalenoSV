@@ -90,4 +90,11 @@ public final class Mensajes {
 
         return new MessageFormat(plantilla, locale).format(parametros);
     }
+
+    public static void errorTexto(String texto) {
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, texto, null)
+        );
+    }
 }
