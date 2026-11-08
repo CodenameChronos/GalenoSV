@@ -195,7 +195,18 @@ public class ExamenTipoExamenService extends ParentService<ExamenTipoExamen> {
             .getSingleResult() > 0;
 }
 
-    public Object contarPorIdExamen(UUID idExamen) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+     public int contarPorIdExamen(final UUID uuid) {
+
+        if (uuid == null) {
+            return 0;
+        }
+
+        return getEntityManager()
+                .createNamedQuery(
+                        "ExamenTipoExamen.countByIdExamen",
+                        Long.class)
+                .setParameter("idExamen", uuid)
+                .getSingleResult()
+                .intValue();
     }
 }
