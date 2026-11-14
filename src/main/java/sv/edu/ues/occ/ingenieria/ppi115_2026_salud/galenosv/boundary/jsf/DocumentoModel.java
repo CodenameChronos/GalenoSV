@@ -14,6 +14,12 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.TipoDocument
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Documento;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Persona;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.TipoDocumento;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.validator.ValidatorException;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  *
@@ -109,9 +115,51 @@ public class DocumentoModel extends ModelHandler<Documento> {
             registroActual.setIdPersona(personaFiltro);
         }
     }
-    
-    public void alCambiarTipoDocumento () {
+
+    public void alCambiarTipoDocumento() {
         this.registroActual.setValor(null);
+    }
+
+    public void validarValor(
+            FacesContext context,
+            UIComponent component,
+            Object value) {
+
+        if (value == null || value.toString().isBlank()) {
+            return;
+        }
+
+        TipoDocumento tipo = registroActual.getIdTipoDocumento();
+
+        if (tipo == null) {
+            return;
+        }
+
+        String patron = tipo.getExpresionRegular();
+
+        if (patron == null || patron.isBlank()) {
+            return;
+        }
+
+        try {
+            if (!Pattern.matches(patron, value.toString().trim())) {
+                throw new ValidatorException(
+                        new FacesMessage(
+                                FacesMessage.SEVERITY_ERROR,
+                                "El valor no cumple con el formato esperado para el tipo de documento seleccionado",
+                                null
+                        )
+                );
+            }
+        } catch (PatternSyntaxException e) {
+            throw new ValidatorException(
+                    new FacesMessage(
+                            FacesMessage.SEVERITY_ERROR,
+                            "La expresión regular del tipo de documento no es válida",
+                            null
+                    )
+            );
+        }
     }
 
 }
