@@ -33,7 +33,7 @@ public class ConsultaProcedimientoPasoService extends ParentService<ConsultaProc
     }
     
     public int contarPorConsultaProcedimiento(UUID idConsp) {
-        return em.createNamedQuery("ConsultaProcedimintoPaso.contarPorConsultaProcedimiento", Long.class)
+        return em.createNamedQuery("ConsultaProcedimientoPaso.contarPorConsultaProcedimiento", Long.class)
                 .setParameter("idConsp", idConsp)
                 .getSingleResult()
                 .intValue();
