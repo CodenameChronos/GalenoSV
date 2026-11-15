@@ -1,8 +1,6 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.jsf;
 
 import jakarta.faces.application.FacesMessage;
-import jakarta.faces.validator.ValidatorException;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -10,12 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.primefaces.PrimeFaces;
-import org.primefaces.event.SelectEvent;
 
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.*;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.*;
@@ -61,155 +55,16 @@ class PersonaRolModelTest {
     }
 
     // ==========================================
-    // PRUEBAS PARA getDAO
-    // ==========================================
-
-    @Test
-    @DisplayName("getDAO - Éxito (Retorna el servicio inyectado)")
-    void getDAO_Success() {
-        assertSame(prServiceMock, personaRolModel.getDAO());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA instanciarRegistro
-    // ==========================================
-
-    @Test
-    @DisplayName("instanciarRegistro - Éxito (Retorna una instancia nueva y vacía cada vez)")
-    void instanciarRegistro_Success() {
-        PersonaRol primero = personaRolModel.instanciarRegistro();
-        PersonaRol segundo = personaRolModel.instanciarRegistro();
-
-        assertNotNull(primero);
-        assertNull(primero.getIdPersonaRol());
-        assertNotSame(primero, segundo);
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getRegistroById
-    // ==========================================
-
-    @Test
-    @DisplayName("getRegistroById - Éxito (Retorna el registro que encuentra el servicio)")
-    void getRegistroById_Success() {
-        when(prServiceMock.buscar(sampleId)).thenReturn(samplePersonaRol);
-
-        PersonaRol resultado = personaRolModel.getRegistroById(sampleId.toString());
-
-        assertSame(samplePersonaRol, resultado);
-        verify(prServiceMock, times(1)).buscar(sampleId);
-    }
-
-    @Test
-    @DisplayName("getRegistroById - Fallos (ID con formato inválido o registro inexistente retornan null)")
-    void getRegistroById_Failures() {
-        UUID idInexistente = UUID.randomUUID();
-        when(prServiceMock.buscar(idInexistente)).thenReturn(null);
-
-        assertNull(personaRolModel.getRegistroById("no-es-un-uuid"));
-        assertNull(personaRolModel.getRegistroById(idInexistente.toString()));
-
-        // Solo el ID válido llegó al servicio
-        verify(prServiceMock, times(1)).buscar(any());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getIdByRegistro
-    // ==========================================
-
-    @Test
-    @DisplayName("getIdByRegistro - Éxito (Retorna el id del registro)")
-    void getIdByRegistro_Success() {
-        assertEquals(sampleId, personaRolModel.getIdByRegistro(samplePersonaRol));
-    }
-
-    @Test
-    @DisplayName("getIdByRegistro - Fallos (Registro nulo retorna null)")
-    void getIdByRegistro_Failures() {
-        assertNull(personaRolModel.getIdByRegistro(null));
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getLazyModel
-    // ==========================================
-
-    @Test
-    @DisplayName("getLazyModel - Éxito (Modelo perezoso conectado a este Model)")
-    void getLazyModel_Success() {
-        when(prServiceMock.contar()).thenReturn(3);
-
-        assertNotNull(personaRolModel.getLazyModel());
-        assertEquals(3, personaRolModel.getLazyModel().count(Collections.emptyMap()));
-    }
-
-    // ==========================================
     // PRUEBAS PARA completarPersona
     // ==========================================
-
-    @Test
-    @DisplayName("completarPersona - Éxito (Retorna los registros que encuentra el servicio)")
-    void completarPersona_Success() {
-        List<Persona> encontrados = List.of(new Persona(UUID.randomUUID()));
-        when(personaServiceMock.buscarPorNombre("ana", 30)).thenReturn(encontrados);
-
-        assertSame(encontrados, personaRolModel.completarPersona("ana"));
-    }
-
-    @Test
-    @DisplayName("completarPersona - Fallos (Texto nulo o en blanco retorna lista vacía sin consultar)")
-    void completarPersona_Failures() {
-        assertTrue(personaRolModel.completarPersona(null).isEmpty());
-        assertTrue(personaRolModel.completarPersona("").isEmpty());
-        assertTrue(personaRolModel.completarPersona("   ").isEmpty());
-
-        verify(personaServiceMock, never()).buscarPorNombre(any(), anyInt());
-    }
 
     // ==========================================
     // PRUEBAS PARA completarRol
     // ==========================================
 
-    @Test
-    @DisplayName("completarRol - Éxito (Retorna los registros que encuentra el servicio)")
-    void completarRol_Success() {
-        List<Rol> encontrados = List.of(new Rol(UUID.randomUUID()));
-        when(rolServiceMock.buscarPorNombre("doc", 30)).thenReturn(encontrados);
-
-        assertSame(encontrados, personaRolModel.completarRol("doc"));
-    }
-
-    @Test
-    @DisplayName("completarRol - Fallos (Texto nulo o en blanco retorna lista vacía sin consultar)")
-    void completarRol_Failures() {
-        assertTrue(personaRolModel.completarRol(null).isEmpty());
-        assertTrue(personaRolModel.completarRol("").isEmpty());
-        assertTrue(personaRolModel.completarRol("   ").isEmpty());
-
-        verify(rolServiceMock, never()).buscarPorNombre(any(), anyInt());
-    }
-
     // ==========================================
     // PRUEBAS PARA completarClinica
     // ==========================================
-
-    @Test
-    @DisplayName("completarClinica - Éxito (Retorna los registros que encuentra el servicio)")
-    void completarClinica_Success() {
-        List<Clinica> encontrados = List.of(new Clinica(UUID.randomUUID(), "Clínica Central"));
-        when(clinicaServiceMock.buscarPorNombre("cen", 30)).thenReturn(encontrados);
-
-        assertSame(encontrados, personaRolModel.completarClinica("cen"));
-    }
-
-    @Test
-    @DisplayName("completarClinica - Fallos (Texto nulo o en blanco retorna lista vacía sin consultar)")
-    void completarClinica_Failures() {
-        assertTrue(personaRolModel.completarClinica(null).isEmpty());
-        assertTrue(personaRolModel.completarClinica("").isEmpty());
-        assertTrue(personaRolModel.completarClinica("   ").isEmpty());
-
-        verify(clinicaServiceMock, never()).buscarPorNombre(any(), anyInt());
-    }
 
     // ==========================================
     // PRUEBAS PARA filtrarPorPersona

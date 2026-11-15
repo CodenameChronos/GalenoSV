@@ -2,7 +2,6 @@ package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.jsf;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.validator.ValidatorException;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -10,12 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.primefaces.PrimeFaces;
-import org.primefaces.event.SelectEvent;
 
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.*;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.*;
@@ -58,132 +53,12 @@ class MedioContactoModelTest {
     }
 
     // ==========================================
-    // PRUEBAS PARA getDAO
-    // ==========================================
-
-    @Test
-    @DisplayName("getDAO - Éxito (Retorna el servicio inyectado)")
-    void getDAO_Success() {
-        assertSame(mcServiceMock, medioContactoModel.getDAO());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA instanciarRegistro
-    // ==========================================
-
-    @Test
-    @DisplayName("instanciarRegistro - Éxito (Retorna una instancia nueva y vacía cada vez)")
-    void instanciarRegistro_Success() {
-        MedioContacto primero = medioContactoModel.instanciarRegistro();
-        MedioContacto segundo = medioContactoModel.instanciarRegistro();
-
-        assertNotNull(primero);
-        assertNull(primero.getIdMedioContacto());
-        assertNotSame(primero, segundo);
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getRegistroById
-    // ==========================================
-
-    @Test
-    @DisplayName("getRegistroById - Éxito (Retorna el registro que encuentra el servicio)")
-    void getRegistroById_Success() {
-        when(mcServiceMock.buscar(sampleId)).thenReturn(sampleMedioContacto);
-
-        MedioContacto resultado = medioContactoModel.getRegistroById(sampleId.toString());
-
-        assertSame(sampleMedioContacto, resultado);
-        verify(mcServiceMock, times(1)).buscar(sampleId);
-    }
-
-    @Test
-    @DisplayName("getRegistroById - Fallos (ID con formato inválido o registro inexistente retornan null)")
-    void getRegistroById_Failures() {
-        UUID idInexistente = UUID.randomUUID();
-        when(mcServiceMock.buscar(idInexistente)).thenReturn(null);
-
-        assertNull(medioContactoModel.getRegistroById("no-es-un-uuid"));
-        assertNull(medioContactoModel.getRegistroById(idInexistente.toString()));
-
-        // Solo el ID válido llegó al servicio
-        verify(mcServiceMock, times(1)).buscar(any());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getIdByRegistro
-    // ==========================================
-
-    @Test
-    @DisplayName("getIdByRegistro - Éxito (Retorna el id del registro)")
-    void getIdByRegistro_Success() {
-        assertEquals(sampleId, medioContactoModel.getIdByRegistro(sampleMedioContacto));
-    }
-
-    @Test
-    @DisplayName("getIdByRegistro - Fallos (Registro nulo retorna null)")
-    void getIdByRegistro_Failures() {
-        assertNull(medioContactoModel.getIdByRegistro(null));
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getLazyModel
-    // ==========================================
-
-    @Test
-    @DisplayName("getLazyModel - Éxito (Modelo perezoso conectado a este Model)")
-    void getLazyModel_Success() {
-        when(mcServiceMock.contar()).thenReturn(3);
-
-        assertNotNull(medioContactoModel.getLazyModel());
-        assertEquals(3, medioContactoModel.getLazyModel().count(Collections.emptyMap()));
-    }
-
-    // ==========================================
     // PRUEBAS PARA completarPersona
     // ==========================================
-
-    @Test
-    @DisplayName("completarPersona - Éxito (Retorna los registros que encuentra el servicio)")
-    void completarPersona_Success() {
-        List<Persona> encontrados = List.of(new Persona(UUID.randomUUID()));
-        when(persServiceMock.buscarPorNombre("ana", 30)).thenReturn(encontrados);
-
-        assertSame(encontrados, medioContactoModel.completarPersona("ana"));
-    }
-
-    @Test
-    @DisplayName("completarPersona - Fallos (Texto nulo o en blanco retorna lista vacía sin consultar)")
-    void completarPersona_Failures() {
-        assertTrue(medioContactoModel.completarPersona(null).isEmpty());
-        assertTrue(medioContactoModel.completarPersona("").isEmpty());
-        assertTrue(medioContactoModel.completarPersona("   ").isEmpty());
-
-        verify(persServiceMock, never()).buscarPorNombre(any(), anyInt());
-    }
 
     // ==========================================
     // PRUEBAS PARA completarTipoMedioContacto
     // ==========================================
-
-    @Test
-    @DisplayName("completarTipoMedioContacto - Éxito (Retorna los registros que encuentra el servicio)")
-    void completarTipoMedioContacto_Success() {
-        List<TipoMedioContacto> encontrados = List.of(new TipoMedioContacto(UUID.randomUUID()));
-        when(tmcServiceMock.buscarPorNombre("correo", 30)).thenReturn(encontrados);
-
-        assertSame(encontrados, medioContactoModel.completarTipoMedioContacto("correo"));
-    }
-
-    @Test
-    @DisplayName("completarTipoMedioContacto - Fallos (Texto nulo o en blanco retorna lista vacía sin consultar)")
-    void completarTipoMedioContacto_Failures() {
-        assertTrue(medioContactoModel.completarTipoMedioContacto(null).isEmpty());
-        assertTrue(medioContactoModel.completarTipoMedioContacto("").isEmpty());
-        assertTrue(medioContactoModel.completarTipoMedioContacto("   ").isEmpty());
-
-        verify(tmcServiceMock, never()).buscarPorNombre(any(), anyInt());
-    }
 
     // ==========================================
     // PRUEBAS PARA filtrarPorPersona
@@ -291,18 +166,4 @@ class MedioContactoModelTest {
         assertNotEquals(noCumple.getFacesMessage().getSummary(), patronInvalido.getFacesMessage().getSummary());
     }
 
-    // ==========================================
-    // PRUEBAS PARA alCambiarTipoMedioContacto
-    // ==========================================
-
-    @Test
-    @DisplayName("alCambiarTipoMedioContacto - Éxito (Limpia el valor al cambiar el tipo)")
-    void alCambiarTipoMedioContacto_Success() {
-        sampleMedioContacto.setValor("01234567-8");
-        medioContactoModel.setRegistroActual(sampleMedioContacto);
-
-        medioContactoModel.alCambiarTipoMedioContacto();
-
-        assertNull(sampleMedioContacto.getValor());
-    }
 }

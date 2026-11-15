@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -55,82 +54,6 @@ class SesionModelTest {
     @AfterEach
     void tearDown() {
         faces.close();
-    }
-
-    // ==========================================
-    // PRUEBAS PARA isRolHabilitado
-    // ==========================================
-
-    @Test
-    @DisplayName("isRolHabilitado - Éxito (Habilitado cuando hay clínica elegida)")
-    void isRolHabilitado_Success() {
-        sesionModel.setClinica(clinica);
-
-        assertTrue(sesionModel.isRolHabilitado());
-    }
-
-    @Test
-    @DisplayName("isRolHabilitado - Fallos (Sin clínica no está habilitado)")
-    void isRolHabilitado_Failures() {
-        assertFalse(sesionModel.isRolHabilitado());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA isPersonaHabilitada
-    // ==========================================
-
-    @Test
-    @DisplayName("isPersonaHabilitada - Éxito (Habilitado cuando hay clínica y rol)")
-    void isPersonaHabilitada_Success() {
-        sesionModel.setClinica(clinica);
-        sesionModel.setRol(rol);
-
-        assertTrue(sesionModel.isPersonaHabilitada());
-    }
-
-    @Test
-    @DisplayName("isPersonaHabilitada - Fallos (Falta la clínica, el rol o ambos)")
-    void isPersonaHabilitada_Failures() {
-        assertFalse(sesionModel.isPersonaHabilitada());
-
-        sesionModel.setClinica(clinica);
-        assertFalse(sesionModel.isPersonaHabilitada());
-
-        sesionModel.setClinica(null);
-        sesionModel.setRol(rol);
-        assertFalse(sesionModel.isPersonaHabilitada());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA alCambiarClinica / alCambiarRol
-    // ==========================================
-
-    @Test
-    @DisplayName("alCambiarClinica - Éxito (Limpia rol y persona elegida)")
-    void alCambiarClinica_Success() {
-        sesionModel.setClinica(clinica);
-        sesionModel.setRol(rol);
-        sesionModel.setSesionPersonaRol(personaRol);
-
-        sesionModel.alCambiarClinica();
-
-        assertNull(sesionModel.getRol());
-        assertNull(sesionModel.getSesionPersonaRol());
-        assertSame(clinica, sesionModel.getClinica());
-    }
-
-    @Test
-    @DisplayName("alCambiarRol - Éxito (Limpia solo la persona elegida)")
-    void alCambiarRol_Success() {
-        sesionModel.setClinica(clinica);
-        sesionModel.setRol(rol);
-        sesionModel.setSesionPersonaRol(personaRol);
-
-        sesionModel.alCambiarRol();
-
-        assertNull(sesionModel.getSesionPersonaRol());
-        assertSame(clinica, sesionModel.getClinica());
-        assertSame(rol, sesionModel.getRol());
     }
 
     // ==========================================

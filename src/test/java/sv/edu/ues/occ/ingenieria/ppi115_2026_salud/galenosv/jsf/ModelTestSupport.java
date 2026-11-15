@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.inject.Inject;
-import static org.mockito.Mockito.mockingDetails;
 
 /**
  * Utilidad de pruebas para construir modelos JSF e inyectar únicamente

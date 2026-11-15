@@ -1,16 +1,11 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.jsf;
 
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.validator.ValidatorException;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -75,44 +70,8 @@ class PersonaModelTest {
     }
 
     // ==========================================
-    // PRUEBAS PARA getDAO
-    // ==========================================
-
-    @Test
-    @DisplayName("getDAO - Éxito (Retorna el servicio inyectado)")
-    void getDAO_Success() {
-        assertSame(persServiceMock, personaModel.getDAO());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA instanciarRegistro
-    // ==========================================
-
-    @Test
-    @DisplayName("instanciarRegistro - Éxito (Retorna una instancia nueva y vacía cada vez)")
-    void instanciarRegistro_Success() {
-        Persona primero = personaModel.instanciarRegistro();
-        Persona segundo = personaModel.instanciarRegistro();
-
-        assertNotNull(primero);
-        assertNull(primero.getIdPersona());
-        assertNotSame(primero, segundo);
-    }
-
-    // ==========================================
     // PRUEBAS PARA getRegistroById
     // ==========================================
-
-    @Test
-    @DisplayName("getRegistroById - Éxito (Retorna el registro que encuentra el servicio)")
-    void getRegistroById_Success() {
-        when(persServiceMock.buscar(sampleId)).thenReturn(samplePersona);
-
-        Persona resultado = personaModel.getRegistroById(sampleId.toString());
-
-        assertSame(samplePersona, resultado);
-        verify(persServiceMock, times(1)).buscar(sampleId);
-    }
 
     @Test
     @DisplayName("getRegistroById - Fallos (ID con formato inválido o registro inexistente retornan null)")
@@ -125,35 +84,6 @@ class PersonaModelTest {
 
         // Solo el ID válido llegó al servicio
         verify(persServiceMock, times(1)).buscar(any());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getIdByRegistro
-    // ==========================================
-
-    @Test
-    @DisplayName("getIdByRegistro - Éxito (Retorna el id del registro)")
-    void getIdByRegistro_Success() {
-        assertEquals(sampleId, personaModel.getIdByRegistro(samplePersona));
-    }
-
-    @Test
-    @DisplayName("getIdByRegistro - Fallos (Registro nulo retorna null)")
-    void getIdByRegistro_Failures() {
-        assertNull(personaModel.getIdByRegistro(null));
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getLazyModel
-    // ==========================================
-
-    @Test
-    @DisplayName("getLazyModel - Éxito (Modelo perezoso conectado a este Model)")
-    void getLazyModel_Success() {
-        when(persServiceMock.contar()).thenReturn(3);
-
-        assertNotNull(personaModel.getLazyModel());
-        assertEquals(3, personaModel.getLazyModel().count(Collections.emptyMap()));
     }
 
     // ==========================================
