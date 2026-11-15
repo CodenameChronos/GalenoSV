@@ -238,7 +238,7 @@
                                         layout="grid"
                                         columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
                                         contentStyleClass="align-items-baseline ui-fluid">
-                                        
+
                                         <p:outputLabel for="idPersona" value="#{msg['persona.titulo']}"/>
                                         <p:autoComplete id="idPersona" dropdown="true" 
                                                         value="#{documentoModel.registroActual.idPersona}"
@@ -266,21 +266,22 @@
                                                         minQueryLength="3"
                                                         required="true"
                                                         disabled="#{documentoModel.estado=='MODIFICAR'}">
-                                                        
-                                                        <p:ajax event="itemSelect"
-                                                                listener="#{documentoModel.alCambiarTipoDocumento}"
-                                                                update="valor"/>
-                                                        <p:ajax event="change"
-                                                                listener="#{documentoModel.alCambiarTipoDocumento}"
-                                                                update="valor"/>
-                                                        
+
+                                            <p:ajax event="itemSelect"
+                                                    listener="#{documentoModel.alCambiarTipoDocumento}"
+                                                    update="valor"/>
+                                            <p:ajax event="change"
+                                                    listener="#{documentoModel.alCambiarTipoDocumento}"
+                                                    update="valor"/>
+
                                         </p:autoComplete>
-                                        
+
                                         <p:outputLabel for="valor" value="#{msg['campo.comun.valor']}"/>
-                                        <p:inputText id="valor" 
-                                                     value="#{documentoModel.registroActual.valor}"
-                                                     disabled="#{documentoModel.registroActual.idTipoDocumento == null}"
-                                                     />
+                                        <p:inputText
+                                            id="valor"
+                                            value="#{documentoModel.registroActual.valor}"
+                                            disabled="#{documentoModel.registroActual.idTipoDocumento == null}"
+                                            validator="#{documentoModel.validarValor}"/>
 
                                         <p:outputLabel for="rutaFisica" value="#{msg['documento.rutaFisica']}"/>
                                         <p:inputText id="rutaFisica" value="#{documentoModel.registroActual.rutaFisica}"/>
@@ -331,7 +332,7 @@
                                         layout="grid"
                                         columnClasses="col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4, col-12 md:col-3 xl:col-2, col-12 md:col-9 xl:col-4"
                                         contentStyleClass="align-items-baseline ui-fluid">
-                                        
+
                                         <p:outputLabel for="fechaCreacion" value="#{msg['campo.comun.fechaCreacion']}"/>
                                         <p:inputText disabled="true" id="fechaCreacion" value="#{medioContactoModel.registroActual.fechaCreacion}">
                                             <f:convertDateTime timeZone="America/El_Salvador" pattern="dd/MM/yyyy"/>
@@ -350,7 +351,7 @@
                                                         minQueryLength="3"
                                                         disabled="#{not empty medioContactoModel.personaFiltro}"
                                                         required="true"/>
-                                        
+
                                         <p:outputLabel for="idTipoMedioContacto" value="#{msg['tipoMedioContacto.titulo']}"/>
                                         <p:autoComplete id="idTipoMedioContacto" dropdown="true" 
                                                         value="#{medioContactoModel.registroActual.idTipoMedioContacto}"
@@ -364,16 +365,16 @@
                                                         minQueryLength="3"
                                                         required="true"
                                                         disabled="#{medioContactoModel.estado=='MODIFICAR'}">
-                                                        
-                                                        <p:ajax event="itemSelect"
-                                                                listener="#{medioContactoModel.alCambiarTipoMedioContacto}"
-                                                                update="valorMC"/>
-                                                        <p:ajax event="change"
-                                                                listener="#{medioContactoModel.alCambiarTipoMedioContacto}"
-                                                                update="valorMC"/>
-                                                        
+
+                                            <p:ajax event="itemSelect"
+                                                    listener="#{medioContactoModel.alCambiarTipoMedioContacto}"
+                                                    update="valorMC"/>
+                                            <p:ajax event="change"
+                                                    listener="#{medioContactoModel.alCambiarTipoMedioContacto}"
+                                                    update="valorMC"/>
+
                                         </p:autoComplete>
-                                        
+
                                         <p:outputLabel
                                             for="valorMC"
                                             value="#{msg['campo.comun.valor']}"/>
@@ -382,7 +383,7 @@
                                             id="valorMC"
                                             value="#{medioContactoModel.registroActual.valor}"
                                             disabled="#{medioContactoModel.registroActual.idTipoMedioContacto == null}"
-                                            />
+                                            validator="#{medioContactoModel.validarValor}"/>
 
                                     </p:panelGrid>
 
