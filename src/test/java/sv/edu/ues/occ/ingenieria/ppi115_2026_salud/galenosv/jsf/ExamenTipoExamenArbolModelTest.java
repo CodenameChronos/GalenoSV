@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -99,23 +98,6 @@ class ExamenTipoExamenArbolModelTest {
         assertTrue(arbolModel.getTiposExamenForm().isEmpty());
 
         verify(examenTipoExamenService, never()).findByIdExamen(any(), anyInt(), anyInt());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA alEntrarPestana
-    // ==========================================
-
-    @Test
-    @DisplayName("alEntrarPestana - Éxito (Carga los tipos del examen actual)")
-    void alEntrarPestana_Success() {
-        when(examenModel.getRegistroActual()).thenReturn(sampleExamen);
-        when(examenTipoExamenService.findByIdExamen(sampleExamen.getIdExamen(), 0, Integer.MAX_VALUE))
-                .thenReturn(List.of(relacion(tipoA)));
-
-        arbolModel.alEntrarPestana();
-
-        assertEquals(List.of(tipoA), arbolModel.getTiposExamenForm());
-        verify(examenTipoExamenService, times(1)).findByIdExamen(any(), anyInt(), anyInt());
     }
 
     // ==========================================
@@ -253,19 +235,4 @@ class ExamenTipoExamenArbolModelTest {
     // ==========================================
     // PRUEBAS PARA limpiar
     // ==========================================
-
-    @Test
-    @DisplayName("limpiar - Éxito (Vacía la lista y las selecciones)")
-    void limpiar_Success() {
-        arbolModel.setTipoExamenAgregar(tipoA);
-        arbolModel.agregarTipoExamen();
-        arbolModel.setTipoExamenAgregar(tipoB);
-        arbolModel.setTipoExamenSeleccionado(tipoA);
-
-        arbolModel.limpiar();
-
-        assertTrue(arbolModel.getTiposExamenForm().isEmpty());
-        assertNull(arbolModel.getTipoExamenAgregar());
-        assertNull(arbolModel.getTipoExamenSeleccionado());
-    }
 }

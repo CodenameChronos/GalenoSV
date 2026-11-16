@@ -13,7 +13,6 @@ import java.util.ResourceBundle;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-
 public final class FacesTestSupport implements AutoCloseable {
 
     private final MockedStatic<FacesContext> facesContextEstatico;

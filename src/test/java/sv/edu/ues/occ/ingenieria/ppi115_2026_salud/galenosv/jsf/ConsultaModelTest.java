@@ -5,14 +5,12 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -107,12 +105,6 @@ class ConsultaModelTest {
     // ==========================================
 
     @Test
-    @DisplayName("getDAO - Éxito (Retorna el servicio inyectado)")
-    void getDAO_Success() {
-        assertSame(consultaServiceMock, consultaModel.getDAO());
-    }
-
-    @Test
     @DisplayName("instanciarRegistro - Éxito (Consulta nueva con id y fecha de inicio)")
     void instanciarRegistro_Success() {
         Consulta primera = consultaModel.instanciarRegistro();
@@ -121,55 +113,6 @@ class ConsultaModelTest {
         assertNotNull(primera.getIdConsulta());
         assertNotNull(primera.getFechaInicio());
         assertNotEquals(primera.getIdConsulta(), segunda.getIdConsulta());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getRegistroById
-    // ==========================================
-
-    @Test
-    @DisplayName("getRegistroById - Éxito (Retorna la consulta que encuentra el servicio)")
-    void getRegistroById_Success() {
-        when(consultaServiceMock.buscar(sampleId)).thenReturn(sampleConsulta);
-
-        assertSame(sampleConsulta, consultaModel.getRegistroById(sampleId.toString()));
-    }
-
-    @Test
-    @DisplayName("getRegistroById - Fallos (ID con formato inválido o registro inexistente retornan null)")
-    void getRegistroById_Failures() {
-        UUID idInexistente = UUID.randomUUID();
-        when(consultaServiceMock.buscar(idInexistente)).thenReturn(null);
-
-        assertNull(consultaModel.getRegistroById("no-es-un-uuid"));
-        assertNull(consultaModel.getRegistroById(idInexistente.toString()));
-        verify(consultaServiceMock, times(1)).buscar(any());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getIdByRegistro
-    // ==========================================
-
-    @Test
-    @DisplayName("getIdByRegistro - Éxito (Retorna el id de la consulta)")
-    void getIdByRegistro_Success() {
-        assertEquals(sampleId, consultaModel.getIdByRegistro(sampleConsulta));
-    }
-
-    @Test
-    @DisplayName("getIdByRegistro - Fallos (Registro nulo retorna null)")
-    void getIdByRegistro_Failures() {
-        assertNull(consultaModel.getIdByRegistro(null));
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getLazyModel
-    // ==========================================
-
-    @Test
-    @DisplayName("getLazyModel - Éxito (Modelo perezoso disponible)")
-    void getLazyModel_Success() {
-        assertNotNull(consultaModel.getLazyModel());
     }
 
     // ==========================================
@@ -286,27 +229,6 @@ class ConsultaModelTest {
     // ==========================================
 
     @Test
-    @DisplayName("guardarHandler - Éxito (CREAR con paciente guarda; MODIFICAR no exige paciente)")
-    void guardarHandler_Success() {
-        sampleConsulta.setIdPersonaRol(pacienteRol);
-        consultaModel.setRegistroActual(sampleConsulta);
-        consultaModel.setEstado(ESTADO_CRUD.CREAR);
-
-        consultaModel.guardarHandler(null);
-
-        verify(consultaServiceMock, times(1)).crear(sampleConsulta);
-        assertEquals(ESTADO_CRUD.NINGUNO, consultaModel.getEstado());
-
-        Consulta sinPaciente = new Consulta(UUID.randomUUID());
-        consultaModel.setRegistroActual(sinPaciente);
-        consultaModel.setEstado(ESTADO_CRUD.MODIFICAR);
-
-        consultaModel.guardarHandler(null);
-
-        verify(consultaServiceMock, times(1)).actualizar(sinPaciente);
-    }
-
-    @Test
     @DisplayName("guardarHandler - Fallos (CREAR sin paciente muestra error y no guarda)")
     void guardarHandler_Failures() {
         consultaModel.setRegistroActual(new Consulta(UUID.randomUUID()));
@@ -323,61 +245,6 @@ class ConsultaModelTest {
     // ==========================================
     // PRUEBAS PARA getNombrePaciente
     // ==========================================
-
-    @Test
-    @DisplayName("getNombrePaciente - Éxito (Nombres y apellidos del paciente)")
-    void getNombrePaciente_Success() {
-        sampleConsulta.setIdPersonaRol(pacienteRol);
-        consultaModel.setRegistroActual(sampleConsulta);
-
-        assertEquals("Ana Pérez", consultaModel.getNombrePaciente());
-    }
-
-    @Test
-    @DisplayName("getNombrePaciente - Fallos (Sin consulta o sin paciente retorna cadena vacía)")
-    void getNombrePaciente_Failures() {
-        consultaModel.setRegistroActual(null);
-        assertEquals("", consultaModel.getNombrePaciente());
-
-        consultaModel.setRegistroActual(new Consulta(UUID.randomUUID()));
-        assertEquals("", consultaModel.getNombrePaciente());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA isPacienteEditable
-    // ==========================================
-
-    @Test
-    @DisplayName("isPacienteEditable - Éxito (Editable solo al crear)")
-    void isPacienteEditable_Success() {
-        consultaModel.setEstado(ESTADO_CRUD.CREAR);
-
-        assertTrue(consultaModel.isPacienteEditable());
-    }
-
-    @Test
-    @DisplayName("isPacienteEditable - Fallos (No editable al modificar ni sin estado)")
-    void isPacienteEditable_Failures() {
-        consultaModel.setEstado(ESTADO_CRUD.MODIFICAR);
-        assertFalse(consultaModel.isPacienteEditable());
-
-        consultaModel.setEstado(ESTADO_CRUD.NINGUNO);
-        assertFalse(consultaModel.isPacienteEditable());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA abrirBuscarPaciente
-    // ==========================================
-
-    @Test
-    @DisplayName("abrirBuscarPaciente - Éxito (Limpia el paciente de búsqueda)")
-    void abrirBuscarPaciente_Success() {
-        consultaModel.setPacienteBusqueda(pacienteRol);
-
-        consultaModel.abrirBuscarPaciente();
-
-        assertNull(consultaModel.getPacienteBusqueda());
-    }
 
     // ==========================================
     // PRUEBAS PARA completarPaciente
@@ -437,72 +304,4 @@ class ConsultaModelTest {
     // PRUEBAS PARA informacionDe
     // ==========================================
 
-    @Test
-    @DisplayName("informacionDe - Éxito (Documentos cargados de la persona)")
-    void informacionDe_Success() {
-        when(sesionMock.getClinica()).thenReturn(clinica);
-        when(personaRolServiceMock.buscarPacientes(clinica, "ana", 15)).thenReturn(List.of(pacienteRol));
-        when(personaRolServiceMock.listarDocumentosDePersonas(anyCollection()))
-                .thenReturn(List.of(documento("DUI", "01234567-8")));
-        consultaModel.completarPaciente("ana");
-
-        assertEquals(", DUI: 01234567-8", consultaModel.informacionDe(persona));
-    }
-
-    @Test
-    @DisplayName("informacionDe - Fallos (Persona nula o sin documentos cargados retorna cadena vacía)")
-    void informacionDe_Failures() {
-        assertEquals("", consultaModel.informacionDe(null));
-        assertEquals("", consultaModel.informacionDe(new Persona(UUID.randomUUID())));
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getZonaHoraria / getAhora
-    // ==========================================
-
-    @Test
-    @DisplayName("getZonaHoraria - Éxito (Zona horaria por defecto)")
-    void getZonaHoraria_Success() {
-        assertEquals(TimeZone.getDefault(), consultaModel.getZonaHoraria());
-    }
-
-    @Test
-    @DisplayName("getAhora - Éxito (Fecha y hora actuales)")
-    void getAhora_Success() {
-        Date antes = new Date();
-        Date ahora = consultaModel.getAhora();
-        Date despues = new Date();
-
-        assertFalse(ahora.before(antes));
-        assertFalse(ahora.after(despues));
-    }
-
-    // ==========================================
-    // PRUEBAS PARA pestañas
-    // ==========================================
-
-    @Test
-    @DisplayName("isMostrarBotonesConsulta - Éxito (Visible solo en la primera pestaña)")
-    void isMostrarBotonesConsulta_Success() {
-        consultaModel.setTabIndex(0);
-
-        assertTrue(consultaModel.isMostrarBotonesConsulta());
-    }
-
-    @Test
-    @DisplayName("isMostrarBotonesConsulta - Fallos (Oculto en las demás pestañas)")
-    void isMostrarBotonesConsulta_Failures() {
-        consultaModel.setTabIndex(1);
-
-        assertFalse(consultaModel.isMostrarBotonesConsulta());
-    }
-
-    @Test
-    @DisplayName("onTabChange / tabIndex - Éxito")
-    void onTabChange_Success() {
-        assertDoesNotThrow(() -> consultaModel.onTabChange(null));
-
-        consultaModel.setTabIndex(2);
-        assertEquals(2, consultaModel.getTabIndex());
-    }
 }

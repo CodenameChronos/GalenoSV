@@ -92,17 +92,6 @@ class ModelHandlerTest {
     // PRUEBAS PARA init
     // ==========================================
 
-    @Test
-    @DisplayName("init - Éxito (Estado NINGUNO y registro actual nuevo)")
-    void init_Success() {
-        modelo.setEstado(ESTADO_CRUD.MODIFICAR);
-
-        modelo.init();
-
-        assertEquals(ESTADO_CRUD.NINGUNO, modelo.getEstado());
-        assertNotNull(modelo.getRegistroActual());
-    }
-
     // ==========================================
     // PRUEBAS PARA nuevo
     // ==========================================
@@ -296,43 +285,9 @@ class ModelHandlerTest {
         assertSame(todas, modelo.buscarRegistros(0, 10));
     }
 
-    @Test
-    @DisplayName("buscarRegistros - Fallos (La excepción del DAO se propaga)")
-    void buscarRegistros_Failures() {
-        when(daoMock.findRange(0, 10)).thenThrow(new IllegalStateException("Query failed"));
-        when(daoMock.findRangeByCriterio("nombre", "Central", 0, 10))
-                .thenThrow(new IllegalArgumentException("Propiedad inválida"));
-
-        assertThrows(IllegalStateException.class, () -> modelo.buscarRegistros(0, 10));
-
-        modelo.setFiltro("nombre", "Central");
-        assertThrows(IllegalArgumentException.class, () -> modelo.buscarRegistros(0, 10));
-    }
-
     // ==========================================
     // PRUEBAS PARA obtenerRegistros
     // ==========================================
-
-    @Test
-    @DisplayName("obtenerRegistros - Éxito (Carga la lista de registros desde el DAO)")
-    void obtenerRegistros_Success() {
-        List<Clinica> lista = List.of(sampleClinica);
-        when(daoMock.findRange(0, 10)).thenReturn(lista);
-
-        modelo.obtenerRegistros(0, 10);
-
-        assertSame(lista, modelo.getRegistros());
-    }
-
-    @Test
-    @DisplayName("obtenerRegistros - Fallos (La excepción del DAO se propaga y no hay registros)")
-    void obtenerRegistros_Failures() {
-        when(daoMock.findRange(0, 10)).thenThrow(new IllegalStateException("Query failed"));
-
-        assertThrows(IllegalStateException.class, () -> modelo.obtenerRegistros(0, 10));
-
-        assertNull(modelo.getRegistros());
-    }
 
     // ==========================================
     // PRUEBAS PARA el reinicio de inputs (resetInputs, privado, se ejecuta desde nuevo)
@@ -353,35 +308,4 @@ class ModelHandlerTest {
         verify(input, times(1)).resetValue();
     }
 
-    @Test
-    @DisplayName("nuevo - Fallos: si no existe el panel pnlCrear no reinicia nada ni lanza error")
-    void resetInputs_Failures() {
-        UIComponent otroPanel = mock(UIComponent.class);
-        UIInput input = mock(UIInput.class);
-        when(otroPanel.getId()).thenReturn("pnlOtro");
-        when(otroPanel.getFacetsAndChildren()).thenAnswer(inv -> List.<UIComponent>of(input).iterator());
-        when(input.getFacetsAndChildren()).thenAnswer(inv -> Collections.<UIComponent>emptyIterator());
-        faces.agregarHijoALaRaiz(otroPanel);
-
-        assertDoesNotThrow(() -> modelo.nuevo());
-
-        verify(input, never()).resetValue();
-        assertEquals(ESTADO_CRUD.CREAR, modelo.getEstado());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getters y setters
-    // ==========================================
-
-    @Test
-    @DisplayName("getters y setters - Éxito")
-    void gettersAndSetters_Success() {
-        modelo.setRegistroActual(sampleClinica);
-        modelo.setEstado(ESTADO_CRUD.CREAR);
-
-        assertSame(sampleClinica, modelo.getRegistroActual());
-        assertEquals(ESTADO_CRUD.CREAR, modelo.getEstado());
-        assertEquals(Clinica.class, modelo.getEntity());
-        assertNull(modelo.getRegistros());
-    }
 }

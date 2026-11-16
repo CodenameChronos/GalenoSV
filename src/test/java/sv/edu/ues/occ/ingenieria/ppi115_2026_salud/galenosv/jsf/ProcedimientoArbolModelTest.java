@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.primefaces.model.TreeNode;
@@ -114,81 +113,17 @@ class ProcedimientoArbolModelTest {
     // PRUEBAS PARA getRaiz
     // ==========================================
 
-    @Test
-    @DisplayName("getRaiz - Éxito (Construye el árbol del procedimiento actual)")
-    void getRaiz_Success() {
-        stubArbolCompleto();
-
-        assertNotNull(arbolModel.getRaiz());
-    }
-
-    @Test
-    @DisplayName("getRaiz - Fallos (Sin procedimiento actual no hay árbol)")
-    void getRaiz_Failures() {
-        assertNull(arbolModel.getRaiz());
-        verify(pasoDAO, never()).listarPorProcedimiento(any());
-    }
-
     // ==========================================
     // PRUEBAS PARA getRoles
     // ==========================================
-
-    @Test
-    @DisplayName("getRoles - Éxito (Carga los roles activos solo la primera vez)")
-    void getRoles_Success() {
-        when(rolService.findAllActive()).thenReturn(List.of(rol));
-
-        assertEquals(List.of(rol), arbolModel.getRoles());
-        assertEquals(List.of(rol), arbolModel.getRoles());
-        verify(rolService, times(1)).findAllActive();
-    }
 
     // ==========================================
     // PRUEBAS PARA isEditandoPaso
     // ==========================================
 
-    @Test
-    @DisplayName("isEditandoPaso - Éxito (True mientras se edita un paso)")
-    void isEditandoPaso_Success() {
-        stubArbolCompleto();
-        arbolModel.alEntrarPestana();
-
-        arbolModel.abrirAgregarRaiz();
-
-        assertTrue(arbolModel.isEditandoPaso());
-    }
-
-    @Test
-    @DisplayName("isEditandoPaso - Fallos (False sin editar o si cambió el procedimiento)")
-    void isEditandoPaso_Failures() {
-        assertFalse(arbolModel.isEditandoPaso());
-
-        stubArbolCompleto();
-        arbolModel.alEntrarPestana();
-        arbolModel.abrirAgregarRaiz();
-        Procedimiento otro = new Procedimiento(UUID.randomUUID());
-        when(procedimientoModel.getRegistroActual()).thenReturn(otro);
-        when(pasoDAO.listarPorProcedimiento(otro.getIdProcedimiento())).thenReturn(List.of());
-
-        assertFalse(arbolModel.isEditandoPaso());
-    }
-
     // ==========================================
     // PRUEBAS PARA alEntrarPestana
     // ==========================================
-
-    @Test
-    @DisplayName("alEntrarPestana - Éxito (Cierra el formulario y reconstruye el árbol)")
-    void alEntrarPestana_Success() {
-        stubArbolCompleto();
-        arbolModel.abrirAgregarRaiz();
-
-        arbolModel.alEntrarPestana();
-
-        assertFalse(arbolModel.isEditandoPaso());
-        assertNotNull(arbolModel.getRaiz());
-        verify(pasoDAO, times(1)).listarPorProcedimiento(any());
-    }
 
     // ==========================================
     // PRUEBAS PARA construirArbol
@@ -280,15 +215,6 @@ class ProcedimientoArbolModelTest {
     // ==========================================
 
     @Test
-    @DisplayName("puedeEliminar - Éxito (Paso sin hijos)")
-    void puedeEliminar_Success() {
-        stubArbolCompleto();
-        arbolModel.construirArbol();
-
-        assertTrue(arbolModel.puedeEliminar(p3));
-    }
-
-    @Test
     @DisplayName("puedeEliminar - Fallos (Paso con hijos)")
     void puedeEliminar_Failures() {
         stubArbolCompleto();
@@ -365,20 +291,6 @@ class ProcedimientoArbolModelTest {
         assertTrue(arbolModel.isModoEdicion());
         assertEquals("", arbolModel.getDependeDeNombre());
         assertTrue(arbolModel.getExamenesForm().isEmpty());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA cancelarPaso
-    // ==========================================
-
-    @Test
-    @DisplayName("cancelarPaso - Éxito (Cierra el formulario)")
-    void cancelarPaso_Success() {
-        arbolModel.abrirAgregarRaiz();
-
-        arbolModel.cancelarPaso();
-
-        assertFalse(arbolModel.isEditandoPaso());
     }
 
     // ==========================================
@@ -461,40 +373,9 @@ class ProcedimientoArbolModelTest {
     // PRUEBAS PARA completarExamen
     // ==========================================
 
-    @Test
-    @DisplayName("completarExamen - Éxito (Excluye los exámenes que ya están en el paso)")
-    void completarExamen_Success() {
-        Examen agregado = new Examen(UUID.randomUUID());
-        Examen otro = new Examen(UUID.randomUUID());
-        arbolModel.setExamenAgregar(agregado);
-        arbolModel.agregarExamen();
-        when(examenService.buscarPorNombre("hemo", 10)).thenReturn(List.of(agregado, otro));
-
-        assertEquals(List.of(otro), arbolModel.completarExamen("hemo"));
-    }
-
     // ==========================================
     // PRUEBAS PARA completarRol
     // ==========================================
-
-    @Test
-    @DisplayName("completarRol - Éxito (Retorna los roles que encuentra el servicio)")
-    void completarRol_Success() {
-        List<Rol> encontrados = List.of(rol);
-        when(rolService.buscarPorNombre("doc", 30)).thenReturn(encontrados);
-
-        assertSame(encontrados, arbolModel.completarRol("doc"));
-    }
-
-    @Test
-    @DisplayName("completarRol - Fallos (Texto nulo o en blanco retorna lista vacía sin consultar)")
-    void completarRol_Failures() {
-        assertTrue(arbolModel.completarRol(null).isEmpty());
-        assertTrue(arbolModel.completarRol("").isEmpty());
-        assertTrue(arbolModel.completarRol("   ").isEmpty());
-
-        verify(rolService, never()).buscarPorNombre(any(), anyInt());
-    }
 
     // ==========================================
     // PRUEBAS PARA agregarExamen

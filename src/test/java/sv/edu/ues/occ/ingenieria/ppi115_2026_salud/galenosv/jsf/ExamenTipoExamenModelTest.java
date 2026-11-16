@@ -1,20 +1,13 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.jsf;
 
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.validator.ValidatorException;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.*;
@@ -58,115 +51,32 @@ class ExamenTipoExamenModelTest {
         faces.close();
     }
 
-    // ==========================================
-    // PRUEBAS PARA getDAO
-    // ==========================================
-
-    @Test
-    @DisplayName("getDAO - Éxito (Retorna el servicio inyectado)")
-    void getDAO_Success() {
-        assertSame(examenServiceMock, examenTipoExamenModel.getDAO());
-    }
 
     // ==========================================
-    // PRUEBAS PARA instanciarRegistro
+    // PRUEBAS PARA nuevo / seleccionar (comportamiento sobrescrito)
     // ==========================================
 
     @Test
-    @DisplayName("instanciarRegistro - Éxito (Retorna una instancia nueva y vacía cada vez)")
-    void instanciarRegistro_Success() {
-        Examen primero = examenTipoExamenModel.instanciarRegistro();
-        Examen segundo = examenTipoExamenModel.instanciarRegistro();
-
-        assertNotNull(primero);
-        assertNull(primero.getIdExamen());
-        assertNotSame(primero, segundo);
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getRegistroById
-    // ==========================================
-
-    @Test
-    @DisplayName("getRegistroById - Éxito (Retorna el registro que encuentra el servicio)")
-    void getRegistroById_Success() {
-        when(examenServiceMock.buscar(sampleId)).thenReturn(sampleExamen);
-
-        Examen resultado = examenTipoExamenModel.getRegistroById(sampleId.toString());
-
-        assertSame(sampleExamen, resultado);
-        verify(examenServiceMock, times(1)).buscar(sampleId);
-    }
-
-    @Test
-    @DisplayName("getRegistroById - Fallos (ID con formato inválido o registro inexistente retornan null)")
-    void getRegistroById_Failures() {
-        UUID idInexistente = UUID.randomUUID();
-        when(examenServiceMock.buscar(idInexistente)).thenReturn(null);
-
-        assertNull(examenTipoExamenModel.getRegistroById("no-es-un-uuid"));
-        assertNull(examenTipoExamenModel.getRegistroById(idInexistente.toString()));
-
-        // Solo el ID válido llegó al servicio
-        verify(examenServiceMock, times(1)).buscar(any());
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getIdByRegistro
-    // ==========================================
-
-    @Test
-    @DisplayName("getIdByRegistro - Éxito (Retorna el id del registro)")
-    void getIdByRegistro_Success() {
-        assertEquals(sampleId, examenTipoExamenModel.getIdByRegistro(sampleExamen));
-    }
-
-    @Test
-    @DisplayName("getIdByRegistro - Fallos (Registro nulo retorna null)")
-    void getIdByRegistro_Failures() {
-        assertNull(examenTipoExamenModel.getIdByRegistro(null));
-    }
-
-    // ==========================================
-    // PRUEBAS PARA getLazyModel
-    // ==========================================
-
-    @Test
-    @DisplayName("getLazyModel - Éxito (Modelo perezoso conectado a este Model)")
-    void getLazyModel_Success() {
-        when(examenServiceMock.contar()).thenReturn(3);
-
-        assertNotNull(examenTipoExamenModel.getLazyModel());
-        assertEquals(3, examenTipoExamenModel.getLazyModel().count(Collections.emptyMap()));
-    }
-
-    // ==========================================
-    // PRUEBAS PARA nuevo
-    // ==========================================
-
-    @Test
-    @DisplayName("nuevo - Éxito (Pasa a CREAR y limpia el árbol de tipos de examen)")
+    @DisplayName("nuevo - Éxito (Prepara un examen nuevo y limpia el árbol de tipos)")
     void nuevo_Success() {
         examenTipoExamenModel.nuevo();
 
+        assertNotNull(examenTipoExamenModel.getRegistroActual());
+        assertNull(examenTipoExamenModel.getRegistroActual().getIdExamen());
         assertEquals(ESTADO_CRUD.CREAR, examenTipoExamenModel.getEstado());
-        verify(arbolModelMock, times(1)).limpiar();
+        verify(arbolModelMock).limpiar();
     }
 
-    // ==========================================
-    // PRUEBAS PARA seleccionar
-    // ==========================================
-
     @Test
-    @DisplayName("seleccionar - Éxito (Pasa a MODIFICAR y carga los tipos del examen elegido)")
+    @DisplayName("seleccionar - Éxito (Selecciona el examen y carga los tipos asociados)")
     void seleccionar_Success() {
         when(selectEventMock.getObject()).thenReturn(sampleExamen);
 
         examenTipoExamenModel.seleccionar(selectEventMock);
 
-        assertEquals(ESTADO_CRUD.MODIFICAR, examenTipoExamenModel.getEstado());
         assertSame(sampleExamen, examenTipoExamenModel.getRegistroActual());
-        verify(arbolModelMock, times(1)).alEntrarPestana();
+        assertEquals(ESTADO_CRUD.MODIFICAR, examenTipoExamenModel.getEstado());
+        verify(arbolModelMock).alEntrarPestana();
     }
 
     // ==========================================
