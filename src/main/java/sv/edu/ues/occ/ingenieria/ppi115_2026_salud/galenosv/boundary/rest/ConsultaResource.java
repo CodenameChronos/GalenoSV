@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ConsultaService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaRolService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ReglaNegocioException;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.TicketPdfBean;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Consulta;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.PersonaRol;
 
@@ -37,6 +38,9 @@ public class ConsultaResource implements Serializable {
 
     @Inject
     PersonaRolService personaRolService;
+    
+    @Inject
+    TicketPdfBean ticketPdfBean;
 
     @POST
     public Response create(
@@ -183,4 +187,48 @@ public class ConsultaResource implements Serializable {
             return Response.status(500).build();
         }
     }
+
+        @GET
+    @Path("{id}/ticket")
+    @Produces("application/pdf")
+    public Response descargarTicket(
+            @PathParam("idPersonaRol") UUID idPersonaRol,
+            @PathParam("id") UUID idConsulta) {
+
+        if (idConsulta == null) {
+            return Response.status(422)
+                    .header("Wrong-Param", "id")
+                    .build();
+        }
+
+        try {
+            Consulta target =  (Consulta) service.buscar(idConsulta);
+
+            if (target == null
+                    || target.getIdPersonaRol() == null
+                    || !idPersonaRol.equals(
+                            target.getIdPersonaRol().getIdPersonaRol())) {
+                return Response.status(404)
+                        .header("Entity-Not-Found", idConsulta)
+                        .build();
+            }
+
+            byte[] pdfBytes = ticketPdfBean.generarTicketCita(target);
+            String nombreArchivo = "ticket-cita-" + idConsulta + ".pdf";
+
+            return Response.ok(pdfBytes, "application/pdf")
+                    .header("Content-Disposition",
+                            "attachment; filename=\"" + nombreArchivo + "\"")
+                    .header("Content-Length", pdfBytes.length)
+                    .build();
+
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName())
+                    .log(Level.SEVERE, ex.getMessage(), ex);
+            return Response.status(500)
+                    .header("Application-Error", ex.getMessage())
+                    .build();
+        }
+    }
+
 }
