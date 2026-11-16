@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.boundary.rest;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
@@ -12,17 +8,13 @@ import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.util.List;
 
-/**
- *
- * @author kardia
- */
 @Provider
 public class CorsFilter implements ContainerResponseFilter{
 
     public static final String METODOS = "GET, POST, PUT, DELETE, OPTIONS, HEAD";
     public static final int MAX_AGE = 60 * 60 * 45;
     public static final String DEFAULT_ALLOWED_METHODS = "origin, accept, content-type, Total-registros, Wrong-Param, Entity-Not-Found, Application-Error";
-    public static final String DEFAULT_EXPOSED_HEADERS = "location, info, Total-registros, Wrong-Param, Entity-Not-Found, Application-Error";
+    public static final String DEFAULT_EXPOSED_HEADERS = "location, info, Content-Disposition, Total-registros, Wrong-Param, Entity-Not-Found, Application-Error";
     
     @Override
     public void filter(ContainerRequestContext ctx, ContainerResponseContext respCtx) throws IOException {
