@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Clinica;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Consulta;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.PersonaRol;
 
 /**
  *
@@ -51,6 +52,19 @@ public class ConsultaService extends ParentService<Consulta> {
                 .setParameter("desde", desde)
                 .setParameter("hasta", hasta)
                 .getSingleResult();
+    }
+    
+    public List<Consulta> findRangeConProcedimientos(PersonaRol personaRol, int first, int max) {
+        return getEntityManager().createQuery(
+                "SELECT DISTINCT c FROM Consulta c "
+                + "LEFT JOIN FETCH c.consultaProcedimientoList cp "
+                + "LEFT JOIN FETCH cp.idProcedimiento "
+                + "WHERE c.idPersonaRol = :personaRol "
+                + "ORDER BY c.fechaInicio DESC", Consulta.class)
+                .setParameter("personaRol", personaRol)
+                .setFirstResult(first)
+                .setMaxResults(max)
+                .getResultList();
     }
     
 }

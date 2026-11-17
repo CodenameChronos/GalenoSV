@@ -114,17 +114,14 @@ public class DocumentoResource implements Serializable {
 
     }
 
-    @GET
+  @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response findByRange(
-            // Asigna el valor del parametro idPersona definido
-            // en el Path propio de la clase
             @PathParam("idPersona") UUID idPersona,
-            @QueryParam("first")
-            @DefaultValue("0") int first,
-            @QueryParam("max")
-            @Max(50)
-            @DefaultValue("50") int max
+            @QueryParam("idTipoDocumento") UUID idTipoDocumento,
+            @QueryParam("valor") String valor,
+            @QueryParam("first") @DefaultValue("0") int first,
+            @QueryParam("max") @Max(50) @DefaultValue("50") int max
     ) {
         if (first < 0 || max <= 0) {
             return Response.status(422)
@@ -132,9 +129,23 @@ public class DocumentoResource implements Serializable {
                     .build();
         }
         try {
-            return Response.ok(service.findRange(first, max))
+            // Búsqueda directa por tipo de documento y número (cuando aún no se conoce idPersona)
+            if (idTipoDocumento != null && valor != null && !valor.isBlank()) {
+                return Response.ok(service.buscarPorTipoYValor(idTipoDocumento, valor.trim()))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            Persona persona = (Persona) peService.buscar(idPersona);
+            if (persona == null) {
+                return Response.status(404)
+                        .header("Entity-Not-Found", idPersona)
+                        .build();
+            }
+
+            return Response.ok(service.findRangeByCriterio("idPersona", persona, first, max))
                     .type(MediaType.APPLICATION_JSON)
-                    .header("Total-registros", service.contar())
+                    .header("Total-registros", service.contarByCriterio("idPersona", persona))
                     .build();
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);

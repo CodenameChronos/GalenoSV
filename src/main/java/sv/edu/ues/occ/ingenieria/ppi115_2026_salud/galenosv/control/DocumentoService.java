@@ -15,11 +15,10 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Documento;
  *
  * @author kardia
  */
-
 @Stateless
 @LocalBean
 public class DocumentoService extends ParentService<Documento> {
-    
+
     @PersistenceContext(unitName = "Galeno-PU")
     EntityManager em;
 
@@ -31,7 +30,7 @@ public class DocumentoService extends ParentService<Documento> {
     public EntityManager getEntityManager() {
         return em;
     }
-    
+
     @Override
     public List<Documento> findRange(int first, int max) {
         if (first < 0 || max < 0) {
@@ -51,7 +50,7 @@ public class DocumentoService extends ParentService<Documento> {
             throw new IllegalStateException(ex);
         }
     }
-    
+
     @Override
     public Object buscar(Object uuid) {
         if (uuid == null) {
@@ -68,5 +67,16 @@ public class DocumentoService extends ParentService<Documento> {
             throw new IllegalStateException(ex);
         }
     }
-    
+
+    public List<Documento> buscarPorTipoYValor(UUID idTipoDocumento, String valor) {
+        return getEntityManager().createQuery(
+                "SELECT d FROM Documento d "
+                + "JOIN FETCH d.idPersona "
+                + "JOIN FETCH d.idTipoDocumento "
+                + "WHERE d.idTipoDocumento.idTipoDocumento = :idTipo "
+                + "AND d.valor = :valor", Documento.class)
+                .setParameter("idTipo", idTipoDocumento)
+                .setParameter("valor", valor)
+                .getResultList();
+    }
 }

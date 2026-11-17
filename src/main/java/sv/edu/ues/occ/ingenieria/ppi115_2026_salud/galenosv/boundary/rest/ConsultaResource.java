@@ -117,7 +117,7 @@ public class ConsultaResource implements Serializable {
         }
     }
 
-    @GET
+   @GET
     public Response findByRange(
             @PathParam("idPersonaRol") UUID idPersonaRol,
             @QueryParam("first") @DefaultValue("0") int first,
@@ -140,8 +140,7 @@ public class ConsultaResource implements Serializable {
             }
 
             return Response.ok(
-                    service.findRangeByCriterio(
-                            "idPersonaRol", personaRol, first, max))
+                    service.findRangeConProcedimientos(personaRol, first, max))
                     .header("Total-registros",
                             service.contarByCriterio(
                                     "idPersonaRol", personaRol))
