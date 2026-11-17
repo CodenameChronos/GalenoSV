@@ -177,17 +177,6 @@ class DocumentoResourceTest {
     // PRUEBAS PARA GET (findByRange)
     // ==========================================
 
-    
-         // ###################################### //
-        //                                        //
-       //        TODO: fix tests                 //
-      //                                        //
-     // ###################################### //
-    
-    
-    
-    
-    /*
     @Test
     @DisplayName("GET /persona/{idPersona}/documento - Éxito con rango y conteo Integer (Retorna 200)")
     void findByRange_Success() throws Exception {
@@ -224,7 +213,6 @@ class DocumentoResourceTest {
         assertEquals(500, response.getStatus());
         assertEquals("Fallo en listado", response.getHeaderString("Application-Error"));
     }
-*/
 
     // ==========================================
     // PRUEBAS PARA DELETE (delete)
