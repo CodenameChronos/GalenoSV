@@ -102,6 +102,7 @@ public class ConsultaProcedimientoPaso implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private PersonaRol idPersonaRol;
 
+    @JsonbTransient
     @OneToMany(mappedBy = "idConsultaProcedimientoPaso", fetch = FetchType.LAZY)
     private List<OrdenExamen> ordenExamenList;
 

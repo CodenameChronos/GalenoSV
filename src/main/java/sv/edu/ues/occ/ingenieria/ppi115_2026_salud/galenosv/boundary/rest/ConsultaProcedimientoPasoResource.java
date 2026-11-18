@@ -8,6 +8,7 @@ import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -149,6 +150,37 @@ public class ConsultaProcedimientoPasoResource implements Serializable {
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
             return Response.status(500).build();
+        }
+    }
+    
+    @PUT
+    @Path("{id}")
+    public Response update(
+            @PathParam("idConsultaProcedimiento") UUID idConsultaProcedimiento,
+            @PathParam("id") UUID id,
+            ConsultaProcedimientoPaso conspp) {
+        if (conspp == null) {
+            return Response.status(422).header("Wrong-Param", "conspp").build();
+        }
+        try {
+            ConsultaProcedimientoPaso existente = (ConsultaProcedimientoPaso) consppService.buscar(id);
+            if (existente == null || !perteneceAProcedimientoConsulta(existente, idConsultaProcedimiento)) {
+                return Response.status(404).header("Entity-Not-Found", id).build();
+            }
+            
+            conspp.setIdConsultaProcedimientoPaso(id);
+            conspp.setIdConsultaProcedimiento(existente.getIdConsultaProcedimiento());
+            
+            consppService.actualizar(conspp);
+            return Response.noContent().build();
+        } catch (ReglaNegocioException ex) {
+            return Response.status(Response.Status.CONFLICT)
+                    .type(MediaType.TEXT_PLAIN)
+                    .entity(ex.getMessage())
+                    .build();
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            return Response.status(500).header("Application-Error", ex.getMessage()).build();
         }
     }
 

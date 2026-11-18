@@ -145,4 +145,23 @@ public class PersonaRolService extends ParentService<PersonaRol> {
                 .setParameter("personas", personas)
                 .getResultList();
     }
+
+    public Object listarPersonalPorClinica(UUID idClinica, int first, int max) {
+        return getEntityManager()
+                    .createNamedQuery(
+                            "PersonaRol.listarPersonalPorClinica",
+                            PersonaRol.class)
+                .setParameter("idClinica", idClinica)
+                .setFirstResult(first)
+                .setMaxResults(max)
+                    .getResultList();
+    }
+
+    public Object contarPersonalPorClinica(UUID idClinica) {
+        return getEntityManager().createNamedQuery(
+                        "PersonaRol.contarPersonalPorClinica",
+                        Long.class)
+                .setParameter("idClinica", idClinica)
+                .getSingleResult();
+    }
 }

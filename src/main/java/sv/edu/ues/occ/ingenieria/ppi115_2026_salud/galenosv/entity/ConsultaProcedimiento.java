@@ -81,6 +81,7 @@ public class ConsultaProcedimiento implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Consulta idConsulta;
 
+    @JsonbTransient
     @OneToMany(mappedBy = "idConsultaProcedimiento", fetch = FetchType.LAZY)
     private List<ConsultaProcedimientoPaso> consultaProcedimientoPasoList;
 

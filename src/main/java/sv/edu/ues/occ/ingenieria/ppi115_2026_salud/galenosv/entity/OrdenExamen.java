@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,7 +31,14 @@ import java.util.UUID;
     @NamedQuery(name = "OrdenExamen.findByFechaCreacion", query = "SELECT o FROM OrdenExamen o WHERE o.fechaCreacion = :fechaCreacion"),
     @NamedQuery(name = "OrdenExamen.findByIndicaciones", query = "SELECT o FROM OrdenExamen o WHERE o.indicaciones = :indicaciones"),
     @NamedQuery(name = "OrdenExamen.findRangeByConsPP", query = "SELECT o FROM OrdenExamen o WHERE o.idConsultaProcedimientoPaso = :conspp"),
-    @NamedQuery(name = "OrdenExamen.countByConsPP", query = "SELECT count(o) FROM OrdenExamen o WHERE o.idConsultaProcedimientoPaso = :conspp")
+    @NamedQuery(
+        name = "OrdenExamen.countByConsPP",
+        query = "SELECT COUNT(o) FROM OrdenExamen o WHERE o.idConsultaProcedimientoPaso.idConsultaProcedimientoPaso = :conspp"
+    ),
+    @NamedQuery(
+        name = "OrdenExamen.findByConsPP",
+        query = "SELECT o FROM OrdenExamen o WHERE o.idConsultaProcedimientoPaso.idConsultaProcedimientoPaso = :conspp ORDER BY o.fechaCreacion ASC"
+    )
 })
 public class OrdenExamen implements Serializable {
 
@@ -51,6 +59,7 @@ public class OrdenExamen implements Serializable {
     @Column(name = "indicaciones", length = 2000)
     private String indicaciones;
 
+    @JsonbTransient
     @OneToMany(mappedBy = "idOrdenExamen", fetch = FetchType.LAZY)
     private List<ExamenResultado> examenResultadoList;
 

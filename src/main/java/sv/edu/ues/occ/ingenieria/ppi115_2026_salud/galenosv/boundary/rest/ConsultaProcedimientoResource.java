@@ -8,6 +8,7 @@ import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -114,6 +115,37 @@ public class ConsultaProcedimientoResource implements Serializable {
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
             return Response.status(500).build();
+        }
+    }
+    
+    @PUT
+    @Path("{id}")
+    public Response update(
+            @PathParam("idConsulta") UUID idConsulta,
+            @PathParam("id") UUID id,
+            ConsultaProcedimiento consp) {
+        if (consp == null) {
+            return Response.status(422).header("Wrong-Param", "consp").build();
+        }
+        try {
+            ConsultaProcedimiento existente = (ConsultaProcedimiento) conspService.buscar(id);
+            if (existente == null || !perteneceAConsulta(existente, idConsulta)) {
+                return Response.status(404).header("Entity-Not-Found", id).build();
+            }
+            
+            consp.setIdConsultaProcedimiento(id);
+            consp.setIdConsulta(existente.getIdConsulta());
+            
+            conspService.actualizar(consp);
+            return Response.noContent().build();
+        } catch (ReglaNegocioException ex) {
+            return Response.status(Response.Status.CONFLICT)
+                    .type(MediaType.TEXT_PLAIN)
+                    .entity(ex.getMessage())
+                    .build();
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            return Response.status(500).header("Application-Error", ex.getMessage()).build();
         }
     }
 

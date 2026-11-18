@@ -1,4 +1,3 @@
-
 package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.boundary.rest;
 
 import jakarta.enterprise.context.RequestScoped;
@@ -13,6 +12,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ClinicaService;
+import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.PersonaRolService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.control.ReglaNegocioException;
 import sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.entity.Clinica;
 
@@ -28,6 +28,9 @@ public class ClinicaResource implements Serializable {
 
     @Inject
     private ClinicaService service;
+
+    @Inject
+    private PersonaRolService personaRolService;
 
     @POST
     public Response create(
@@ -56,6 +59,38 @@ public class ClinicaResource implements Serializable {
             Logger.getLogger(getClass().getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
             return Response.status(500).build();
+        }
+    }
+
+    @PUT
+    @Path("{id}")
+    public Response update(
+            @PathParam("id") UUID id,
+            Clinica clinica) {
+        if (clinica == null) {
+            return Response.status(422).header("Wrong-Param", "clinica").build();
+        }
+        try {
+            Clinica existente = (Clinica) service.buscar(id);
+            if (existente == null) {
+                return Response.status(404).header("Entity-Not-Found", id).build();
+            }
+
+            clinica.setIdClinica(id);
+            if (clinica.getActivo() == null) {
+                clinica.setActivo(existente.getActivo());
+            }
+
+            service.actualizar(clinica);
+            return Response.noContent().build();
+        } catch (ReglaNegocioException ex) {
+            return Response.status(Response.Status.CONFLICT)
+                    .type(MediaType.TEXT_PLAIN)
+                    .entity(ex.getMessage())
+                    .build();
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            return Response.status(500).header("Application-Error", ex.getMessage()).build();
         }
     }
 
@@ -113,6 +148,29 @@ public class ClinicaResource implements Serializable {
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName())
                     .log(Level.SEVERE, ex.getMessage(), ex);
+            return Response.status(500).build();
+        }
+    }
+
+    @GET
+    @Path("{idClinica}/personal")
+    public Response findPersonal(
+            @PathParam("idClinica") UUID idClinica,
+            @QueryParam("first") @DefaultValue("0") int first,
+            @QueryParam("max") @Max(50) @DefaultValue("50") int max) {
+        if (first < 0 || max <= 0) {
+            return Response.status(422).header("Wrong-Param", "first,max").build();
+        }
+        try {
+            if (service.buscar(idClinica) == null) {
+                return Response.status(404).header("Entity-Not-Found", idClinica).build();
+            }
+            return Response.ok(personaRolService.listarPersonalPorClinica(idClinica, first, max))
+                    .type(MediaType.APPLICATION_JSON)
+                    .header("Total-registros", personaRolService.contarPersonalPorClinica(idClinica))
+                    .build();
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
             return Response.status(500).build();
         }
     }

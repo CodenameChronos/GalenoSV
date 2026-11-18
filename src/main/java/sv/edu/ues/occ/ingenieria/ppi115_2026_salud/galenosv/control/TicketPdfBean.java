@@ -87,7 +87,7 @@ public class TicketPdfBean {
                     : "Paciente no especificado";
             document.add(parrafoIzquierda(nombrePaciente, fontTexto, 1f));
 
-           Documento doc = obtenerDocumentoPrincipal(persona);
+            Documento doc = obtenerDocumentoPrincipal(persona);
             if (doc != null) {
                 String tipoDoc = (doc.getIdTipoDocumento() != null && doc.getIdTipoDocumento().getNombre() != null)
                         ? doc.getIdTipoDocumento().getNombre()
@@ -121,8 +121,16 @@ public class TicketPdfBean {
                 document.add(parrafoIzquierda("* " + nombreProc, fontTexto, 1f));
                 tieneContenido = true;
 
-                if (cp.getObservaciones() != null && !cp.getObservaciones().isBlank()) {
-                    document.add(parrafoIzquierda("  Obs: " + cp.getObservaciones(), fontTexto, 1f));
+                String obsCp = cp.getObservaciones();
+                for (ObservacionesCodec.Paso paso : ObservacionesCodec.leerTodos(obsCp)) {
+                    String nota = ObservacionesCodec.notas(paso.datos());
+                    if (!nota.isEmpty()) {
+                        document.add(parrafoIzquierda("  - " + nota, fontTexto, 1f));
+                    }
+                }
+                String libreCp = ObservacionesCodec.textoLibre(obsCp);
+                if (!libreCp.isEmpty()) {
+                    document.add(parrafoIzquierda("  Obs: " + libreCp, fontTexto, 1f));
                 }
             }
 

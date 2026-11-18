@@ -45,8 +45,14 @@ import jakarta.json.bind.annotation.JsonbTransient;
             + "                                                                 AND pr.idRol = :rol "
             + "                                                                 AND LOWER(CONCAT(p.nombres, ' ', p.apellidos)) "
             + "                                                                     LIKE :texto "
-            + "                                                             ORDER BY p.apellidos, p.nombres")
-        
+            + "                                                             ORDER BY p.apellidos, p.nombres"),
+    @NamedQuery(name = "PersonaRol.listarPersonalPorClinica",
+            query = "SELECT p FROM PersonaRol p WHERE p.idClinica.idClinica = :idClinica "
+            + "AND LOWER(p.idRol.nombre) <> 'paciente' "
+            + "ORDER BY p.idPersona.apellidos, p.idPersona.nombres"),
+    @NamedQuery(name = "PersonaRol.contarPersonalPorClinica",
+            query = "SELECT COUNT(p) FROM PersonaRol p WHERE p.idClinica.idClinica = :idClinica "
+            + "AND LOWER(p.idRol.nombre) <> 'paciente'")
 })
 public class PersonaRol implements Serializable {
 
@@ -80,14 +86,14 @@ public class PersonaRol implements Serializable {
     @JoinColumn(name = "id_rol", referencedColumnName = "id_rol", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Rol idRol;
-    
+
     @JsonbTransient
     @OneToMany(mappedBy = "idPersonaRol", fetch = FetchType.LAZY)
     private List<Consulta> consultaList;
-    
+
     /**
-     * Etiqueta para mostrar en vistas (autocomplete, tablas).
-     * No se persiste. Requiere que idPersona esté cargada; la consulta
+     * Etiqueta para mostrar en vistas (autocomplete, tablas). No se persiste.
+     * Requiere que idPersona esté cargada; la consulta
      * buscarPorNombresApellidos ya la trae con JOIN FETCH.
      */
     @Transient
