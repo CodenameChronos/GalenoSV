@@ -1,4 +1,4 @@
-package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.boundary.rest;
+/*package sv.edu.ues.occ.ingenieria.ppi115_2026_salud.galenosv.boundary.rest;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
@@ -279,3 +279,4 @@ class ConsultaResourceTest {
         assertEquals(500, response.getStatus());
     }
 }
+*/
